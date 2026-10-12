@@ -68,7 +68,7 @@ export const renderPollMessage = (
   const ctx: RenderContext = { poll, t: getMessages(poll.locale) };
 
   const lines = [
-    `📅 <b>${escapeHtml(poll.title)}</b>`,
+    `<b>${escapeHtml(poll.title)}</b>`,
     '',
     renderRespondents(ctx, results),
     ...renderSummary(ctx, results),
