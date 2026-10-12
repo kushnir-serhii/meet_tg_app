@@ -3,20 +3,21 @@
 import { useCallback, useState } from 'react';
 
 import { pollsApi } from '@/lib/api/polls';
-import { copy } from '@/shared/copy';
 
 import { useConfirm } from './useConfirm';
 import { useHaptics } from './useHaptics';
+import { useI18n } from './useI18n';
 
 /** Asks for confirmation, deletes the poll, then calls `onDeleted`. */
 export const useDeletePoll = (pollId: string, onDeleted: () => void) => {
+  const { t } = useI18n();
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState(false);
   const confirm = useConfirm();
   const haptics = useHaptics();
 
   const remove = useCallback(async () => {
-    if (!(await confirm(copy.poll.deleteConfirm))) return;
+    if (!(await confirm(t.poll.deleteConfirm))) return;
 
     setIsDeleting(true);
     setError(false);
@@ -30,7 +31,7 @@ export const useDeletePoll = (pollId: string, onDeleted: () => void) => {
     } finally {
       setIsDeleting(false);
     }
-  }, [confirm, pollId, onDeleted, haptics]);
+  }, [confirm, pollId, onDeleted, haptics, t]);
 
   return { remove, isDeleting, error };
 };

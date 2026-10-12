@@ -1,8 +1,9 @@
 import { MiniApp } from '@/components/app/MiniApp';
+import { getPublicMiniAppLink } from '@/server/telegram/links';
 
 const HomePage = () => (
   <main>
-    <MiniApp />
+    <MiniApp telegramLink={getPublicMiniAppLink()} />
   </main>
 );
 

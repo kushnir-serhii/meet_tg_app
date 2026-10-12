@@ -2,7 +2,7 @@ import type { Composer, Context } from 'grammy';
 import type { InlineQueryResultArticle } from 'grammy/types';
 
 import type { Poll } from '@/domain/types';
-import { copy } from '@/shared/copy';
+import { getMessages, resolveLocale } from '@/i18n';
 
 import { getEnv } from '../../env';
 import { pollsRepository } from '../../repositories/pollsRepository';
@@ -38,11 +38,12 @@ export const registerInlineQuery = (bot: Composer<Context>): void => {
   bot.on('inline_query', async (ctx) => {
     const polls = await findPolls(ctx.inlineQuery.query, ctx.from.id);
     const results = await Promise.all(polls.map(toArticle));
+    const t = getMessages(resolveLocale(ctx.from.language_code));
 
     await ctx.answerInlineQuery(results, {
       cache_time: 0,
       is_personal: true,
-      button: { text: copy.bot.inlineCreate, web_app: { url: getEnv().APP_URL } },
+      button: { text: t.bot.inlineCreate, web_app: { url: getEnv().APP_URL } },
     });
   });
 };

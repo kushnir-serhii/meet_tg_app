@@ -30,7 +30,13 @@ export type WebApp = {
   initData: string;
   initDataUnsafe: {
     start_param?: string;
-    user?: { id: number; first_name: string; last_name?: string; username?: string };
+    user?: {
+      id: number;
+      first_name: string;
+      last_name?: string;
+      username?: string;
+      language_code?: string;
+    };
   };
   version: string;
   colorScheme: 'light' | 'dark';

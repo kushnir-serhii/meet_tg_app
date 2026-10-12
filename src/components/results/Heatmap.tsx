@@ -5,6 +5,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { buildGrid } from '@/domain/grid';
 import { getSlotSummary } from '@/domain/results';
 import type { Poll, PollResults } from '@/domain/types';
+import { useI18n } from '@/hooks/useI18n';
 import { formatSlot } from '@/shared/format';
 
 import { HeatCell } from '../grid/HeatCell';
@@ -19,7 +20,8 @@ type HeatmapProps = {
 
 /** Heat grid of availability; tap a cell to see who can join. */
 export const Heatmap = ({ poll, results }: HeatmapProps) => {
-  const grid = useMemo(() => buildGrid(poll), [poll]);
+  const { locale } = useI18n();
+  const grid = useMemo(() => buildGrid(poll, locale), [poll, locale]);
   const [activeSlot, setActiveSlot] = useState<string | null>(null);
   const total = results.respondents.length;
 
@@ -47,7 +49,7 @@ export const Heatmap = ({ poll, results }: HeatmapProps) => {
       <SlotGrid grid={grid} renderCell={renderCell} />
       {activeSummary && (
         <SlotDetails
-          label={formatSlot(activeSummary.slot, poll.timezone)}
+          label={formatSlot(activeSummary.slot, poll.timezone, locale)}
           available={activeSummary.available}
           unavailable={activeSummary.unavailable}
           total={total}

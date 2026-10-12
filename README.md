@@ -13,6 +13,12 @@ People mark free slots on a "days × hours" grid; the app shows times when every
 4. Participants tap "🗓 Позначити свій час" → Mini App with the poll (`startapp=<pollId>`).
 5. On every save the bot edits all poll cards: who answered, perfect time or top-3 with names of those who can't.
 
+## Languages
+
+English and Ukrainian (`src/i18n/locales`). The Mini App follows the user's Telegram language;
+chat messages use the organizer's language (stored in `polls.locale`). To add a language, add a
+file next to `en.ts`, register it in `src/i18n/index.ts` and in the `locale` check constraint.
+
 ## Project structure
 
 ```
@@ -56,7 +62,7 @@ scripts/               set-webhook
 
 ### 2. Supabase
 
-New project → SQL Editor → run `supabase/migrations/0001_init.sql`, then `0002_cleanup.sql`
+New project → SQL Editor → run the files in `supabase/migrations/` in order (`0001` → `0003`)
 (daily pg_cron job: deletes polls 7 days after their last date or 60 days after creation).
 Only `SUPABASE_URL` and `service_role` key are needed (all access goes through the API; RLS is on with no policies).
 

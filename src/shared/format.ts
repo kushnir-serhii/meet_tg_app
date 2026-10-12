@@ -1,30 +1,40 @@
 import { format, parseISO } from 'date-fns';
-import { uk } from 'date-fns/locale';
 import { formatInTimeZone } from 'date-fns-tz';
 
 import type { Participant, SlotRange } from '@/domain/types';
+import { getDateLocale, type Locale } from '@/i18n';
 
-const fmt = (iso: string, timezone: string, pattern: string): string =>
-  formatInTimeZone(iso, timezone, pattern, { locale: uk });
+/** Short weekday: en "Tue", uk "вт" (default uk "EEE" gives "вів"). */
+const WEEKDAY: Record<Locale, string> = { en: 'EEE', uk: 'EEEEEE' };
 
-/** "пн, 20.10" */
-export const formatDay = (iso: string, timezone: string): string =>
-  fmt(iso, timezone, 'EEEEEE, dd.MM');
+const fmt = (iso: string, timezone: string, pattern: string, locale: Locale): string =>
+  formatInTimeZone(iso, timezone, pattern, { locale: getDateLocale(locale) });
+
+/** en: "Mon 20 Oct" · uk: "пн 20 жовт." */
+export const formatDay = (iso: string, timezone: string, locale: Locale): string =>
+  fmt(iso, timezone, `${WEEKDAY[locale]} d MMM`, locale);
 
 /** "18:00" */
-export const formatTime = (iso: string, timezone: string): string => fmt(iso, timezone, 'HH:mm');
+export const formatTime = (iso: string, timezone: string): string =>
+  formatInTimeZone(iso, timezone, 'HH:mm');
 
-/** "пн, 20.10 18:00" */
-export const formatSlot = (iso: string, timezone: string): string =>
-  `${formatDay(iso, timezone)} ${formatTime(iso, timezone)}`;
+/** "Mon 20 Oct 18:00" */
+export const formatSlot = (iso: string, timezone: string, locale: Locale): string =>
+  `${formatDay(iso, timezone, locale)} ${formatTime(iso, timezone)}`;
 
-/** "пн, 20.10 18:00–20:00" */
-export const formatRange = ({ start, end }: SlotRange, timezone: string): string =>
-  `${formatSlot(start, timezone)}–${formatTime(end, timezone)}`;
+/** "Mon 20 Oct 18:00–20:00" */
+export const formatRange = ({ start, end }: SlotRange, timezone: string, locale: Locale): string =>
+  `${formatSlot(start, timezone, locale)}–${formatTime(end, timezone)}`;
 
-/** Local `YYYY-MM-DD` → "пн, 20.10" */
-export const formatDate = (date: string): string =>
-  format(parseISO(date), 'EEEEEE, dd.MM', { locale: uk });
+/** Local `YYYY-MM-DD` → { weekday: "Mon", day: "20 Oct" } (two-line grid header). */
+export const formatGridDate = (date: string, locale: Locale): { weekday: string; day: string } => {
+  const parsed = parseISO(date);
+  const options = { locale: getDateLocale(locale) };
+  return {
+    weekday: format(parsed, WEEKDAY[locale], options),
+    day: format(parsed, 'd MMM', options),
+  };
+};
 
 /** 570 → "09:30" */
 export const formatMinuteOfDay = (minute: number): string =>

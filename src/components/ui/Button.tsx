@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes } from 'react';
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react';
 
 import { cx } from '@/utils/cx';
 
@@ -17,6 +17,23 @@ export const Button = ({
   <button
     type={type}
     className={cx(styles.button, variant === 'secondary' && styles.secondary, className)}
+    {...props}
+  />
+);
+
+type ButtonLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
+  variant?: 'primary' | 'secondary';
+};
+
+/** Link that looks like a button. */
+export const ButtonLink = ({ variant = 'primary', className, ...props }: ButtonLinkProps) => (
+  <a
+    className={cx(
+      styles.button,
+      styles.link,
+      variant === 'secondary' && styles.secondary,
+      className,
+    )}
     {...props}
   />
 );

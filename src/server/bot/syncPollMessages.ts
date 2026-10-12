@@ -3,7 +3,8 @@ import 'server-only';
 import { type Api, GrammyError } from 'grammy';
 import type { InlineKeyboardMarkup } from 'grammy/types';
 
-import { copy } from '@/shared/copy';
+import type { Poll } from '@/domain/types';
+import { getMessages } from '@/i18n';
 import { escapeHtml } from '@/shared/html';
 
 import type { PollMessage as StoredMessage } from '../repositories/pollMessagesRepository';
@@ -57,8 +58,8 @@ export const syncPollMessages = async (pollId: string): Promise<void> => {
 /** Replaces chat messages of a deleted poll with a short note (and drops the button). */
 export const markPollMessagesDeleted = async (
   targets: StoredMessage[],
-  title: string,
+  poll: Poll,
 ): Promise<void> => {
   if (targets.length === 0) return;
-  await editAll(targets, { text: copy.bot.deleted(escapeHtml(title)) });
+  await editAll(targets, { text: getMessages(poll.locale).bot.deleted(escapeHtml(poll.title)) });
 };

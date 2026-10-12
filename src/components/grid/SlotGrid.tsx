@@ -21,7 +21,8 @@ export const SlotGrid = ({ grid, renderCell, bodyProps }: SlotGridProps) => {
         <div className={styles.corner} />
         {grid.days.map((day) => (
           <div key={day.date} className={styles.dayLabel}>
-            {day.label}
+            <span className={styles.weekday}>{day.weekday}</span>
+            <span>{day.day}</span>
           </div>
         ))}
         <div className={styles.body} {...bodyProps}>

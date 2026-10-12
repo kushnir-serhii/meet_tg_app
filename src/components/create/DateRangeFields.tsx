@@ -2,7 +2,7 @@ import { addDays, format, parseISO } from 'date-fns';
 
 import { MAX_POLL_DAYS } from '@/domain/dates';
 import type { CreatePollFormValues } from '@/hooks/useCreatePollForm';
-import { copy } from '@/shared/copy';
+import { useI18n } from '@/hooks/useI18n';
 
 import { Field, FieldRow } from '../ui/Field';
 import type { SetField } from './types';
@@ -16,36 +16,40 @@ type DateRangeFieldsProps = {
 const maxEndDate = (from: string): string =>
   format(addDays(parseISO(from), MAX_POLL_DAYS - 1), 'yyyy-MM-dd');
 
-export const DateRangeFields = ({ values, setField, minDate }: DateRangeFieldsProps) => (
-  <FieldRow>
-    <Field label={copy.create.dateFrom}>
-      {(id, className) => (
-        <input
-          id={id}
-          type="date"
-          className={className}
-          min={minDate}
-          value={values.dateFrom}
-          onChange={(e) => {
-            setField('dateFrom', e.target.value);
-          }}
-        />
-      )}
-    </Field>
-    <Field label={copy.create.dateTo}>
-      {(id, className) => (
-        <input
-          id={id}
-          type="date"
-          className={className}
-          min={values.dateFrom}
-          max={maxEndDate(values.dateFrom)}
-          value={values.dateTo}
-          onChange={(e) => {
-            setField('dateTo', e.target.value);
-          }}
-        />
-      )}
-    </Field>
-  </FieldRow>
-);
+export const DateRangeFields = ({ values, setField, minDate }: DateRangeFieldsProps) => {
+  const { t } = useI18n();
+
+  return (
+    <FieldRow>
+      <Field label={t.create.dateFrom}>
+        {(id, className) => (
+          <input
+            id={id}
+            type="date"
+            className={className}
+            min={minDate}
+            value={values.dateFrom}
+            onChange={(e) => {
+              setField('dateFrom', e.target.value);
+            }}
+          />
+        )}
+      </Field>
+      <Field label={t.create.dateTo}>
+        {(id, className) => (
+          <input
+            id={id}
+            type="date"
+            className={className}
+            min={values.dateFrom}
+            max={maxEndDate(values.dateFrom)}
+            value={values.dateTo}
+            onChange={(e) => {
+              setField('dateTo', e.target.value);
+            }}
+          />
+        )}
+      </Field>
+    </FieldRow>
+  );
+};

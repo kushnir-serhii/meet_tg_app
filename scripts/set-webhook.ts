@@ -30,6 +30,29 @@ await call('setWebhook', {
   drop_pending_updates: true,
 });
 
-await call('setMyCommands', {
-  commands: [{ command: 'start', description: 'Створити зустріч' }],
-});
+/** Bot profile texts per language. Default (no language_code) = English. */
+const profiles = [
+  {
+    language_code: undefined,
+    command: 'Create a meeting',
+    description:
+      'Find a meeting time that works for everyone. Mark your free hours, and I show when they overlap.',
+    short: 'Find a meeting time that works for everyone.',
+  },
+  {
+    language_code: 'uk',
+    command: 'Створити зустріч',
+    description:
+      'Знайдіть час для зустрічі, зручний усім. Кожен позначає вільні години — я покажу, коли вони збігаються.',
+    short: 'Знайдіть час для зустрічі, зручний усім.',
+  },
+];
+
+for (const { language_code, command, description, short } of profiles) {
+  await call('setMyCommands', {
+    commands: [{ command: 'start', description: command }],
+    language_code,
+  });
+  await call('setMyDescription', { description, language_code });
+  await call('setMyShortDescription', { short_description: short, language_code });
+}

@@ -1,5 +1,5 @@
 import type { Poll, PollResults } from '@/domain/types';
-import { copy } from '@/shared/copy';
+import { useI18n } from '@/hooks/useI18n';
 
 import { Hint, Section } from '../ui/Section';
 import { BestSlots } from './BestSlots';
@@ -13,10 +13,11 @@ type ResultsViewProps = {
 };
 
 export const ResultsView = ({ poll, results }: ResultsViewProps) => {
+  const { t } = useI18n();
   if (results.respondents.length === 0) {
     return (
       <Section>
-        <Hint>{copy.results.noRespondents}</Hint>
+        <Hint>{t.results.noRespondents}</Hint>
       </Section>
     );
   }

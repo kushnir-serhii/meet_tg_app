@@ -1,8 +1,12 @@
-/** All user-facing strings in one place (ready for i18n later). */
-export const copy = {
+import type { Messages } from '../types';
+
+export const uk: Messages = {
   app: {
     loading: 'Завантаження…',
     openInTelegram: 'Відкрийте застосунок у Telegram',
+    landing:
+      'Знайдіть час для зустрічі, зручний усім. Кожен позначає вільні години — бот показує, коли вони збігаються.',
+    openButton: 'Відкрити в Telegram',
     genericError: 'Щось пішло не так. Спробуйте ще раз.',
     retry: 'Спробувати ще',
   },
@@ -34,8 +38,8 @@ export const copy = {
     save: 'Зберегти',
     saving: 'Зберігаю…',
     saved: 'Збережено ✓',
-    timezone: (tz: string) => `Час указано за ${tz}`,
-    timezoneMismatch: (tz: string) => `Увага: ваш часовий пояс ${tz}`,
+    timezone: (tz) => `Час указано за ${tz}`,
+    timezoneMismatch: (tz) => `Увага: ваш часовий пояс ${tz}`,
     delete: 'Видалити зустріч',
     deleting: 'Видаляю…',
     deleteConfirm: 'Видалити зустріч і всі відповіді? Це не можна скасувати.',
@@ -43,29 +47,28 @@ export const copy = {
     notFound: 'Зустріч не знайдено — можливо, її видалили або вона застаріла.',
   },
   results: {
-    respondents: (n: number, expected: number | null) =>
-      expected ? `Відповіли: ${n}/${expected}` : `Відповіли: ${n}`,
+    respondents: (n, expected) => (expected ? `Відповіли: ${n}/${expected}` : `Відповіли: ${n}`),
     noRespondents: 'Поки ніхто не відповів.',
-    perfect: '✅ Зручно всім',
-    best: (count: number, total: number) => `🏆 Найкраще: ${count}/${total}`,
+    perfect: '✅ Підходить усім',
+    best: (count, total) => `🏆 Найкращі варіанти: ${count}/${total}`,
     noMatch: '❌ Спільного часу поки немає. Ось коли може найбільше людей:',
     cannot: 'Не можуть',
-    of: (a: number, b: number) => `${a}/${b}`,
+    of: (a, b) => `${a}/${b}`,
   },
   bot: {
     start: 'Привіт! Я допоможу знайти час для зустрічі, зручний усім.',
     createButton: '➕ Створити зустріч',
     inlineCreate: '➕ Створити нову зустріч',
     markButton: '🗓 Позначити свій час',
-    respondents: (names: string, n: number, expected: number | null) =>
-      `👥 Відповіли (${expected ? `${n}/${expected}` : n}): ${names}`,
+    respondents: (names, n, expected) =>
+      `👥 Відповіли ${expected ? `${n}/${expected}` : n}: ${names}`,
     nobody: '👥 Поки ніхто не відповів',
-    perfect: (n: number) => `✅ Зручно всім (${n}):`,
+    perfect: '✅ Підходить усім:',
     noCommon: '❌ Спільного часу поки немає',
-    best: (count: number, total: number) => `🏆 Найкраще — можуть ${count} з ${total}:`,
-    more: (n: number) => `…і ще ${n}`,
+    best: (count, total) => `🏆 Найкращі варіанти — можуть ${count} з ${total}:`,
+    more: (n) => `…і ще ${n}`,
     cannot: 'не може',
-    timezone: (tz: string) => `🕒 ${tz}`,
-    deleted: (title: string) => `🗑 Зустріч «${title}» видалено організатором`,
+    timezone: (tz) => `🕒 ${tz}`,
+    deleted: (title) => `🗑 Зустріч «${title}» видалено організатором`,
   },
-} as const;
+};

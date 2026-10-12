@@ -1,5 +1,6 @@
 import { normalizeSlotId } from '@/domain/slots';
 import type { Poll, PollResponse, SlotMinutes } from '@/domain/types';
+import { DEFAULT_LOCALE, isLocale } from '@/i18n';
 
 import type { Tables } from '../db/database.types';
 
@@ -14,6 +15,7 @@ export const toPoll = (row: Tables<'polls'>): Poll => ({
   slotMinutes: row.slot_minutes as SlotMinutes,
   timezone: row.timezone,
   expectedCount: row.expected_count,
+  locale: isLocale(row.locale) ? row.locale : DEFAULT_LOCALE,
   createdAt: row.created_at,
 });
 

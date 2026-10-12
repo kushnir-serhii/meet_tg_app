@@ -17,6 +17,7 @@ const poll: Poll = {
   slotMinutes: 60,
   timezone: 'Europe/Warsaw',
   expectedCount: 3,
+  locale: 'en',
   createdAt: '2026-10-12T00:00:00.000Z',
 };
 
@@ -44,15 +45,23 @@ describe('renderPollMessage', () => {
 
   it('shows respondents and a perfect range', () => {
     const { text } = render([response(1, 'Olena', slots), response(2, 'Andrii', slots)]);
-    expect(text).toContain('(2/3): Olena, Andrii');
-    expect(text).toContain('✅ Зручно всім (2):');
+    expect(text).toContain('Responded 2/3: Olena, Andrii');
+    expect(text).toContain('✅ Works for everyone:');
     expect(text).toContain('18:00–20:00');
   });
 
   it('names who cannot join when nobody fits all', () => {
     const { text } = render([response(1, 'Olena', [slots[0]!]), response(2, 'Andrii', [])]);
-    expect(text).toContain('❌ Спільного часу поки немає');
-    expect(text).toContain('можуть 1 з 2');
-    expect(text).toContain('не може: Andrii');
+    expect(text).toContain('❌ No common time yet');
+    expect(text).toContain('1 of 2 can join');
+    expect(text).toContain("can't: Andrii");
+  });
+
+  it('uses the organizer language', () => {
+    const results = computeResults(slots, [response(1, 'Olena', slots)], 60);
+    const { text, replyMarkup } = renderPollMessage({ ...poll, locale: 'uk' }, results, 'u');
+    expect(text).toContain('Відповіли 1/3: Olena');
+    expect(text).toContain('✅ Підходить усім:');
+    expect(replyMarkup.inline_keyboard[0]?.[0]?.text).toBe('🗓 Позначити свій час');
   });
 });

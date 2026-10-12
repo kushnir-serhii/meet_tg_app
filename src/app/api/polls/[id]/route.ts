@@ -20,7 +20,7 @@ export const DELETE = handle<Context>(async (request, { params }) => {
   const { id } = await params;
 
   const { poll, messages } = await deletePoll(id, user.userId);
-  after(() => markPollMessagesDeleted(messages, poll.title));
+  after(() => markPollMessagesDeleted(messages, poll));
 
   return NextResponse.json({ ok: true });
 });
