@@ -15,4 +15,7 @@ export const pollsApi = {
       method: 'PUT',
       body: { slots },
     }),
+
+  remove: (pollId: string) =>
+    apiRequest<{ ok: true }>(`/api/polls/${encodeURIComponent(pollId)}`, { method: 'DELETE' }),
 };

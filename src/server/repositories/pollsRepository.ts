@@ -21,6 +21,11 @@ export const pollsRepository = {
     return data ? toPoll(data) : null;
   },
 
+  async deleteById(id: string): Promise<void> {
+    const { error } = await getDb().from('polls').delete().eq('id', id);
+    if (error) throw error;
+  },
+
   async findRecentByCreator(creatorId: number, limit = 10): Promise<Poll[]> {
     const { data, error } = await getDb()
       .from('polls')

@@ -45,11 +45,14 @@ describe('renderPollMessage', () => {
   it('shows respondents and a perfect range', () => {
     const { text } = render([response(1, 'Olena', slots), response(2, 'Andrii', slots)]);
     expect(text).toContain('(2/3): Olena, Andrii');
+    expect(text).toContain('✅ Зручно всім (2):');
     expect(text).toContain('18:00–20:00');
   });
 
   it('names who cannot join when nobody fits all', () => {
     const { text } = render([response(1, 'Olena', [slots[0]!]), response(2, 'Andrii', [])]);
+    expect(text).toContain('❌ Спільного часу поки немає');
+    expect(text).toContain('можуть 1 з 2');
     expect(text).toContain('не може: Andrii');
   });
 });

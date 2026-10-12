@@ -1,28 +1,28 @@
-import type { SlotSummary } from '@/domain/types';
+import type { Participant } from '@/domain/types';
 import { copy } from '@/shared/copy';
-import { formatSlot } from '@/shared/format';
 
 import { NameChips } from './NameChips';
 import styles from './results.module.css';
 
 type SlotDetailsProps = {
-  summary: SlotSummary;
+  label: string;
+  available: Participant[];
+  unavailable: Participant[];
   total: number;
-  timezone: string;
 };
 
-/** "пн, 20.10 18:00 — 4/5" + who can and who can't. */
-export const SlotDetails = ({ summary, total, timezone }: SlotDetailsProps) => (
+/** "вт, 13.10 18:00–20:00 — 4/5" + who can and who can't. */
+export const SlotDetails = ({ label, available, unavailable, total }: SlotDetailsProps) => (
   <div className={styles.details}>
     <div className={styles.detailsHead}>
-      <span>{formatSlot(summary.slot, timezone)}</span>
-      <span className={styles.score}>{copy.results.of(summary.available.length, total)}</span>
+      <span>{label}</span>
+      <span className={styles.score}>{copy.results.of(available.length, total)}</span>
     </div>
-    <NameChips people={summary.available} />
-    {summary.unavailable.length > 0 && (
+    <NameChips people={available} />
+    {unavailable.length > 0 && (
       <>
         <span className={styles.subLabel}>{copy.results.cannot}</span>
-        <NameChips people={summary.unavailable} muted />
+        <NameChips people={unavailable} muted />
       </>
     )}
   </div>

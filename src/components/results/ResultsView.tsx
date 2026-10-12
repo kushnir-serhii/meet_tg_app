@@ -30,7 +30,8 @@ export const ResultsView = ({ poll, results }: ResultsViewProps) => {
         <PerfectRanges ranges={results.perfectRanges} timezone={poll.timezone} />
       ) : (
         <BestSlots
-          best={results.best}
+          ranges={results.bestRanges}
+          count={results.bestCount}
           total={results.respondents.length}
           timezone={poll.timezone}
         />

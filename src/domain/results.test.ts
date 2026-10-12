@@ -43,16 +43,36 @@ describe('computeResults', () => {
     ]);
   });
 
-  it('returns best slots with names of those who cannot join', () => {
+  it('returns all best ranges with names of those who cannot join', () => {
     const results = computeResults(
       slots,
-      [response(1, 'Olena', [slots[0]!]), response(2, 'Andrii', [slots[1]!])],
+      [response(1, 'Olena', [slots[0]!]), response(2, 'Andrii', [slots[1]!, slots[2]!])],
       60,
     );
 
     expect(results.perfectRanges).toEqual([]);
-    expect(results.best[0]?.slot).toBe(slots[0]);
-    expect(results.best[0]?.unavailable.map((p) => p.name)).toEqual(['Andrii']);
+    expect(results.bestCount).toBe(1);
+    expect(results.bestRanges.map((r) => [r.start, r.end])).toEqual([
+      ['2026-10-20T16:00:00.000Z', '2026-10-20T17:00:00.000Z'],
+      ['2026-10-20T17:00:00.000Z', '2026-10-20T19:00:00.000Z'],
+    ]);
+    expect(results.bestRanges[0]?.unavailable.map((p) => p.name)).toEqual(['Andrii']);
+    expect(results.bestRanges[1]?.unavailable.map((p) => p.name)).toEqual(['Olena']);
+  });
+
+  it('keeps only slots with the highest availability', () => {
+    const results = computeResults(
+      slots,
+      [
+        response(1, 'Olena', slots),
+        response(2, 'Andrii', [slots[2]!]),
+        response(3, 'Marta', [slots[0]!]),
+      ],
+      60,
+    );
+
+    expect(results.bestCount).toBe(2);
+    expect(results.bestRanges).toHaveLength(2);
   });
 
   it('has no perfect ranges without respondents', () => {

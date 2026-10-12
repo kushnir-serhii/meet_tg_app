@@ -3,12 +3,20 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import type { PollDetails } from '@/domain/types';
+import { ApiError } from '@/lib/api/client';
 import { pollsApi } from '@/lib/api/polls';
 
 type State =
   | { status: 'loading' }
   | { status: 'error'; error: Error }
+  | { status: 'notFound' }
+  | { status: 'deleted' }
   | { status: 'ready'; data: PollDetails };
+
+const toErrorState = (error: unknown): State => {
+  if (error instanceof ApiError && error.status === 404) return { status: 'notFound' };
+  return { status: 'error', error: error instanceof Error ? error : new Error(String(error)) };
+};
 
 export const usePollDetails = (pollId: string) => {
   const [state, setState] = useState<State>({ status: 'loading' });
@@ -24,10 +32,7 @@ export const usePollDetails = (pollId: string) => {
       })
       .catch((error: unknown) => {
         if (controller.signal.aborted) return;
-        setState({
-          status: 'error',
-          error: error instanceof Error ? error : new Error(String(error)),
-        });
+        setState(toErrorState(error));
       });
 
     return () => {
@@ -45,5 +50,9 @@ export const usePollDetails = (pollId: string) => {
     setState({ status: 'ready', data });
   }, []);
 
-  return { state, reload, update };
+  const markDeleted = useCallback(() => {
+    setState({ status: 'deleted' });
+  }, []);
+
+  return { state, reload, update, markDeleted };
 };
