@@ -1,18 +1,17 @@
 import type { InlineKeyboardMarkup } from 'grammy/types';
 
-import type { Poll, PollResults, SlotSummary } from '@/domain/types';
+import type { Poll, PollResults, RangeSummary, SlotRange } from '@/domain/types';
 import { copy } from '@/shared/copy';
-import { formatNames, formatRange, formatSlot } from '@/shared/format';
+import { formatNames, formatRange } from '@/shared/format';
+import { escapeHtml } from '@/shared/html';
 
-const MAX_RANGES = 3;
+const MAX_PERFECT = 8;
+const MAX_BEST = 5;
 
 export type PollMessage = {
   text: string;
   replyMarkup: InlineKeyboardMarkup;
 };
-
-const escapeHtml = (value: string): string =>
-  value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 const renderRespondents = (poll: Poll, results: PollResults): string => {
   const { respondents } = results;
@@ -24,24 +23,39 @@ const renderRespondents = (poll: Poll, results: PollResults): string => {
   );
 };
 
-const renderBestSlot = (poll: Poll, best: SlotSummary, total: number): string => {
-  const line = `• ${formatSlot(best.slot, poll.timezone)} — ${best.available.length}/${total}`;
-  if (best.unavailable.length === 0) return line;
-  return `${line} (${copy.bot.cannot}: ${escapeHtml(formatNames(best.unavailable))})`;
+/** Renders up to `limit` items, then "…і ще N". */
+const limitLines = <T>(items: T[], limit: number, render: (item: T) => string): string[] => {
+  const lines = items.slice(0, limit).map(render);
+  return items.length > limit ? [...lines, copy.bot.more(items.length - limit)] : lines;
+};
+
+const renderRange = (range: SlotRange, poll: Poll): string =>
+  `• ${formatRange(range, poll.timezone)}`;
+
+const renderBestRange = (range: RangeSummary, poll: Poll): string => {
+  const line = renderRange(range, poll);
+  if (range.unavailable.length === 0) return line;
+  return `${line} (${copy.bot.cannot}: ${escapeHtml(formatNames(range.unavailable))})`;
 };
 
 const renderSummary = (poll: Poll, results: PollResults): string[] => {
-  if (results.respondents.length === 0) return [];
+  const total = results.respondents.length;
+  if (total === 0) return [];
 
   if (results.perfectRanges.length > 0) {
-    const ranges = results.perfectRanges
-      .slice(0, MAX_RANGES)
-      .map((range) => `• ${formatRange(range, poll.timezone)}`);
-    return [copy.bot.perfect, ...ranges];
+    return [
+      '',
+      copy.bot.perfect(total),
+      ...limitLines(results.perfectRanges, MAX_PERFECT, (r) => renderRange(r, poll)),
+    ];
   }
 
-  const total = results.respondents.length;
-  return [copy.bot.best, ...results.best.map((b) => renderBestSlot(poll, b, total))];
+  return [
+    '',
+    copy.bot.noCommon,
+    copy.bot.best(results.bestCount, total),
+    ...limitLines(results.bestRanges, MAX_BEST, (r) => renderBestRange(r, poll)),
+  ];
 };
 
 export const renderPollMessage = (

@@ -43,6 +43,7 @@ export type WebApp = {
   MainButton: BottomButton;
   BackButton: BackButton;
   HapticFeedback: HapticFeedback;
+  showConfirm: (message: string, callback: (confirmed: boolean) => void) => void;
 };
 
 declare global {

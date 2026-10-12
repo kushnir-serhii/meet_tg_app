@@ -5,6 +5,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { buildGrid } from '@/domain/grid';
 import { getSlotSummary } from '@/domain/results';
 import type { Poll, PollResults } from '@/domain/types';
+import { formatSlot } from '@/shared/format';
 
 import { HeatCell } from '../grid/HeatCell';
 import { SlotGrid } from '../grid/SlotGrid';
@@ -45,7 +46,12 @@ export const Heatmap = ({ poll, results }: HeatmapProps) => {
     <Section>
       <SlotGrid grid={grid} renderCell={renderCell} />
       {activeSummary && (
-        <SlotDetails summary={activeSummary} total={total} timezone={poll.timezone} />
+        <SlotDetails
+          label={formatSlot(activeSummary.slot, poll.timezone)}
+          available={activeSummary.available}
+          unavailable={activeSummary.unavailable}
+          total={total}
+        />
       )}
     </Section>
   );

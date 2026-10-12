@@ -7,7 +7,8 @@ import { generateSlots, sanitizeSlots } from '@/domain/slots';
 import type { Participant, Poll, PollDetails, PollResults } from '@/domain/types';
 import type { CreatePollInput } from '@/domain/validation';
 
-import { notFound } from '../http/errors';
+import { forbidden, notFound } from '../http/errors';
+import { type PollMessage, pollMessagesRepository } from '../repositories/pollMessagesRepository';
 import { pollsRepository } from '../repositories/pollsRepository';
 import { responsesRepository } from '../repositories/responsesRepository';
 
@@ -46,6 +47,7 @@ export const getPollDetails = async (pollId: string, userId: number): Promise<Po
     poll,
     results: computeResults(generateSlots(poll), responses, poll.slotMinutes),
     myResponse: responses.find((r) => r.userId === userId) ?? null,
+    canManage: poll.creatorId === userId,
   };
 };
 
@@ -57,4 +59,20 @@ export const saveResponse = async (
   const poll = await getPollOrThrow(pollId);
   await responsesRepository.upsert(poll.id, participant, sanitizeSlots(slots, generateSlots(poll)));
   return getPollDetails(poll.id, participant.userId);
+};
+
+/**
+ * Deletes the poll with all responses (organizer only).
+ * Returns the chat messages it was posted to, so they can be updated.
+ */
+export const deletePoll = async (
+  pollId: string,
+  userId: number,
+): Promise<{ poll: Poll; messages: PollMessage[] }> => {
+  const poll = await getPollOrThrow(pollId);
+  if (poll.creatorId !== userId) throw forbidden('Only the organizer can delete the poll');
+
+  const messages = await pollMessagesRepository.findByPoll(poll.id);
+  await pollsRepository.deleteById(poll.id);
+  return { poll, messages };
 };

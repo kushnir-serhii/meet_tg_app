@@ -41,12 +41,20 @@ export type SlotRange = {
   end: string;
 };
 
+/** Continuous time range with the same set of available people. */
+export type RangeSummary = SlotRange & {
+  available: Participant[];
+  unavailable: Participant[];
+};
+
 export type PollResults = {
   respondents: Participant[];
-  /** Ranges where every respondent is free. */
+  /** All ranges where every respondent is free. */
   perfectRanges: SlotRange[];
-  /** Top slots when there is no perfect match (or as extra info). */
-  best: SlotSummary[];
+  /** All ranges with the highest availability (used when nothing fits everyone). */
+  bestRanges: RangeSummary[];
+  /** How many people are free in `bestRanges`. */
+  bestCount: number;
   /** User ids available per slot (only slots with at least one person). */
   availability: Record<string, number[]>;
 };
@@ -55,4 +63,6 @@ export type PollDetails = {
   poll: Poll;
   results: PollResults;
   myResponse: PollResponse | null;
+  /** True for the organizer (can delete the poll). */
+  canManage: boolean;
 };

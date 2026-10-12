@@ -1,7 +1,5 @@
-import { mergeSlotsIntoRanges } from './ranges';
+import { mergeSlotsIntoRanges, mergeSummariesIntoRanges } from './ranges';
 import type { Participant, PollResponse, PollResults, SlotSummary } from './types';
-
-const BEST_LIMIT = 3;
 
 const toParticipant = ({ userId, name, username }: PollResponse): Participant => ({
   userId,
@@ -20,10 +18,6 @@ const summarizeSlot = (slot: string, responses: PollResponse[]): SlotSummary => 
   return { slot, available, unavailable };
 };
 
-/** Higher availability first; earlier slot wins a tie. */
-const byAvailability = (a: SlotSummary, b: SlotSummary): number =>
-  b.available.length - a.available.length || a.slot.localeCompare(b.slot);
-
 export const computeResults = (
   slots: string[],
   responses: PollResponse[],
@@ -41,15 +35,14 @@ export const computeResults = (
       ? summaries.filter((s) => s.unavailable.length === 0).map((s) => s.slot)
       : [];
 
-  const best = summaries
-    .filter((s) => s.available.length > 0)
-    .sort(byAvailability)
-    .slice(0, BEST_LIMIT);
+  const bestCount = Math.max(0, ...summaries.map((s) => s.available.length));
+  const bestSlots = bestCount > 0 ? summaries.filter((s) => s.available.length === bestCount) : [];
 
   return {
     respondents: responses.map(toParticipant),
     perfectRanges: mergeSlotsIntoRanges(perfectSlots, slotMinutes),
-    best,
+    bestRanges: mergeSummariesIntoRanges(bestSlots, slotMinutes),
+    bestCount,
     availability,
   };
 };

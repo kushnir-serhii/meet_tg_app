@@ -56,7 +56,8 @@ scripts/               set-webhook
 
 ### 2. Supabase
 
-New project → SQL Editor → run `supabase/migrations/0001_init.sql`.
+New project → SQL Editor → run `supabase/migrations/0001_init.sql`, then `0002_cleanup.sql`
+(daily pg_cron job: deletes polls 7 days after their last date or 60 days after creation).
 Only `SUPABASE_URL` and `service_role` key are needed (all access goes through the API; RLS is on with no policies).
 
 ### 3. Env

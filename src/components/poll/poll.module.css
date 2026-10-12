@@ -16,3 +16,9 @@
   font-weight: 700;
   word-break: break-word;
 }
+
+.danger {
+  color: var(--destructive);
+  background: var(--section-bg);
+  margin-top: 8px;
+}

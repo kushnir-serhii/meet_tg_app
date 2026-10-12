@@ -6,9 +6,10 @@ import { usePollDetails } from '@/hooks/usePollDetails';
 import { copy } from '@/shared/copy';
 
 import { ResultsView } from '../results/ResultsView';
-import { ErrorState, Loading } from '../ui/StateViews';
+import { ErrorState, Loading, Notice } from '../ui/StateViews';
 import { Tabs } from '../ui/Tabs';
 import { AvailabilityEditor } from './AvailabilityEditor';
+import { DeletePollButton } from './DeletePollButton';
 import styles from './poll.module.css';
 import { PollHeader } from './PollHeader';
 
@@ -26,13 +27,15 @@ type PollScreenProps = {
 };
 
 export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) => {
-  const { state, reload, update } = usePollDetails(pollId);
+  const { state, reload, update, markDeleted } = usePollDetails(pollId);
   const [tab, setTab] = useState<Tab>('mine');
 
   if (state.status === 'loading') return <Loading />;
   if (state.status === 'error') return <ErrorState onRetry={reload} />;
+  if (state.status === 'notFound') return <Notice message={copy.poll.notFound} />;
+  if (state.status === 'deleted') return <Notice message={copy.poll.deleted} />;
 
-  const { poll, results, myResponse } = state.data;
+  const { poll, results, myResponse, canManage } = state.data;
 
   return (
     <div className={styles.stack}>
@@ -48,6 +51,7 @@ export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) 
       ) : (
         <ResultsView poll={poll} results={results} />
       )}
+      {canManage && <DeletePollButton pollId={poll.id} onDeleted={markDeleted} />}
     </div>
   );
 };
