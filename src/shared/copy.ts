@@ -1,0 +1,63 @@
+/** All user-facing strings in one place (ready for i18n later). */
+export const copy = {
+  app: {
+    loading: 'Завантаження…',
+    openInTelegram: 'Відкрийте застосунок у Telegram',
+    genericError: 'Щось пішло не так. Спробуйте ще раз.',
+    retry: 'Спробувати ще',
+  },
+  create: {
+    heading: 'Нова зустріч',
+    title: 'Назва',
+    titlePlaceholder: 'Наприклад: Зідзвон команди',
+    dateFrom: 'З дати',
+    dateTo: 'По дату',
+    hourFrom: 'З години',
+    hourTo: 'До години',
+    slot: 'Крок',
+    slot30: '30 хв',
+    slot60: '1 год',
+    expected: 'Скільки людей очікуєте (необовʼязково)',
+    submit: 'Створити',
+    creating: 'Створюю…',
+  },
+  share: {
+    heading: 'Зустріч створено 🎉',
+    hint: 'Надішліть її в чат — учасники позначать свій час прямо в Telegram.',
+    shareButton: 'Надіслати в чат',
+    fillMine: 'Позначити свій час',
+  },
+  poll: {
+    tabMine: 'Мій час',
+    tabResults: 'Результати',
+    hint: 'Торкніться або проведіть по клітинках, коли ви вільні.',
+    save: 'Зберегти',
+    saving: 'Зберігаю…',
+    saved: 'Збережено ✓',
+    timezone: (tz: string) => `Час указано за ${tz}`,
+    timezoneMismatch: (tz: string) => `Увага: ваш часовий пояс ${tz}`,
+  },
+  results: {
+    respondents: (n: number, expected: number | null) =>
+      expected ? `Відповіли: ${n}/${expected}` : `Відповіли: ${n}`,
+    noRespondents: 'Поки ніхто не відповів.',
+    perfect: '✅ Зручно всім',
+    best: '🏆 Найкращі варіанти',
+    noMatch: 'Немає часу, зручного всім.',
+    cannot: 'Не можуть',
+    of: (a: number, b: number) => `${a}/${b}`,
+  },
+  bot: {
+    start: 'Привіт! Я допоможу знайти час для зустрічі, зручний усім.',
+    createButton: '➕ Створити зустріч',
+    inlineCreate: '➕ Створити нову зустріч',
+    markButton: '🗓 Позначити свій час',
+    respondents: (names: string, n: number, expected: number | null) =>
+      `👥 Відповіли (${expected ? `${n}/${expected}` : n}): ${names}`,
+    nobody: '👥 Поки ніхто не відповів',
+    perfect: '✅ Зручно всім:',
+    best: '🏆 Найкраще:',
+    cannot: 'не може',
+    timezone: (tz: string) => `🕒 ${tz}`,
+  },
+} as const;

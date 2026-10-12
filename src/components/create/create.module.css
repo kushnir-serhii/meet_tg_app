@@ -1,0 +1,11 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.heading {
+  font-size: 22px;
+  font-weight: 700;
+  padding: 4px 4px 0;
+}
