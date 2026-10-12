@@ -6,6 +6,7 @@ import { useI18n } from '@/hooks/useI18n';
 import { usePollDetails } from '@/hooks/usePollDetails';
 
 import { ResultsView } from '../results/ResultsView';
+import { SupportSection } from '../support/SupportSection';
 import { ErrorState, Loading, Notice } from '../ui/StateViews';
 import { Tabs } from '../ui/Tabs';
 import { AvailabilityEditor } from './AvailabilityEditor';
@@ -55,6 +56,7 @@ export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) 
       ) : (
         <ResultsView poll={poll} results={results} />
       )}
+      <SupportSection />
       {canManage && <DeletePollButton pollId={poll.id} onDeleted={markDeleted} />}
     </div>
   );

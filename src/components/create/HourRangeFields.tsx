@@ -1,4 +1,4 @@
-import type { SlotMinutes } from '@/domain/types';
+import { SLOT_MINUTES, type SlotMinutes } from '@/domain/types';
 import type { CreatePollFormValues } from '@/hooks/useCreatePollForm';
 import { useI18n } from '@/hooks/useI18n';
 import { formatMinuteOfDay } from '@/shared/format';
@@ -64,8 +64,11 @@ export const HourRangeFields = ({ values, setField }: HourRangeFieldsProps) => {
               setField('slotMinutes', Number(e.target.value) as SlotMinutes);
             }}
           >
-            <option value={60}>{t.create.slot60}</option>
-            <option value={30}>{t.create.slot30}</option>
+            {SLOT_MINUTES.map((minutes) => (
+              <option key={minutes} value={minutes}>
+                {t.create.slotOption(minutes)}
+              </option>
+            ))}
           </select>
         )}
       </Field>

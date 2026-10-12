@@ -26,7 +26,7 @@ const call = async (method: string, body: Record<string, unknown>): Promise<void
 await call('setWebhook', {
   url: `${appUrl}/api/bot`,
   secret_token: secret,
-  allowed_updates: ['message', 'inline_query', 'chosen_inline_result'],
+  allowed_updates: ['message', 'inline_query', 'chosen_inline_result', 'pre_checkout_query'],
   drop_pending_updates: true,
 });
 
@@ -35,6 +35,7 @@ const profiles = [
   {
     language_code: undefined,
     command: 'Create a meeting',
+    paySupport: 'Payment support',
     description:
       'Find a meeting time that works for everyone. Mark your free hours, and I show when they overlap.',
     short: 'Find a meeting time that works for everyone.',
@@ -42,15 +43,19 @@ const profiles = [
   {
     language_code: 'uk',
     command: 'Створити зустріч',
+    paySupport: 'Підтримка з оплатою',
     description:
       'Знайдіть час для зустрічі, зручний усім. Кожен позначає вільні години — я покажу, коли вони збігаються.',
     short: 'Знайдіть час для зустрічі, зручний усім.',
   },
 ];
 
-for (const { language_code, command, description, short } of profiles) {
+for (const { language_code, command, paySupport, description, short } of profiles) {
   await call('setMyCommands', {
-    commands: [{ command: 'start', description: command }],
+    commands: [
+      { command: 'start', description: command },
+      { command: 'paysupport', description: paySupport },
+    ],
     language_code,
   });
   await call('setMyDescription', { description, language_code });

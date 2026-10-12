@@ -5,6 +5,7 @@ import { Bot } from 'grammy';
 import { getEnv } from '../env';
 import { registerChosenInlineResult } from './handlers/chosenInlineResult';
 import { registerInlineQuery } from './handlers/inlineQuery';
+import { registerPayments } from './handlers/payments';
 import { registerStart } from './handlers/start';
 
 let bot: Bot | null = null;
@@ -15,6 +16,7 @@ const createBot = (): Bot => {
   registerStart(instance);
   registerInlineQuery(instance);
   registerChosenInlineResult(instance);
+  registerPayments(instance);
 
   instance.catch(({ error }) => {
     console.error('Bot error', error);

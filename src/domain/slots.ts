@@ -6,14 +6,14 @@ type SlotConfig = Pick<Poll, 'dates' | 'hourFrom' | 'hourTo' | 'slotMinutes' | '
 
 const pad = (value: number): string => String(value).padStart(2, '0');
 
-/** Minutes from midnight for each slot of a day, e.g. [540, 600, ...]. */
+/** Minutes from midnight for each slot that fully fits the day range, e.g. [540, 600, ...]. */
 export const getDayMinuteOffsets = ({
   hourFrom,
   hourTo,
   slotMinutes,
 }: Pick<SlotConfig, 'hourFrom' | 'hourTo' | 'slotMinutes'>): number[] => {
   const offsets: number[] = [];
-  for (let minute = hourFrom * 60; minute < hourTo * 60; minute += slotMinutes) {
+  for (let minute = hourFrom * 60; minute + slotMinutes <= hourTo * 60; minute += slotMinutes) {
     offsets.push(minute);
   }
   return offsets;
@@ -41,4 +41,16 @@ export const sanitizeSlots = (slots: string[], allowed: readonly string[]): stri
   const allowedSet = new Set(allowed);
   const picked = new Set(slots.map(normalizeSlotId).filter((slot) => allowedSet.has(slot)));
   return allowed.filter((slot) => picked.has(slot));
+};
+
+/** Keeps the hour range at least one slot long (e.g. 4 h step needs ≥ 4 h). */
+export const fitHourRange = (
+  hourFrom: number,
+  hourTo: number,
+  slotMinutes: number,
+): { hourFrom: number; hourTo: number } => {
+  const minHours = Math.ceil(slotMinutes / 60);
+  if (hourTo - hourFrom >= minHours) return { hourFrom, hourTo };
+  const to = Math.min(24, hourFrom + minHours);
+  return { hourFrom: to - minHours, hourTo: to };
 };

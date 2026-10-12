@@ -78,6 +78,23 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['responses']['Insert']>;
         Relationships: [];
       };
+      tips: {
+        Row: {
+          id: number;
+          user_id: number;
+          amount: number;
+          telegram_payment_charge_id: string;
+          created_at: string;
+        };
+        Insert: {
+          user_id: number;
+          amount: number;
+          telegram_payment_charge_id: string;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['tips']['Insert']>;
+        Relationships: [];
+      };
     };
     Views: { [_ in never]: never };
     Functions: { [_ in never]: never };

@@ -1,6 +1,9 @@
 import type { Locale } from '@/i18n/types';
 
-export type SlotMinutes = 30 | 60;
+/** Allowed slot sizes, in minutes. */
+export const SLOT_MINUTES = [30, 60, 120, 180, 240] as const;
+
+export type SlotMinutes = (typeof SLOT_MINUTES)[number];
 
 export type Poll = {
   id: string;

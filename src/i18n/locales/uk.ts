@@ -19,8 +19,7 @@ export const uk: Messages = {
     hourFrom: 'З години',
     hourTo: 'До години',
     slot: 'Крок',
-    slot30: '30 хв',
-    slot60: '1 год',
+    slotOption: (minutes) => (minutes < 60 ? `${minutes} хв` : `${minutes / 60} год`),
     expected: 'Скільки людей очікуєте (необовʼязково)',
     submit: 'Створити',
     creating: 'Створюю…',
@@ -55,6 +54,12 @@ export const uk: Messages = {
     cannot: 'Не можуть',
     of: (a, b) => `${a}/${b}`,
   },
+  support: {
+    title: 'Подобається застосунок? Підтримайте зірками',
+    amount: (stars) => `⭐ ${stars}`,
+    thanks: 'Дякуємо за підтримку! 💙',
+    error: 'Оплата не вдалася. Спробуйте ще раз.',
+  },
   bot: {
     start: 'Привіт! Я допоможу знайти час для зустрічі, зручний усім.',
     createButton: '➕ Створити зустріч',
@@ -70,5 +75,10 @@ export const uk: Messages = {
     cannot: 'не може',
     timezone: (tz) => `🕒 ${tz}`,
     deleted: (title) => `🗑 Зустріч «${title}» видалено організатором`,
+    tipTitle: 'Підтримати Pik To Meet',
+    tipDescription: (stars) => `Чайові ${stars} ⭐ на розвиток застосунку`,
+    tipThanks: (stars) => `Дякуємо за ${stars} ⭐! 💙`,
+    paySupport:
+      'Чайові добровільні й не дають додаткових функцій. З питаннями щодо оплати чи повернення пишіть розробнику в цей чат.',
   },
 };
