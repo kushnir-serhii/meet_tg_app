@@ -4,6 +4,7 @@ import { addDays, format } from 'date-fns';
 import { useCallback, useMemo, useState } from 'react';
 
 import { datesInRange } from '@/domain/dates';
+import { fitHourRange } from '@/domain/slots';
 import type { SlotMinutes } from '@/domain/types';
 import { type CreatePollInput, createPollSchema } from '@/domain/validation';
 
@@ -45,7 +46,10 @@ export const useCreatePollForm = () => {
 
   const setField = useCallback(
     <K extends keyof CreatePollFormValues>(key: K, value: CreatePollFormValues[K]) => {
-      setValues((prev) => ({ ...prev, [key]: value }));
+      setValues((prev) => {
+        const next = { ...prev, [key]: value };
+        return { ...next, ...fitHourRange(next.hourFrom, next.hourTo, next.slotMinutes) };
+      });
     },
     [],
   );

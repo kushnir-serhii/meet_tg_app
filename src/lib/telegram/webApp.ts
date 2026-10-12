@@ -24,6 +24,8 @@ type HapticFeedback = {
   notificationOccurred: (type: 'error' | 'success' | 'warning') => void;
 };
 
+export type InvoiceStatus = 'paid' | 'cancelled' | 'failed' | 'pending';
+
 export type ChatType = 'users' | 'bots' | 'groups' | 'channels';
 
 export type WebApp = {
@@ -50,6 +52,7 @@ export type WebApp = {
   BackButton: BackButton;
   HapticFeedback: HapticFeedback;
   showConfirm: (message: string, callback: (confirmed: boolean) => void) => void;
+  openInvoice: (url: string, callback: (status: InvoiceStatus) => void) => void;
 };
 
 declare global {

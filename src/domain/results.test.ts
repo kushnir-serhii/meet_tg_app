@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { computeResults } from './results';
-import { generateSlots } from './slots';
+import { fitHourRange, generateSlots } from './slots';
 import type { PollResponse } from './types';
 
 const slots = generateSlots({
@@ -77,5 +77,23 @@ describe('computeResults', () => {
 
   it('has no perfect ranges without respondents', () => {
     expect(computeResults(slots, [], 60).perfectRanges).toEqual([]);
+  });
+});
+
+describe('long slots', () => {
+  it('only keeps slots that fully fit the hour range', () => {
+    const fourHours = generateSlots({
+      dates: ['2026-10-20'],
+      hourFrom: 9,
+      hourTo: 20,
+      slotMinutes: 240,
+      timezone: 'UTC',
+    });
+    expect(fourHours).toEqual(['2026-10-20T09:00:00.000Z', '2026-10-20T13:00:00.000Z']);
+  });
+
+  it('stretches the hour range to fit one slot', () => {
+    expect(fitHourRange(22, 23, 180)).toEqual({ hourFrom: 21, hourTo: 24 });
+    expect(fitHourRange(9, 21, 120)).toEqual({ hourFrom: 9, hourTo: 21 });
   });
 });

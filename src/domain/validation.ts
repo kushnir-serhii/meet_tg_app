@@ -1,6 +1,11 @@
 import { z } from 'zod';
 
 import { isValidTimezone, MAX_POLL_DAYS } from './dates';
+import { isTipAmount } from './tips';
+import { SLOT_MINUTES, type SlotMinutes } from './types';
+
+const isSlotMinutes = (value: number): value is SlotMinutes =>
+  (SLOT_MINUTES as readonly number[]).includes(value);
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Expected YYYY-MM-DD');
 
@@ -14,12 +19,12 @@ export const createPollSchema = z
       .transform((dates) => [...new Set(dates)].sort()),
     hourFrom: z.number().int().min(0).max(23),
     hourTo: z.number().int().min(1).max(24),
-    slotMinutes: z.union([z.literal(30), z.literal(60)]),
+    slotMinutes: z.number().refine(isSlotMinutes, 'Unsupported slot size'),
     timezone: z.string().refine(isValidTimezone, 'Unknown timezone'),
     expectedCount: z.number().int().min(2).max(200).nullable().default(null),
   })
-  .refine((data) => data.hourTo > data.hourFrom, {
-    message: 'hourTo must be greater than hourFrom',
+  .refine((data) => (data.hourTo - data.hourFrom) * 60 >= data.slotMinutes, {
+    message: 'The hour range must fit at least one slot',
     path: ['hourTo'],
   });
 
@@ -30,3 +35,7 @@ export const saveResponseSchema = z.object({
 });
 
 export type SaveResponseInput = z.infer<typeof saveResponseSchema>;
+
+export const createTipSchema = z.object({
+  amount: z.number().int().refine(isTipAmount, 'Unsupported tip amount'),
+});

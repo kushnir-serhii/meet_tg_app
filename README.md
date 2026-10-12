@@ -19,6 +19,13 @@ English and Ukrainian (`src/i18n/locales`). The Mini App follows the user's Tele
 chat messages use the organizer's language (stored in `polls.locale`). To add a language, add a
 file next to `en.ts`, register it in `src/i18n/index.ts` and in the `locale` check constraint.
 
+## Tips (Telegram Stars)
+
+The Mini App shows optional ⭐ 50 / 100 / 250 tips. The server creates an invoice (`createInvoiceLink`,
+currency `XTR`), the app opens it with `openInvoice`, the bot approves `pre_checkout_query` and stores
+`successful_payment` in `tips`. `/paysupport` is required by Telegram for Stars payments.
+Refunds: Bot API `refundStarPayment(user_id, telegram_payment_charge_id)`.
+
 ## Project structure
 
 ```
@@ -62,7 +69,7 @@ scripts/               set-webhook
 
 ### 2. Supabase
 
-New project → SQL Editor → run the files in `supabase/migrations/` in order (`0001` → `0003`)
+New project → SQL Editor → run the files in `supabase/migrations/` in order (`0001` → `0005`)
 (daily pg_cron job: deletes polls 7 days after their last date or 60 days after creation).
 Only `SUPABASE_URL` and `service_role` key are needed (all access goes through the API; RLS is on with no policies).
 

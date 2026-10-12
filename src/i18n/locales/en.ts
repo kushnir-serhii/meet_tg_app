@@ -18,8 +18,8 @@ export const en = {
     hourFrom: 'From hour',
     hourTo: 'To hour',
     slot: 'Step',
-    slot30: '30 min',
-    slot60: '1 hour',
+    slotOption: (minutes: number) =>
+      minutes < 60 ? `${minutes} min` : `${minutes / 60} hour${minutes === 60 ? '' : 's'}`,
     expected: 'Expected participants (optional)',
     submit: 'Create',
     creating: 'Creating…',
@@ -55,6 +55,12 @@ export const en = {
     cannot: "Can't join",
     of: (a: number, b: number) => `${a}/${b}`,
   },
+  support: {
+    title: 'Like the app? Support it with Stars',
+    amount: (stars: number) => `⭐ ${stars}`,
+    thanks: 'Thank you for your support! 💙',
+    error: 'Payment failed. Please try again.',
+  },
   bot: {
     start: 'Hi! I help find a meeting time that works for everyone.',
     createButton: '➕ Create meeting',
@@ -70,5 +76,10 @@ export const en = {
     cannot: "can't",
     timezone: (tz: string) => `🕒 ${tz}`,
     deleted: (title: string) => `🗑 Meeting “${title}” was deleted by the organizer`,
+    tipTitle: 'Support Pik To Meet',
+    tipDescription: (stars: number) => `A ${stars} ⭐ tip to support development`,
+    tipThanks: (stars: number) => `Thank you for the ${stars} ⭐ tip! 💙`,
+    paySupport:
+      'Tips are voluntary and give no extra features. For payment questions or a refund, write to the developer in this chat.',
   },
 };
