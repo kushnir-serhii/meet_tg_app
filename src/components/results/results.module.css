@@ -42,7 +42,6 @@
   display: flex;
   justify-content: space-between;
   font-weight: 600;
-  text-transform: capitalize;
 }
 
 .score {

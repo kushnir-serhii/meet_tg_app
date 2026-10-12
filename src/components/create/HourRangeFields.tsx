@@ -1,6 +1,6 @@
 import type { SlotMinutes } from '@/domain/types';
 import type { CreatePollFormValues } from '@/hooks/useCreatePollForm';
-import { copy } from '@/shared/copy';
+import { useI18n } from '@/hooks/useI18n';
 import { formatMinuteOfDay } from '@/shared/format';
 
 import { Field, FieldRow } from '../ui/Field';
@@ -21,50 +21,54 @@ const HourOptions = ({ from, to }: { from: number; to: number }) =>
     </option>
   ));
 
-export const HourRangeFields = ({ values, setField }: HourRangeFieldsProps) => (
-  <FieldRow>
-    <Field label={copy.create.hourFrom}>
-      {(id, className) => (
-        <select
-          id={id}
-          className={className}
-          value={values.hourFrom}
-          onChange={(e) => {
-            setField('hourFrom', Number(e.target.value));
-          }}
-        >
-          <HourOptions from={0} to={values.hourTo - 1} />
-        </select>
-      )}
-    </Field>
-    <Field label={copy.create.hourTo}>
-      {(id, className) => (
-        <select
-          id={id}
-          className={className}
-          value={values.hourTo}
-          onChange={(e) => {
-            setField('hourTo', Number(e.target.value));
-          }}
-        >
-          <HourOptions from={values.hourFrom + 1} to={24} />
-        </select>
-      )}
-    </Field>
-    <Field label={copy.create.slot}>
-      {(id, className) => (
-        <select
-          id={id}
-          className={className}
-          value={values.slotMinutes}
-          onChange={(e) => {
-            setField('slotMinutes', Number(e.target.value) as SlotMinutes);
-          }}
-        >
-          <option value={60}>{copy.create.slot60}</option>
-          <option value={30}>{copy.create.slot30}</option>
-        </select>
-      )}
-    </Field>
-  </FieldRow>
-);
+export const HourRangeFields = ({ values, setField }: HourRangeFieldsProps) => {
+  const { t } = useI18n();
+
+  return (
+    <FieldRow>
+      <Field label={t.create.hourFrom}>
+        {(id, className) => (
+          <select
+            id={id}
+            className={className}
+            value={values.hourFrom}
+            onChange={(e) => {
+              setField('hourFrom', Number(e.target.value));
+            }}
+          >
+            <HourOptions from={0} to={values.hourTo - 1} />
+          </select>
+        )}
+      </Field>
+      <Field label={t.create.hourTo}>
+        {(id, className) => (
+          <select
+            id={id}
+            className={className}
+            value={values.hourTo}
+            onChange={(e) => {
+              setField('hourTo', Number(e.target.value));
+            }}
+          >
+            <HourOptions from={values.hourFrom + 1} to={24} />
+          </select>
+        )}
+      </Field>
+      <Field label={t.create.slot}>
+        {(id, className) => (
+          <select
+            id={id}
+            className={className}
+            value={values.slotMinutes}
+            onChange={(e) => {
+              setField('slotMinutes', Number(e.target.value) as SlotMinutes);
+            }}
+          >
+            <option value={60}>{t.create.slot60}</option>
+            <option value={30}>{t.create.slot30}</option>
+          </select>
+        )}
+      </Field>
+    </FieldRow>
+  );
+};

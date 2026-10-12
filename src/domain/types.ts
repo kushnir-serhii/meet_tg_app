@@ -1,3 +1,5 @@
+import type { Locale } from '@/i18n/types';
+
 export type SlotMinutes = 30 | 60;
 
 export type Poll = {
@@ -14,6 +16,8 @@ export type Poll = {
   slotMinutes: SlotMinutes;
   timezone: string;
   expectedCount: number | null;
+  /** Organizer's language — used for chat messages. */
+  locale: Locale;
   createdAt: string;
 };
 

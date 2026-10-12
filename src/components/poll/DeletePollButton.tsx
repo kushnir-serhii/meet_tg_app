@@ -1,7 +1,7 @@
 'use client';
 
 import { useDeletePoll } from '@/hooks/useDeletePoll';
-import { copy } from '@/shared/copy';
+import { useI18n } from '@/hooks/useI18n';
 
 import { Button } from '../ui/Button';
 import { ErrorText } from '../ui/Section';
@@ -13,18 +13,19 @@ type DeletePollButtonProps = {
 };
 
 export const DeletePollButton = ({ pollId, onDeleted }: DeletePollButtonProps) => {
+  const { t } = useI18n();
   const { remove, isDeleting, error } = useDeletePoll(pollId, onDeleted);
 
   return (
     <>
-      {error && <ErrorText>{copy.app.genericError}</ErrorText>}
+      {error && <ErrorText>{t.app.genericError}</ErrorText>}
       <Button
         variant="secondary"
         className={styles.danger}
         disabled={isDeleting}
         onClick={() => void remove()}
       >
-        {isDeleting ? copy.poll.deleting : copy.poll.delete}
+        {isDeleting ? t.poll.deleting : t.poll.delete}
       </Button>
     </>
   );

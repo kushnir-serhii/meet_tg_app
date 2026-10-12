@@ -8,3 +8,6 @@ next-env.d.ts
 .vercel
 coverage
 .DS_Store
+
+# temp files from Claude sync
+_to_delete/

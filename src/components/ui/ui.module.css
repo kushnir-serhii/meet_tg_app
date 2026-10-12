@@ -139,3 +139,9 @@ select.input {
   background-size: 12px 8px;
   text-overflow: ellipsis;
 }
+
+.link {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}

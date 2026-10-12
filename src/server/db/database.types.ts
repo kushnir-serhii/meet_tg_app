@@ -17,6 +17,7 @@ export type Database = {
           slot_minutes: number;
           timezone: string;
           expected_count: number | null;
+          locale: string;
           created_at: string;
         };
         Insert: {
@@ -30,6 +31,7 @@ export type Database = {
           slot_minutes: number;
           timezone: string;
           expected_count?: number | null;
+          locale?: string;
           created_at?: string;
         };
         Update: Partial<Database['public']['Tables']['polls']['Insert']>;

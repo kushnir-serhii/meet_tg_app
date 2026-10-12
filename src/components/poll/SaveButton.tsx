@@ -1,6 +1,7 @@
 'use client';
 
-import { copy } from '@/shared/copy';
+import { useI18n } from '@/hooks/useI18n';
+import type { Messages } from '@/i18n';
 
 import { MainButton } from '../telegram/MainButton';
 import { Button } from '../ui/Button';
@@ -13,14 +14,15 @@ type SaveButtonProps = {
   onSave: () => void;
 };
 
-const labelFor = (status: SaveButtonProps['status'], isDirty: boolean): string => {
-  if (status === 'saving') return copy.poll.saving;
-  if (status === 'saved' && !isDirty) return copy.poll.saved;
-  return copy.poll.save;
+const labelFor = (t: Messages, status: SaveButtonProps['status'], isDirty: boolean): string => {
+  if (status === 'saving') return t.poll.saving;
+  if (status === 'saved' && !isDirty) return t.poll.saved;
+  return t.poll.save;
 };
 
 export const SaveButton = ({ native, status, isDirty, onSave }: SaveButtonProps) => {
-  const text = labelFor(status, isDirty);
+  const { t } = useI18n();
+  const text = labelFor(t, status, isDirty);
   const disabled = !isDirty || status === 'saving';
 
   if (native) {

@@ -6,6 +6,7 @@ import { computeResults } from '@/domain/results';
 import { generateSlots, sanitizeSlots } from '@/domain/slots';
 import type { Participant, Poll, PollDetails, PollResults } from '@/domain/types';
 import type { CreatePollInput } from '@/domain/validation';
+import type { Locale } from '@/i18n';
 
 import { forbidden, notFound } from '../http/errors';
 import { type PollMessage, pollMessagesRepository } from '../repositories/pollMessagesRepository';
@@ -14,7 +15,10 @@ import { responsesRepository } from '../repositories/responsesRepository';
 
 const POLL_ID_LENGTH = 10;
 
-export const createPoll = (input: CreatePollInput, creator: Participant): Promise<Poll> =>
+export const createPoll = (
+  input: CreatePollInput,
+  creator: Participant & { locale: Locale },
+): Promise<Poll> =>
   pollsRepository.insert({
     id: nanoid(POLL_ID_LENGTH),
     title: input.title,
@@ -26,6 +30,7 @@ export const createPoll = (input: CreatePollInput, creator: Participant): Promis
     slot_minutes: input.slotMinutes,
     timezone: input.timezone,
     expected_count: input.expectedCount,
+    locale: creator.locale,
   });
 
 export const getPollOrThrow = async (pollId: string): Promise<Poll> => {

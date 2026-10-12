@@ -5,8 +5,8 @@ import Script from 'next/script';
 import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Meet — спільний час',
-  description: 'Знайдіть час для зустрічі, зручний усім, прямо в Telegram.',
+  title: 'Pik To Meet',
+  description: 'Find a meeting time that works for everyone, right in Telegram.',
 };
 
 export const viewport: Viewport = {
@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 };
 
 const RootLayout = ({ children }: { children: ReactNode }) => (
-  <html lang="uk">
+  <html lang="en">
     <body>
       <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
       {children}

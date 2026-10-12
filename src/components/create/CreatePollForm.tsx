@@ -5,8 +5,8 @@ import { useCallback } from 'react';
 import type { Poll } from '@/domain/types';
 import { useCreatePoll } from '@/hooks/useCreatePoll';
 import { useCreatePollForm } from '@/hooks/useCreatePollForm';
+import { useI18n } from '@/hooks/useI18n';
 import { useMainButton } from '@/hooks/useMainButton';
-import { copy } from '@/shared/copy';
 
 import { ErrorText, Section } from '../ui/Section';
 import styles from './create.module.css';
@@ -20,6 +20,7 @@ type CreatePollFormProps = {
 };
 
 export const CreatePollForm = ({ onCreated }: CreatePollFormProps) => {
+  const { t } = useI18n();
   const { values, setField, input, minDate } = useCreatePollForm();
   const { create, isPending, error } = useCreatePoll(onCreated);
 
@@ -28,7 +29,7 @@ export const CreatePollForm = ({ onCreated }: CreatePollFormProps) => {
   }, [input, create]);
 
   useMainButton({
-    text: isPending ? copy.create.creating : copy.create.submit,
+    text: isPending ? t.create.creating : t.create.submit,
     onClick: submit,
     disabled: !input || isPending,
     loading: isPending,
@@ -36,7 +37,7 @@ export const CreatePollForm = ({ onCreated }: CreatePollFormProps) => {
 
   return (
     <div className={styles.stack}>
-      <h1 className={styles.heading}>{copy.create.heading}</h1>
+      <h1 className={styles.heading}>{t.create.heading}</h1>
       <Section>
         <TitleField
           value={values.title}
