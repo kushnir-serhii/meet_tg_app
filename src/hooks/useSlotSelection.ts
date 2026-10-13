@@ -26,7 +26,11 @@ export const useSlotSelection = (initial: readonly string[]) => {
     setSelected(next);
   }, []);
 
+  const clear = useCallback(() => {
+    setSelected((prev) => (prev.size === 0 ? prev : new Set()));
+  }, []);
+
   const isDirty = useMemo(() => !sameSet(saved, selected), [saved, selected]);
 
-  return { selected, setSlot, markSaved, isDirty };
+  return { selected, setSlot, markSaved, clear, isDirty };
 };
