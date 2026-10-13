@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { buildGrid } from '@/domain/grid';
 import type { Poll, PollDetails } from '@/domain/types';
@@ -34,8 +34,8 @@ export const AvailabilityEditor = ({
 }: AvailabilityEditorProps) => {
   const { t, locale } = useI18n();
   const grid = useMemo(() => buildGrid(poll, locale), [poll, locale]);
-  const { selected, setSlot, markSaved, clear, isDirty } = useSlotSelection(initialSlots);
-  const [erase, setErase] = useState(false);
+  const { selected, setSlot, markSaved, clear, undoClear, canUndoClear, isDirty } =
+    useSlotSelection(initialSlots);
   const haptics = useHaptics();
 
   const handleSaved = useCallback(
@@ -48,12 +48,7 @@ export const AvailabilityEditor = ({
   const { save, status } = useSaveAvailability(poll.id, handleSaved);
 
   const isSelected = useCallback((slot: string) => selected.has(slot), [selected]);
-  const dragHandlers = useDragSelect({
-    isSelected,
-    setSlot,
-    onChange: haptics.selection,
-    erase,
-  });
+  const dragHandlers = useDragSelect({ isSelected, setSlot, onChange: haptics.selection });
 
   const renderCell = useCallback(
     (slot: string) => <SelectCell key={slot} slot={slot} selected={selected.has(slot)} />,
@@ -64,12 +59,14 @@ export const AvailabilityEditor = ({
     <Section>
       <Hint>{t.poll.hint}</Hint>
       <EditorToolbar
-        erase={erase}
-        onEraseChange={setErase}
-        canClear={selected.size > 0}
+        count={selected.size}
+        canUndo={canUndoClear}
         onClear={() => {
           clear();
-          setErase(false);
+          haptics.selection();
+        }}
+        onUndo={() => {
+          undoClear();
           haptics.selection();
         }}
       />
