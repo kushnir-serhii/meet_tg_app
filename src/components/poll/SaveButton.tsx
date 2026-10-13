@@ -6,6 +6,7 @@ import type { Messages } from '@/i18n';
 
 import { MainButton } from '../telegram/MainButton';
 import { Button } from '../ui/Button';
+import styles from './poll.module.css';
 
 type Status = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -27,6 +28,11 @@ export const SaveButton = ({ native, status, isDirty, onSave }: SaveButtonProps)
   const { t } = useI18n();
   const webApp = useTelegram();
   const isDone = status === 'saved' && !isDirty;
+  // Nothing to save: keep the button fully visible, just ignore taps (no faded "disabled" look).
+  const inactive = !isDirty || status === 'saving';
+  const handleSave = () => {
+    if (!inactive) onSave();
+  };
 
   if (native) {
     // After saving, the bottom button turns into "Done — close" (the obvious next step).
@@ -43,15 +49,19 @@ export const SaveButton = ({ native, status, isDirty, onSave }: SaveButtonProps)
     return (
       <MainButton
         text={labelFor(t, status, isDirty)}
-        onClick={onSave}
-        disabled={!isDirty || status === 'saving'}
+        onClick={handleSave}
         loading={status === 'saving'}
       />
     );
   }
 
   return (
-    <Button variant="secondary" disabled={!isDirty || status === 'saving'} onClick={onSave}>
+    <Button
+      variant="secondary"
+      aria-disabled={inactive}
+      className={isDone ? styles.saveDone : undefined}
+      onClick={handleSave}
+    >
       {labelFor(t, status, isDirty)}
     </Button>
   );

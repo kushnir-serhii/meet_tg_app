@@ -30,9 +30,7 @@ export const SavedNotice = ({ beforeShare, onShowResults }: SavedNoticeProps) =>
           <li key={line}>{line}</li>
         ))}
       </ul>
-      <Button variant="secondary" onClick={onShowResults}>
-        {t.poll.showResults}
-      </Button>
+      <Button onClick={onShowResults}>{t.poll.showResults}</Button>
     </div>
   );
 };
