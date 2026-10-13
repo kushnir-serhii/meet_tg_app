@@ -89,12 +89,14 @@ export type Database = {
           amount: number;
           telegram_payment_charge_id: string;
           created_at: string;
+          refunded_at: string | null;
         };
         Insert: {
           user_id: number;
           amount: number;
           telegram_payment_charge_id: string;
           created_at?: string;
+          refunded_at?: string | null;
         };
         Update: Partial<Database['public']['Tables']['tips']['Insert']>;
         Relationships: [];

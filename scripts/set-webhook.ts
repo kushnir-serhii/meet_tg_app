@@ -2,17 +2,11 @@
  * Registers the Telegram webhook and bot commands.
  * Usage: npm run webhook:set   (reads .env.local)
  */
-export {};
+import { requiredEnv } from './lib/env';
 
-const required = (name: string): string => {
-  const value = process.env[name];
-  if (!value) throw new Error(`Missing env: ${name}`);
-  return value;
-};
-
-const token = required('TELEGRAM_BOT_TOKEN');
-const secret = required('TELEGRAM_WEBHOOK_SECRET');
-const appUrl = required('APP_URL').replace(/\/$/, '');
+const token = requiredEnv('TELEGRAM_BOT_TOKEN');
+const secret = requiredEnv('TELEGRAM_WEBHOOK_SECRET');
+const appUrl = requiredEnv('APP_URL').replace(/\/$/, '');
 
 const call = async (method: string, body: Record<string, unknown>): Promise<void> => {
   const response = await fetch(`https://api.telegram.org/bot${token}/${method}`, {
