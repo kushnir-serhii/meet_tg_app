@@ -48,7 +48,7 @@ export const en = {
       'Changed your plans? Open the meeting again from the chat and edit your time.',
     ] as string[],
     savedStepsBeforeShare: [
-      'Now send the meeting to a chat with the button below — the summary will appear there.',
+      'Now send the meeting to a chat.',
       'You can come back and edit your time at any moment.',
     ] as string[],
     showResults: 'See results',

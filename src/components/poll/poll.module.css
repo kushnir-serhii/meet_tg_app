@@ -78,3 +78,9 @@
   color: var(--destructive);
   background: color-mix(in srgb, var(--destructive) 10%, var(--section-bg));
 }
+
+/* Saved state: readable success label instead of a faded disabled button. */
+.saveDone {
+  color: var(--success-strong);
+  cursor: default;
+}
