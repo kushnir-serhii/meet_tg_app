@@ -7,6 +7,7 @@ import type { Poll } from '@/domain/types';
 import { getMessages } from '@/i18n';
 import { escapeHtml } from '@/shared/html';
 
+import { buildCalendarLinks } from '../calendar/pollCalendar';
 import type { PollMessage as StoredMessage } from '../repositories/pollMessagesRepository';
 import { pollMessagesRepository } from '../repositories/pollMessagesRepository';
 import { getPollOrThrow, getPollResults } from '../services/pollService';
@@ -51,7 +52,13 @@ export const syncPollMessages = async (pollId: string): Promise<void> => {
   ]);
   if (targets.length === 0) return;
 
-  const message = renderPollMessage(poll, await getPollResults(poll), buildMiniAppLink(poll.id));
+  const results = await getPollResults(poll);
+  const message = renderPollMessage(
+    poll,
+    results,
+    buildMiniAppLink(poll.id),
+    buildCalendarLinks(poll, results),
+  );
   await editAll(targets, message);
 };
 

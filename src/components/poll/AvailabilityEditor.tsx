@@ -14,12 +14,14 @@ import { SelectCell } from '../grid/SelectCell';
 import { SlotGrid } from '../grid/SlotGrid';
 import { ErrorText, Hint, Section } from '../ui/Section';
 import { SaveButton } from './SaveButton';
+import { SavedNotice } from './SavedNotice';
 
 type AvailabilityEditorProps = {
   poll: Poll;
   initialSlots: string[];
   useNativeButton: boolean;
   onSaved: (data: PollDetails) => void;
+  onShowResults: () => void;
 };
 
 export const AvailabilityEditor = ({
@@ -27,6 +29,7 @@ export const AvailabilityEditor = ({
   initialSlots,
   useNativeButton,
   onSaved,
+  onShowResults,
 }: AvailabilityEditorProps) => {
   const { t, locale } = useI18n();
   const grid = useMemo(() => buildGrid(poll, locale), [poll, locale]);
@@ -55,6 +58,9 @@ export const AvailabilityEditor = ({
       <Hint>{t.poll.hint}</Hint>
       <SlotGrid grid={grid} renderCell={renderCell} bodyProps={dragHandlers} />
       {status === 'error' && <ErrorText>{t.app.genericError}</ErrorText>}
+      {status === 'saved' && !isDirty && (
+        <SavedNotice beforeShare={!useNativeButton} onShowResults={onShowResults} />
+      )}
       <SaveButton
         native={useNativeButton}
         status={status}

@@ -26,13 +26,13 @@ export const formatSlot = (iso: string, timezone: string, locale: Locale): strin
 export const formatRange = ({ start, end }: SlotRange, timezone: string, locale: Locale): string =>
   `${formatSlot(start, timezone, locale)}–${formatTime(end, timezone)}`;
 
-/** Local `YYYY-MM-DD` → { weekday: "Mon", day: "20 Oct" } (two-line grid header). */
+/** Local `YYYY-MM-DD` → { weekday: "Mon", day: "20.10" } (compact two-line grid header). */
 export const formatGridDate = (date: string, locale: Locale): { weekday: string; day: string } => {
   const parsed = parseISO(date);
   const options = { locale: getDateLocale(locale) };
   return {
     weekday: format(parsed, WEEKDAY[locale], options),
-    day: format(parsed, 'd MMM', options),
+    day: format(parsed, 'dd.MM', options),
   };
 };
 

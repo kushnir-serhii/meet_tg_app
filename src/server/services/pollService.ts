@@ -2,13 +2,14 @@ import 'server-only';
 
 import { nanoid } from 'nanoid';
 
-import { computeResults } from '@/domain/results';
+import { computeResults, isRangeOfSlots } from '@/domain/results';
 import { generateSlots, sanitizeSlots } from '@/domain/slots';
-import type { Participant, Poll, PollDetails, PollResults } from '@/domain/types';
+import type { Participant, Poll, PollDetails, PollResults, SlotRange } from '@/domain/types';
 import type { CreatePollInput } from '@/domain/validation';
 import type { Locale } from '@/i18n';
 
-import { forbidden, notFound } from '../http/errors';
+import { buildCalendarLinks } from '../calendar/pollCalendar';
+import { badRequest, forbidden, notFound } from '../http/errors';
 import { type PollMessage, pollMessagesRepository } from '../repositories/pollMessagesRepository';
 import { pollsRepository } from '../repositories/pollsRepository';
 import { responsesRepository } from '../repositories/responsesRepository';
@@ -47,13 +48,38 @@ export const getPollResults = async (poll: Poll): Promise<PollResults> => {
 export const getPollDetails = async (pollId: string, userId: number): Promise<PollDetails> => {
   const poll = await getPollOrThrow(pollId);
   const responses = await responsesRepository.findByPoll(poll.id);
+  const results = computeResults(generateSlots(poll), responses, poll.slotMinutes);
 
   return {
     poll,
-    results: computeResults(generateSlots(poll), responses, poll.slotMinutes),
+    results,
     myResponse: responses.find((r) => r.userId === userId) ?? null,
     canManage: poll.creatorId === userId,
+    calendar: buildCalendarLinks(poll, results),
   };
+};
+
+/** Sets (or clears with `null`) the meeting time. Organizer only. */
+export const schedulePoll = async (
+  pollId: string,
+  userId: number,
+  range: SlotRange | null,
+): Promise<PollDetails> => {
+  const poll = await getPollOrThrow(pollId);
+  if (poll.creatorId !== userId) throw forbidden('Only the organizer can schedule the meeting');
+
+  const normalized = range
+    ? { start: new Date(range.start).toISOString(), end: new Date(range.end).toISOString() }
+    : null;
+  if (normalized && !isRangeOfSlots(normalized, generateSlots(poll), poll.slotMinutes)) {
+    throw badRequest('The time must be within the poll slots');
+  }
+
+  await pollsRepository.update(poll.id, {
+    scheduled_start: normalized?.start ?? null,
+    scheduled_end: normalized?.end ?? null,
+  });
+  return getPollDetails(poll.id, userId);
 };
 
 export const saveResponse = async (

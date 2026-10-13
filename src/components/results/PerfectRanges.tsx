@@ -1,27 +1,62 @@
-import type { SlotRange } from '@/domain/types';
-import { useI18n } from '@/hooks/useI18n';
-import { formatRange } from '@/shared/format';
+import { type CSSProperties, useMemo } from 'react';
 
-import { Section } from '../ui/Section';
+import { groupRangesByDay } from '@/domain/ranges';
+import type { Poll, SlotRange } from '@/domain/types';
+import { useI18n } from '@/hooks/useI18n';
+import { formatGridDate, formatTime } from '@/shared/format';
+import { cx } from '@/utils/cx';
+
+import { Hint, Section } from '../ui/Section';
 import styles from './results.module.css';
 
 type PerfectRangesProps = {
+  poll: Poll;
   ranges: SlotRange[];
-  timezone: string;
+  /** Organizer can tap a range to schedule the meeting. */
+  onPick?: (range: SlotRange) => void;
 };
 
-export const PerfectRanges = ({ ranges, timezone }: PerfectRangesProps) => {
+/** Days as columns (like the grid), matching time ranges stacked under each day. */
+export const PerfectRanges = ({ poll, ranges, onPick }: PerfectRangesProps) => {
   const { t, locale } = useI18n();
+  const days = useMemo(
+    () => groupRangesByDay(ranges, poll.dates, poll.timezone),
+    [ranges, poll.dates, poll.timezone],
+  );
 
   return (
     <Section title={t.results.perfect}>
-      <ul className={styles.list}>
-        {ranges.map((range) => (
-          <li key={range.start} className={styles.item}>
-            {formatRange(range, timezone, locale)}
-          </li>
-        ))}
-      </ul>
+      {onPick && <Hint>{t.schedule.pickHint}</Hint>}
+      <div className={styles.dayScroll}>
+        <ul className={styles.dayColumns} style={{ '--days': days.length } as CSSProperties}>
+          {days.map(({ date, ranges: dayRanges }) => {
+            const { weekday, day } = formatGridDate(date, locale);
+            return (
+              <li key={date} className={styles.dayColumn}>
+                <div className={styles.dayHead}>
+                  <span className={styles.dayWeekday}>{weekday}</span>
+                  <span>{day}</span>
+                </div>
+                {dayRanges.length === 0 && <span className={styles.dayEmpty}>—</span>}
+                {dayRanges.map((range) => (
+                  <button
+                    key={range.start}
+                    type="button"
+                    disabled={!onPick}
+                    className={cx(styles.timePill, onPick && styles.timePillAction)}
+                    onClick={() => onPick?.(range)}
+                  >
+                    <span className={styles.timeStart}>
+                      {formatTime(range.start, poll.timezone)}
+                    </span>
+                    <span className={styles.timeEnd}>{formatTime(range.end, poll.timezone)}</span>
+                  </button>
+                ))}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </Section>
   );
 };

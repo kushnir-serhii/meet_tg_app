@@ -18,6 +18,7 @@ const poll: Poll = {
   timezone: 'Europe/Warsaw',
   expectedCount: 3,
   locale: 'en',
+  scheduled: null,
   createdAt: '2026-10-12T00:00:00.000Z',
 };
 
@@ -63,5 +64,19 @@ describe('renderPollMessage', () => {
     expect(text).toContain('Відповіли 1/3: Olena');
     expect(text).toContain('✅ Підходить усім:');
     expect(replyMarkup.inline_keyboard[0]?.[0]?.text).toBe('🗓 Позначити свій час');
+  });
+
+  it('shows the scheduled time and calendar buttons', () => {
+    const scheduled = { start: slots[0]!, end: slots[1]! };
+    const { text, replyMarkup } = renderPollMessage(
+      { ...poll, scheduled },
+      computeResults(slots, [], 60),
+      'mini',
+      { google: 'https://calendar.google.com/x', ics: 'https://app/ics' },
+    );
+    expect(text).toContain('📌 <b>Meeting scheduled: Tue 20 Oct 18:00–19:00</b>');
+    expect(
+      replyMarkup.inline_keyboard.map((row) => (row[0] as { url?: string } | undefined)?.url),
+    ).toEqual(['https://calendar.google.com/x', 'https://app/ics', 'mini']);
   });
 });

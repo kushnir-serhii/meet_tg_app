@@ -1,4 +1,4 @@
-import type { Poll, PollDetails } from '@/domain/types';
+import type { Poll, PollDetails, SlotRange } from '@/domain/types';
 import type { CreatePollInput } from '@/domain/validation';
 
 import { apiRequest } from './client';
@@ -14,6 +14,12 @@ export const pollsApi = {
     apiRequest<PollDetails>(`/api/polls/${encodeURIComponent(pollId)}/responses`, {
       method: 'PUT',
       body: { slots },
+    }),
+
+  schedule: (pollId: string, range: SlotRange | null) =>
+    apiRequest<PollDetails>(`/api/polls/${encodeURIComponent(pollId)}/schedule`, {
+      method: 'PUT',
+      body: { range },
     }),
 
   remove: (pollId: string) =>

@@ -1,6 +1,6 @@
-import type { InlineKeyboardMarkup } from 'grammy/types';
+import type { InlineKeyboardButton, InlineKeyboardMarkup } from 'grammy/types';
 
-import type { Poll, PollResults, RangeSummary, SlotRange } from '@/domain/types';
+import type { CalendarLinks, Poll, PollResults, RangeSummary, SlotRange } from '@/domain/types';
 import { getMessages, type Messages } from '@/i18n';
 import { formatNames, formatRange } from '@/shared/format';
 import { escapeHtml } from '@/shared/html';
@@ -59,15 +59,36 @@ const renderSummary = (ctx: RenderContext, results: PollResults): string[] => {
   return ['', ctx.t.bot.noCommon, ctx.t.bot.best(results.bestCount, total), ...ranges];
 };
 
+const renderScheduled = ({ poll, t }: RenderContext): string[] =>
+  poll.scheduled
+    ? ['', t.bot.scheduled(formatRange(poll.scheduled, poll.timezone, poll.locale))]
+    : [];
+
+const renderKeyboard = (
+  { t }: RenderContext,
+  miniAppLink: string,
+  calendar: CalendarLinks | null,
+): InlineKeyboardButton[][] => {
+  const mark = [{ text: t.bot.markButton, url: miniAppLink }];
+  if (!calendar) return [mark];
+  return [
+    [{ text: t.bot.googleButton, url: calendar.google }],
+    [{ text: t.bot.icsButton, url: calendar.ics }],
+    mark,
+  ];
+};
+
 /** Chat card of the poll, in the organizer's language. */
 export const renderPollMessage = (
   poll: Poll,
   results: PollResults,
   miniAppLink: string,
+  calendar: CalendarLinks | null = null,
 ): PollMessage => {
   const ctx: RenderContext = { poll, t: getMessages(poll.locale) };
 
   const lines = [
+
     `<b>${escapeHtml(poll.title)}</b>`,
     '',
     renderRespondents(ctx, results),
@@ -78,6 +99,6 @@ export const renderPollMessage = (
 
   return {
     text: lines.join('\n'),
-    replyMarkup: { inline_keyboard: [[{ text: ctx.t.bot.markButton, url: miniAppLink }]] },
+    replyMarkup: { inline_keyboard: renderKeyboard(ctx, miniAppLink, calendar) },
   };
 };

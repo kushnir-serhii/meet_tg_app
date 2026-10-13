@@ -52,3 +52,99 @@
   font-size: 12px;
   color: var(--hint);
 }
+
+/* "Works for everyone": one column per day, like the grid. */
+.dayScroll {
+  overflow-x: auto;
+  margin: 0 -4px;
+  padding: 0 4px;
+}
+
+.dayColumns {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  /* Same columns as the heatmap above, so each day lines up with its grid column. */
+  display: grid;
+  grid-template-columns: 48px repeat(var(--days), minmax(40px, 1fr));
+  gap: 2px;
+}
+
+.dayColumns::before {
+  content: '';
+}
+
+.dayColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.dayHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--hint);
+  padding-bottom: 2px;
+  white-space: nowrap;
+}
+
+.dayWeekday {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.dayEmpty {
+  text-align: center;
+  color: var(--hint);
+}
+
+.timePill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  border: 0;
+  border-radius: 6px;
+  padding: 6px 0;
+  background: color-mix(in srgb, var(--success) 16%, var(--section-bg));
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.timePill:disabled {
+  color: var(--text);
+  opacity: 1;
+}
+
+.timePillAction {
+  cursor: pointer;
+}
+
+.timePillAction:active {
+  background: color-mix(in srgb, var(--success) 30%, var(--section-bg));
+}
+
+.timeStart {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.timeEnd {
+  font-size: 11px;
+  color: var(--hint);
+}
+
+.pickButton {
+  align-self: flex-start;
+  margin-top: 6px;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--link);
+  font-size: 14px;
+  cursor: pointer;
+}

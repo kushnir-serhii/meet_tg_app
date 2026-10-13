@@ -1,3 +1,5 @@
+import { formatInTimeZone } from 'date-fns-tz';
+
 import type { RangeSummary, SlotRange, SlotSummary } from './types';
 
 const addMinutes = (iso: string, minutes: number): string =>
@@ -40,3 +42,18 @@ export const mergeSummariesIntoRanges = (
 
   return ranges;
 };
+
+export type DayRanges<T extends SlotRange> = { date: string; ranges: T[] };
+
+/** Groups ranges by their local date (`YYYY-MM-DD` in `timezone`), keeping every poll date. */
+export const groupRangesByDay = <T extends SlotRange>(
+  ranges: T[],
+  dates: string[],
+  timezone: string,
+): DayRanges<T>[] =>
+  dates.map((date) => ({
+    date,
+    ranges: ranges.filter(
+      (range) => formatInTimeZone(range.start, timezone, 'yyyy-MM-dd') === date,
+    ),
+  }));
