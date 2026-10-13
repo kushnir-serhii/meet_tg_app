@@ -21,6 +21,8 @@ export type Poll = {
   expectedCount: number | null;
   /** Organizer's language — used for chat messages. */
   locale: Locale;
+  /** Meeting time picked by the organizer, if any. */
+  scheduled: SlotRange | null;
   createdAt: string;
 };
 
@@ -70,6 +72,14 @@ export type PollDetails = {
   poll: Poll;
   results: PollResults;
   myResponse: PollResponse | null;
-  /** True for the organizer (can delete the poll). */
+  /** True for the organizer (can delete / schedule the poll). */
   canManage: boolean;
+  /** "Add to calendar" links when the meeting is scheduled. */
+  calendar: CalendarLinks | null;
+};
+
+export type CalendarLinks = {
+  google: string;
+  /** `.ics` file for Apple / Outlook / other calendars. */
+  ics: string;
 };

@@ -22,3 +22,26 @@
   background: var(--section-bg);
   margin-top: 8px;
 }
+
+.notice {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--success) 14%, var(--section-bg));
+}
+
+.noticeTitle {
+  font-size: 15px;
+}
+
+.noticeList {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 1.35;
+}

@@ -7,6 +7,7 @@ import type { Database } from '../db/database.types';
 import { toPoll } from './mappers';
 
 type PollInsert = Database['public']['Tables']['polls']['Insert'];
+type PollUpdate = Database['public']['Tables']['polls']['Update'];
 
 export const pollsRepository = {
   async insert(values: PollInsert): Promise<Poll> {
@@ -19,6 +20,17 @@ export const pollsRepository = {
     const { data, error } = await getDb().from('polls').select().eq('id', id).maybeSingle();
     if (error) throw error;
     return data ? toPoll(data) : null;
+  },
+
+  async update(id: string, values: PollUpdate): Promise<Poll> {
+    const { data, error } = await getDb()
+      .from('polls')
+      .update(values)
+      .eq('id', id)
+      .select()
+      .single();
+    if (error) throw error;
+    return toPoll(data);
   },
 
   async deleteById(id: string): Promise<void> {

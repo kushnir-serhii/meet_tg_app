@@ -4,6 +4,7 @@ import type { InlineQueryResultArticle } from 'grammy/types';
 import type { Poll } from '@/domain/types';
 import { getMessages, resolveLocale } from '@/i18n';
 
+import { buildCalendarLinks } from '../../calendar/pollCalendar';
 import { getEnv } from '../../env';
 import { pollsRepository } from '../../repositories/pollsRepository';
 import { getPollResults } from '../../services/pollService';
@@ -13,7 +14,13 @@ import { renderPollMessage } from '../renderPollMessage';
 const POLL_QUERY = /^(?:poll_)?([\w-]{6,32})$/;
 
 const toArticle = async (poll: Poll): Promise<InlineQueryResultArticle> => {
-  const message = renderPollMessage(poll, await getPollResults(poll), buildMiniAppLink(poll.id));
+  const results = await getPollResults(poll);
+  const message = renderPollMessage(
+    poll,
+    results,
+    buildMiniAppLink(poll.id),
+    buildCalendarLinks(poll, results),
+  );
   return {
     type: 'article',
     id: poll.id,

@@ -39,3 +39,10 @@ export type SaveResponseInput = z.infer<typeof saveResponseSchema>;
 export const createTipSchema = z.object({
   amount: z.number().int().refine(isTipAmount, 'Unsupported tip amount'),
 });
+
+/** `range: null` clears the scheduled time. */
+export const schedulePollSchema = z.object({
+  range: z
+    .object({ start: z.iso.datetime({ offset: true }), end: z.iso.datetime({ offset: true }) })
+    .nullable(),
+});

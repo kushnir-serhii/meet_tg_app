@@ -4,8 +4,10 @@ import { useMemo, useState } from 'react';
 
 import { useI18n } from '@/hooks/useI18n';
 import { usePollDetails } from '@/hooks/usePollDetails';
+import { useSchedulePoll } from '@/hooks/useSchedulePoll';
 
 import { ResultsView } from '../results/ResultsView';
+import { ScheduledCard } from '../schedule/ScheduledCard';
 import { SupportSection } from '../support/SupportSection';
 import { ErrorState, Loading, Notice } from '../ui/StateViews';
 import { Tabs } from '../ui/Tabs';
@@ -26,6 +28,7 @@ export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) 
   const { state, reload, update, markDeleted } = usePollDetails(pollId);
   const [tab, setTab] = useState<Tab>('mine');
   const { t } = useI18n();
+  const scheduling = useSchedulePoll(pollId, update);
   const tabs = useMemo(
     () =>
       [
@@ -40,11 +43,23 @@ export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) 
   if (state.status === 'notFound') return <Notice message={t.poll.notFound} />;
   if (state.status === 'deleted') return <Notice message={t.poll.deleted} />;
 
-  const { poll, results, myResponse, canManage } = state.data;
+  const { poll, results, myResponse, canManage, calendar } = state.data;
 
   return (
     <div className={styles.stack}>
       <PollHeader poll={poll} />
+      {calendar && (
+        <ScheduledCard
+          poll={poll}
+          calendar={calendar}
+          canManage={canManage}
+          isSaving={scheduling.isSaving}
+          onChange={() => {
+            setTab('results');
+          }}
+          onUnschedule={() => void scheduling.schedule(null)}
+        />
+      )}
       <Tabs tabs={tabs} active={tab} onChange={setTab} />
       {tab === 'mine' ? (
         <AvailabilityEditor
@@ -52,9 +67,21 @@ export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) 
           initialSlots={myResponse?.slots ?? []}
           useNativeButton={!hideMainButton}
           onSaved={update}
+          onShowResults={() => {
+            setTab('results');
+          }}
         />
       ) : (
-        <ResultsView poll={poll} results={results} />
+        <ResultsView
+          poll={poll}
+          results={results}
+          canManage={canManage}
+          schedule={{
+            isSaving: scheduling.isSaving,
+            error: scheduling.error,
+            submit: scheduling.schedule,
+          }}
+        />
       )}
       <SupportSection />
       {canManage && <DeletePollButton pollId={poll.id} onDeleted={markDeleted} />}

@@ -9,6 +9,7 @@ import { useI18n } from '@/hooks/useI18n';
 import { formatSlot } from '@/shared/format';
 
 import { HeatCell } from '../grid/HeatCell';
+import { HeatLegend } from '../grid/HeatLegend';
 import { SlotGrid } from '../grid/SlotGrid';
 import { Section } from '../ui/Section';
 import { SlotDetails } from './SlotDetails';
@@ -47,6 +48,7 @@ export const Heatmap = ({ poll, results }: HeatmapProps) => {
   return (
     <Section>
       <SlotGrid grid={grid} renderCell={renderCell} />
+      <HeatLegend />
       {activeSummary && (
         <SlotDetails
           label={formatSlot(activeSummary.slot, poll.timezone, locale)}

@@ -46,6 +46,7 @@ export type WebApp = {
   expand: () => void;
   disableVerticalSwipes?: () => void;
   close: () => void;
+  openLink: (url: string, options?: { try_instant_view?: boolean }) => void;
   isVersionAtLeast: (version: string) => boolean;
   switchInlineQuery: (query: string, chatTypes?: ChatType[]) => void;
   MainButton: BottomButton;

@@ -16,6 +16,10 @@ export const toPoll = (row: Tables<'polls'>): Poll => ({
   timezone: row.timezone,
   expectedCount: row.expected_count,
   locale: isLocale(row.locale) ? row.locale : DEFAULT_LOCALE,
+  scheduled:
+    row.scheduled_start && row.scheduled_end
+      ? { start: normalizeSlotId(row.scheduled_start), end: normalizeSlotId(row.scheduled_end) }
+      : null,
   createdAt: row.created_at,
 });
 
