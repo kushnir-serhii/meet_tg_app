@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { buildGrid } from '@/domain/grid';
 import type { Poll, PollDetails } from '@/domain/types';
@@ -13,6 +13,7 @@ import { useSlotSelection } from '@/hooks/useSlotSelection';
 import { SelectCell } from '../grid/SelectCell';
 import { SlotGrid } from '../grid/SlotGrid';
 import { ErrorText, Hint, Section } from '../ui/Section';
+import { EditorToolbar } from './EditorToolbar';
 import { SaveButton } from './SaveButton';
 import { SavedNotice } from './SavedNotice';
 
@@ -33,7 +34,8 @@ export const AvailabilityEditor = ({
 }: AvailabilityEditorProps) => {
   const { t, locale } = useI18n();
   const grid = useMemo(() => buildGrid(poll, locale), [poll, locale]);
-  const { selected, setSlot, markSaved, isDirty } = useSlotSelection(initialSlots);
+  const { selected, setSlot, markSaved, clear, isDirty } = useSlotSelection(initialSlots);
+  const [erase, setErase] = useState(false);
   const haptics = useHaptics();
 
   const handleSaved = useCallback(
@@ -46,7 +48,12 @@ export const AvailabilityEditor = ({
   const { save, status } = useSaveAvailability(poll.id, handleSaved);
 
   const isSelected = useCallback((slot: string) => selected.has(slot), [selected]);
-  const dragHandlers = useDragSelect({ isSelected, setSlot, onChange: haptics.selection });
+  const dragHandlers = useDragSelect({
+    isSelected,
+    setSlot,
+    onChange: haptics.selection,
+    erase,
+  });
 
   const renderCell = useCallback(
     (slot: string) => <SelectCell key={slot} slot={slot} selected={selected.has(slot)} />,
@@ -56,6 +63,16 @@ export const AvailabilityEditor = ({
   return (
     <Section>
       <Hint>{t.poll.hint}</Hint>
+      <EditorToolbar
+        erase={erase}
+        onEraseChange={setErase}
+        canClear={selected.size > 0}
+        onClear={() => {
+          clear();
+          setErase(false);
+          haptics.selection();
+        }}
+      />
       <SlotGrid grid={grid} renderCell={renderCell} bodyProps={dragHandlers} />
       {status === 'error' && <ErrorText>{t.app.genericError}</ErrorText>}
       {status === 'saved' && !isDirty && (

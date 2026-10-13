@@ -11,13 +11,15 @@ type Options = {
   isSelected: (slot: string) => boolean;
   setSlot: (slot: string, value: boolean) => void;
   onChange?: () => void;
+  /** `false` = eraser: every touched cell is cleared. Otherwise the first cell decides. */
+  erase?: boolean;
 };
 
 /**
  * "Paint" selection by dragging over cells marked with `data-slot`.
- * The first touched cell decides whether the drag selects or clears.
+ * The first touched cell decides whether the drag selects or clears (unless `erase` is on).
  */
-export const useDragSelect = ({ isSelected, setSlot, onChange }: Options) => {
+export const useDragSelect = ({ isSelected, setSlot, onChange, erase = false }: Options) => {
   const mode = useRef<boolean | null>(null);
   const lastSlot = useRef<string | null>(null);
 
@@ -36,10 +38,10 @@ export const useDragSelect = ({ isSelected, setSlot, onChange }: Options) => {
       const slot = slotFromPoint(event.clientX, event.clientY);
       if (slot === null) return;
       event.currentTarget.setPointerCapture(event.pointerId);
-      mode.current = !isSelected(slot);
+      mode.current = erase ? false : !isSelected(slot);
       paint(slot);
     },
-    [isSelected, paint],
+    [isSelected, paint, erase],
   );
 
   const onPointerMove = useCallback(
