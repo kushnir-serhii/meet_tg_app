@@ -63,6 +63,14 @@
   color: var(--hint);
 }
 
+.counterSuccess {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--success-strong);
+  font-weight: 500;
+}
+
 .counterState {
   font-size: 13px;
 }

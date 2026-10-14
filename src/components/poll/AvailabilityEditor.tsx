@@ -38,7 +38,7 @@ const saveLineFor = (
 ): SaveLine | null => {
   if (status === 'pending' || status === 'saving') return { text: t.poll.stateSaving };
   if (status === 'error') return { text: t.poll.stateError, isError: true, onRetry: retry };
-  if (hasResponse) return { text: t.poll.stateSaved };
+  if (hasResponse) return { text: t.poll.stateSaved, isSuccess: true };
   // Saved an empty selection in this session: the answer was withdrawn.
   if (status === 'saved') return { text: t.poll.stateRemoved };
   return null;

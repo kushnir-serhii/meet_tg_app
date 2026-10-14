@@ -48,7 +48,7 @@ export const uk: Messages = {
     nothingSelected: 'Поки нічого не обрано',
     selectedCount: (n) => `Обрано: ${n}`,
     stateSaving: 'Зберігаю…',
-    stateSaved: '✓ Збережено',
+    stateSaved: 'Збережено',
     stateRemoved: 'Відповідь прибрано',
     stateError: 'Не вдалося зберегти',
     retry: 'Повторити',

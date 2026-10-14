@@ -8,6 +8,8 @@ import styles from './poll.module.css';
 export type SaveLine = {
   text: string;
   isError?: boolean;
+  /** Green with a check icon ("Saved"). */
+  isSuccess?: boolean;
   /** Shown as a "Retry" link next to the text. */
   onRetry?: () => void;
 };
@@ -28,6 +30,19 @@ const ClearIcon = () => (
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      d="M5 12.5 10 17.5 19 7"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.6"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
@@ -65,7 +80,14 @@ export const EditorToolbar = ({
       <span className={styles.counter} aria-live="polite">
         <span>{statusText}</span>
         {saveLine && (
-          <span className={cx(styles.counterState, saveLine.isError && styles.counterError)}>
+          <span
+            className={cx(
+              styles.counterState,
+              saveLine.isError && styles.counterError,
+              saveLine.isSuccess && styles.counterSuccess,
+            )}
+          >
+            {saveLine.isSuccess && <CheckIcon />}
             {saveLine.text}
             {saveLine.onRetry && (
               <>
