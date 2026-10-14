@@ -48,7 +48,8 @@ export const useAutoSave = (
       const key = toKey(slots);
       if (key === savedKey.current) {
         // Edited and then reverted before the save: nothing to send.
-        setStatus((prev) => (prev === 'pending' ? (savedOnce.current ? 'saved' : 'idle') : prev));
+        const settled = savedOnce.current ? 'saved' : 'idle';
+        setStatus((prev) => (prev === 'pending' ? settled : prev));
         return true;
       }
 
