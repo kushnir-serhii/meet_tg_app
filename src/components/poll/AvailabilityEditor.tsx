@@ -14,7 +14,7 @@ import { SelectCell } from '../grid/SelectCell';
 import { SlotGrid } from '../grid/SlotGrid';
 import { ErrorText, Hint, Section } from '../ui/Section';
 import { EditorToolbar } from './EditorToolbar';
-import { SaveButton } from './SaveButton';
+import { type IdleAction, SaveButton } from './SaveButton';
 import { SavedNotice } from './SavedNotice';
 
 /** Lets the screen save or drop unsaved edits (e.g. before leaving to Results). */
@@ -29,7 +29,8 @@ type AvailabilityEditorProps = {
   initialSlots: string[];
   /** The user already has a stored response (possibly from an earlier session). */
   hasResponse: boolean;
-  useNativeButton: boolean;
+  /** Bottom-button action when nothing is unsaved (organizer: "Send to chat"). */
+  idleAction?: IdleAction;
   onSaved: (data: PollDetails) => void;
   onDirtyChange: (isDirty: boolean) => void;
   onShowResults: () => void;
@@ -40,7 +41,7 @@ export const AvailabilityEditor = ({
   poll,
   initialSlots,
   hasResponse,
-  useNativeButton,
+  idleAction,
   onSaved,
   onDirtyChange,
   onShowResults,
@@ -101,10 +102,10 @@ export const AvailabilityEditor = ({
       <SlotGrid grid={grid} renderCell={renderCell} bodyProps={dragHandlers} />
       {status === 'error' && <ErrorText>{t.app.genericError}</ErrorText>}
       {status === 'saved' && !isDirty && (
-        <SavedNotice beforeShare={!useNativeButton} autoScroll onShowResults={onShowResults} />
+        <SavedNotice beforeShare={idleAction != null} autoScroll onShowResults={onShowResults} />
       )}
       <SaveButton
-        native={useNativeButton}
+        idleAction={idleAction}
         status={status}
         isDirty={isDirty}
         hasSaved={isStored}
