@@ -22,6 +22,12 @@ export const pollsApi = {
       body: { range },
     }),
 
+  /** Prepared inline message id for `WebApp.shareMessage`. */
+  prepareShare: (pollId: string) =>
+    apiRequest<{ id: string }>(`/api/polls/${encodeURIComponent(pollId)}/share`, {
+      method: 'POST',
+    }),
+
   remove: (pollId: string) =>
     apiRequest<{ ok: true }>(`/api/polls/${encodeURIComponent(pollId)}`, { method: 'DELETE' }),
 };
