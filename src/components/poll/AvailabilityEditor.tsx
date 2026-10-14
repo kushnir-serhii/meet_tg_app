@@ -21,6 +21,8 @@ type AvailabilityEditorProps = {
   poll: Poll;
   initialSlots: string[];
   useNativeButton: boolean;
+  /** Saved earlier in this session (editor was remounted, e.g. after a tab switch). */
+  alreadySaved: boolean;
   onSaved: (data: PollDetails) => void;
   onShowResults: () => void;
 };
@@ -29,6 +31,7 @@ export const AvailabilityEditor = ({
   poll,
   initialSlots,
   useNativeButton,
+  alreadySaved,
   onSaved,
   onShowResults,
 }: AvailabilityEditorProps) => {
@@ -45,7 +48,9 @@ export const AvailabilityEditor = ({
     },
     [markSaved, onSaved],
   );
-  const { save, status } = useSaveAvailability(poll.id, handleSaved);
+  const { save, status: saveStatus } = useSaveAvailability(poll.id, handleSaved);
+  // A fresh mount starts 'idle'; restore 'saved' if nothing changed since the last save.
+  const status = saveStatus === 'idle' && alreadySaved ? 'saved' : saveStatus;
 
   const isSelected = useCallback((slot: string) => selected.has(slot), [selected]);
   const dragHandlers = useDragSelect({ isSelected, setSlot, onChange: haptics.selection });
@@ -73,7 +78,11 @@ export const AvailabilityEditor = ({
       <SlotGrid grid={grid} renderCell={renderCell} bodyProps={dragHandlers} />
       {status === 'error' && <ErrorText>{t.app.genericError}</ErrorText>}
       {status === 'saved' && !isDirty && (
-        <SavedNotice beforeShare={!useNativeButton} onShowResults={onShowResults} />
+        <SavedNotice
+          beforeShare={!useNativeButton}
+          autoScroll={saveStatus === 'saved'}
+          onShowResults={onShowResults}
+        />
       )}
       <SaveButton
         native={useNativeButton}

@@ -4,6 +4,7 @@ import { MAX_POLL_DAYS } from '@/domain/dates';
 import type { CreatePollFormValues } from '@/hooks/useCreatePollForm';
 import { useI18n } from '@/hooks/useI18n';
 
+import { DatePicker } from '../ui/datePicker/DatePicker';
 import { Field, FieldRow } from '../ui/Field';
 import type { SetField } from './types';
 
@@ -23,29 +24,28 @@ export const DateRangeFields = ({ values, setField, minDate }: DateRangeFieldsPr
     <FieldRow>
       <Field label={t.create.dateFrom}>
         {(id, className) => (
-          <input
+          <DatePicker
             id={id}
-            type="date"
             className={className}
             min={minDate}
             value={values.dateFrom}
-            onChange={(e) => {
-              setField('dateFrom', e.target.value);
+            onChange={(value) => {
+              setField('dateFrom', value);
             }}
           />
         )}
       </Field>
       <Field label={t.create.dateTo}>
         {(id, className) => (
-          <input
+          <DatePicker
             id={id}
-            type="date"
             className={className}
+            align="right"
             min={values.dateFrom}
             max={maxEndDate(values.dateFrom)}
             value={values.dateTo}
-            onChange={(e) => {
-              setField('dateTo', e.target.value);
+            onChange={(value) => {
+              setField('dateTo', value);
             }}
           />
         )}

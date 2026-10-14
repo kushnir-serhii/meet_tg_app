@@ -10,17 +10,19 @@ import styles from './poll.module.css';
 type SavedNoticeProps = {
   /** Organizer right after creation — the poll is not in a chat yet. */
   beforeShare: boolean;
+  /** Scroll into view only right after saving, not when returning to the tab. */
+  autoScroll: boolean;
   onShowResults: () => void;
 };
 
 /** What happens next after saving: you can close the app, edit later, results go to the chat. */
-export const SavedNotice = ({ beforeShare, onShowResults }: SavedNoticeProps) => {
+export const SavedNotice = ({ beforeShare, autoScroll, onShowResults }: SavedNoticeProps) => {
   const { t } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, []);
+    if (autoScroll) ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [autoScroll]);
 
   return (
     <div ref={ref} className={styles.notice} role="status">

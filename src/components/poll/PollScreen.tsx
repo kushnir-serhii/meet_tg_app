@@ -27,6 +27,8 @@ type PollScreenProps = {
 export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) => {
   const { state, reload, update, markDeleted } = usePollDetails(pollId);
   const [tab, setTab] = useState<Tab>('mine');
+  /** Survives tab switches (the editor unmounts), so "saved" state isn't lost. */
+  const [hasSaved, setHasSaved] = useState(false);
   const { t } = useI18n();
   const scheduling = useSchedulePoll(pollId, update);
   const tabs = useMemo(
@@ -66,7 +68,11 @@ export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) 
           poll={poll}
           initialSlots={myResponse?.slots ?? []}
           useNativeButton={!hideMainButton}
-          onSaved={update}
+          alreadySaved={hasSaved}
+          onSaved={(data) => {
+            setHasSaved(true);
+            update(data);
+          }}
           onShowResults={() => {
             setTab('results');
           }}

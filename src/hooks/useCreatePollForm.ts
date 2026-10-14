@@ -1,9 +1,9 @@
 'use client';
 
-import { addDays, format } from 'date-fns';
+import { addDays, differenceInCalendarDays, format, parseISO } from 'date-fns';
 import { useCallback, useMemo, useState } from 'react';
 
-import { datesInRange } from '@/domain/dates';
+import { datesInRange, MAX_POLL_DAYS } from '@/domain/dates';
 import { fitHourRange } from '@/domain/slots';
 import type { SlotMinutes } from '@/domain/types';
 import { type CreatePollInput, createPollSchema } from '@/domain/validation';
@@ -30,6 +30,14 @@ const initialValues = (): CreatePollFormValues => ({
   expectedCount: '',
 });
 
+/** Keeps the end date within [from, from + MAX_POLL_DAYS - 1], preserving the span when possible. */
+const fitDateRange = (prevFrom: string, from: string, to: string): string => {
+  const latest = format(addDays(parseISO(from), MAX_POLL_DAYS - 1), 'yyyy-MM-dd');
+  if (to >= from && to <= latest) return to;
+  const span = Math.max(0, differenceInCalendarDays(parseISO(to), parseISO(prevFrom)));
+  return format(addDays(parseISO(from), Math.min(span, MAX_POLL_DAYS - 1)), 'yyyy-MM-dd');
+};
+
 const toInput = (values: CreatePollFormValues): unknown => ({
   title: values.title,
   dates: datesInRange(values.dateFrom, values.dateTo),
@@ -48,6 +56,7 @@ export const useCreatePollForm = () => {
     <K extends keyof CreatePollFormValues>(key: K, value: CreatePollFormValues[K]) => {
       setValues((prev) => {
         const next = { ...prev, [key]: value };
+        next.dateTo = fitDateRange(prev.dateFrom, next.dateFrom, next.dateTo);
         return { ...next, ...fitHourRange(next.hourFrom, next.hourTo, next.slotMinutes) };
       });
     },
