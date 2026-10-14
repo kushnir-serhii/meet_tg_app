@@ -1,5 +1,6 @@
 'use client';
 
+import { useHaptics } from '@/hooks/useHaptics';
 import { useI18n } from '@/hooks/useI18n';
 import { useTelegram } from '@/hooks/useTelegram';
 import type { Messages } from '@/i18n';
@@ -15,7 +16,7 @@ type SaveButtonProps = {
   native: boolean;
   status: Status;
   isDirty: boolean;
-  /** User already has a saved response (e.g. reopened the app) — nothing to save yet. */
+  /** A response is stored (this session or earlier) — unchanged selection means "done". */
   hasSaved: boolean;
   onSave: () => void;
 };
@@ -29,11 +30,17 @@ const labelFor = (t: Messages, status: Status, isDone: boolean): string => {
 export const SaveButton = ({ native, status, isDirty, hasSaved, onSave }: SaveButtonProps) => {
   const { t } = useI18n();
   const webApp = useTelegram();
+  const haptics = useHaptics();
   const isDone = !isDirty && status !== 'saving' && (status === 'saved' || hasSaved);
   // Nothing to save: keep the button fully visible, just ignore taps (no faded "disabled" look).
   const inactive = !isDirty || status === 'saving';
   const handleSave = () => {
-    if (!inactive) onSave();
+    if (inactive) {
+      // Nothing selected yet: a tap still gets feedback instead of silently doing nothing.
+      if (status !== 'saving') haptics.warning();
+      return;
+    }
+    onSave();
   };
 
   if (native) {

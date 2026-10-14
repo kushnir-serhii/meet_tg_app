@@ -59,6 +59,10 @@
   color: var(--hint);
 }
 
+.counterUnsaved {
+  color: var(--destructive);
+}
+
 .toolButton {
   display: inline-flex;
   align-items: center;
@@ -83,4 +87,13 @@
 .saveDone {
   color: var(--success-strong);
   cursor: default;
+}
+
+/* Tab panel: transparent to the parent's flex gap; hidden one is removed from layout. */
+.panel {
+  display: contents;
+}
+
+.panel[hidden] {
+  display: none;
 }

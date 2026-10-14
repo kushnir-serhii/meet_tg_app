@@ -42,6 +42,8 @@ export const uk: Messages = {
     save: 'Зберегти',
     saving: 'Зберігаю…',
     saved: 'Збережено ✓',
+    stateSaved: 'збережено',
+    stateUnsaved: 'не збережено',
     savedTitle: '✅ Ваш час збережено',
     savedSteps: [
       'Застосунок можна закрити — підсумок у чаті оновиться автоматично.',
@@ -49,7 +51,7 @@ export const uk: Messages = {
     ],
     savedStepsBeforeShare: ['Тепер надішліть зустріч у чат.', 'Свій час можна змінити будь-коли.'],
     showResults: 'Переглянути результати',
-    close: 'Готово — закрити',
+    close: 'Готово',
     timezone: (tz) => `Час указано за ${tz}`,
     timezoneMismatch: (tz) => `Увага: ваш часовий пояс ${tz}`,
     delete: 'Видалити зустріч',

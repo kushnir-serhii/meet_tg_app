@@ -27,17 +27,17 @@ type PollScreenProps = {
 export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) => {
   const { state, reload, update, markDeleted } = usePollDetails(pollId);
   const [tab, setTab] = useState<Tab>('mine');
-  /** Survives tab switches (the editor unmounts), so "saved" state isn't lost. */
-  const [hasSaved, setHasSaved] = useState(false);
+  /** Unsaved edits in "Мій час" — flagged on the tab so they aren't forgotten on Results. */
+  const [isDirty, setIsDirty] = useState(false);
   const { t } = useI18n();
   const scheduling = useSchedulePoll(pollId, update);
   const tabs = useMemo(
     () =>
       [
-        { id: 'mine', label: t.poll.tabMine },
+        { id: 'mine', label: isDirty ? `${t.poll.tabMine} •` : t.poll.tabMine },
         { id: 'results', label: t.poll.tabResults },
       ] as const,
-    [t],
+    [t, isDirty],
   );
 
   if (state.status === 'loading') return <Loading />;
@@ -63,21 +63,22 @@ export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) 
         />
       )}
       <Tabs tabs={tabs} active={tab} onChange={setTab} />
-      {tab === 'mine' ? (
+      {/* Both panels stay mounted: unsaved selection survives tab switches and the
+          bottom Save/Done button stays visible on both tabs. */}
+      <div className={styles.panel} hidden={tab !== 'mine'}>
         <AvailabilityEditor
           poll={poll}
           initialSlots={myResponse?.slots ?? []}
+          hasResponse={myResponse != null}
           useNativeButton={!hideMainButton}
-          alreadySaved={hasSaved}
-          onSaved={(data) => {
-            setHasSaved(true);
-            update(data);
-          }}
+          onSaved={update}
+          onDirtyChange={setIsDirty}
           onShowResults={() => {
             setTab('results');
           }}
         />
-      ) : (
+      </div>
+      <div className={styles.panel} hidden={tab !== 'results'}>
         <ResultsView
           poll={poll}
           results={results}
@@ -88,7 +89,7 @@ export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) 
             submit: scheduling.schedule,
           }}
         />
-      )}
+      </div>
       <SupportSection />
       {canManage && <DeletePollButton pollId={poll.id} onDeleted={markDeleted} />}
     </div>
