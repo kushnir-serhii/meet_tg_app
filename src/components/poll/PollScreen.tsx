@@ -92,7 +92,7 @@ export const PollScreen = ({ pollId, action }: PollScreenProps) => {
           ref={editorRef}
           poll={poll}
           initialSlots={myResponse?.slots ?? []}
-          hasResponse={myResponse != null}
+          hasResponse={myResponse !== null}
           onSaved={update}
         />
       </div>
