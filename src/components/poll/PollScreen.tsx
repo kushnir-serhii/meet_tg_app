@@ -13,6 +13,7 @@ import { SupportSection } from '../support/SupportSection';
 import { ErrorState, Loading, Notice } from '../ui/StateViews';
 import { Tabs } from '../ui/Tabs';
 import { AvailabilityEditor, type AvailabilityEditorHandle } from './AvailabilityEditor';
+import type { IdleAction } from './SaveButton';
 import { DeletePollButton } from './DeletePollButton';
 import styles from './poll.module.css';
 import { PollHeader } from './PollHeader';
@@ -21,11 +22,11 @@ type Tab = 'mine' | 'results';
 
 type PollScreenProps = {
   pollId: string;
-  /** When the bottom button is owned by a parent (e.g. share step). */
-  hideMainButton?: boolean;
+  /** Bottom-button action once everything is saved (share step: "Send to chat"). */
+  idleAction?: IdleAction;
 };
 
-export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) => {
+export const PollScreen = ({ pollId, idleAction }: PollScreenProps) => {
   const { state, reload, update, markDeleted } = usePollDetails(pollId);
   const [tab, setTab] = useState<Tab>('mine');
   /** Unsaved edits in "Мій час" — flagged on the tab so they aren't forgotten on Results. */
@@ -104,7 +105,7 @@ export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) 
           poll={poll}
           initialSlots={myResponse?.slots ?? []}
           hasResponse={myResponse != null}
-          useNativeButton={!hideMainButton}
+          idleAction={idleAction}
           onSaved={update}
           onDirtyChange={setIsDirty}
           onShowResults={() => {
