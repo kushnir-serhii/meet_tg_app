@@ -30,6 +30,12 @@ export const useSlotSelection = (initial: readonly string[]) => {
     setBeforeClear(null);
   }, []);
 
+  /** Drop unsaved edits: back to the last saved selection. */
+  const reset = useCallback(() => {
+    setSelected(saved);
+    setBeforeClear(null);
+  }, [saved]);
+
   const clear = useCallback(() => {
     if (selected.size === 0) return;
     setBeforeClear(selected);
@@ -48,6 +54,7 @@ export const useSlotSelection = (initial: readonly string[]) => {
     selected,
     setSlot,
     markSaved,
+    reset,
     clear,
     undoClear,
     canUndoClear: beforeClear !== null,

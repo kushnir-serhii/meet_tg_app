@@ -63,7 +63,10 @@ export const ScheduledCard = ({
             className={styles.textButton}
             disabled={isSaving}
             onClick={() => {
-              void confirm(t.schedule.unscheduleConfirm).then((ok) => {
+              void confirm(t.schedule.unscheduleConfirm, {
+                confirmText: t.schedule.unscheduleAction,
+                destructive: true,
+              }).then((ok) => {
                 if (ok) onUnschedule();
               });
             }}

@@ -2,7 +2,12 @@ import { cx } from '@/utils/cx';
 
 import styles from './ui.module.css';
 
-type Tab<T extends string> = { id: T; label: string };
+type Tab<T extends string> = {
+  id: T;
+  label: string;
+  /** Looks unavailable but stays tappable, so the screen can explain why. */
+  locked?: boolean;
+};
 
 type TabsProps<T extends string> = {
   tabs: readonly Tab<T>[];
@@ -18,7 +23,12 @@ export const Tabs = <T extends string>({ tabs, active, onChange }: TabsProps<T>)
         type="button"
         role="tab"
         aria-selected={tab.id === active}
-        className={cx(styles.tab, tab.id === active && styles.tabActive)}
+        aria-disabled={tab.locked}
+        className={cx(
+          styles.tab,
+          tab.id === active && styles.tabActive,
+          tab.locked && styles.tabLocked,
+        )}
         onClick={() => {
           onChange(tab.id);
         }}

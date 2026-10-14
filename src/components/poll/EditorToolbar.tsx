@@ -56,11 +56,12 @@ export const EditorToolbar = ({
   return (
     <div className={styles.toolbar}>
       <span className={styles.counter} aria-live="polite">
-        {statusText}
+        <span>{statusText}</span>
         {saveState && (
-          <span className={cx(saveState === 'unsaved' && styles.counterUnsaved)}>
-            {' · '}
-            {saveState === 'saved' ? t.poll.stateSaved : t.poll.stateUnsaved}
+          <span
+            className={cx(styles.counterState, saveState === 'unsaved' && styles.counterUnsaved)}
+          >
+            {saveState === 'saved' ? `✓ ${t.poll.stateSaved}` : t.poll.stateUnsaved}
           </span>
         )}
       </span>

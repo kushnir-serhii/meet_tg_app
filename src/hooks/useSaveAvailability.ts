@@ -14,15 +14,17 @@ export const useSaveAvailability = (pollId: string, onSaved: (data: PollDetails)
   const haptics = useHaptics();
 
   const save = useCallback(
-    async (slots: string[]) => {
+    async (slots: string[]): Promise<boolean> => {
       setStatus('saving');
       try {
         onSaved(await pollsApi.saveResponse(pollId, slots));
         setStatus('saved');
         haptics.success();
+        return true;
       } catch {
         setStatus('error');
         haptics.error();
+        return false;
       }
     },
     [pollId, onSaved, haptics],

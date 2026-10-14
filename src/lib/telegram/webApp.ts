@@ -24,6 +24,18 @@ type HapticFeedback = {
   notificationOccurred: (type: 'error' | 'success' | 'warning') => void;
 };
 
+export type PopupButton = {
+  id: string;
+  type?: 'default' | 'ok' | 'close' | 'cancel' | 'destructive';
+  text?: string;
+};
+
+export type PopupParams = {
+  title?: string;
+  message: string;
+  buttons: PopupButton[];
+};
+
 export type InvoiceStatus = 'paid' | 'cancelled' | 'failed' | 'pending';
 
 export type ChatType = 'users' | 'bots' | 'groups' | 'channels';
@@ -53,6 +65,8 @@ export type WebApp = {
   BackButton: BackButton;
   HapticFeedback: HapticFeedback;
   showConfirm: (message: string, callback: (confirmed: boolean) => void) => void;
+  /** Bot API 6.2+. Callback gets the pressed button id ('' when dismissed). */
+  showPopup: (params: PopupParams, callback?: (buttonId: string) => void) => void;
   openInvoice: (url: string, callback: (status: InvoiceStatus) => void) => void;
 };
 
