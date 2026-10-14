@@ -20,6 +20,8 @@ type SaveButtonProps = {
   hasSaved: boolean;
   /** Replaces "Done — close" while the selection is saved / untouched. */
   idleAction?: IdleAction;
+  /** Overrides "Save" (e.g. "Remove my answer" when everything was cleared). */
+  saveText?: string;
   onSave: () => void;
 };
 
@@ -28,7 +30,14 @@ type SaveButtonProps = {
  * unsaved edits → "Save"; otherwise the idle action ("Send to chat") or "Done" (close).
  * Outside Telegram (dev in a browser) falls back to an inline button.
  */
-export const SaveButton = ({ status, isDirty, hasSaved, idleAction, onSave }: SaveButtonProps) => {
+export const SaveButton = ({
+  status,
+  isDirty,
+  hasSaved,
+  idleAction,
+  saveText,
+  onSave,
+}: SaveButtonProps) => {
   const { t } = useI18n();
   const webApp = useTelegram();
   const haptics = useHaptics();
@@ -45,7 +54,7 @@ export const SaveButton = ({ status, isDirty, hasSaved, idleAction, onSave }: Sa
     onSave();
   };
 
-  let text = t.poll.save;
+  let text = saveText ?? t.poll.save;
   let onClick = handleSave;
   if (isSaving) text = t.poll.saving;
   else if (!isDirty && idleAction) ({ text, onClick } = idleAction);

@@ -12,17 +12,33 @@ type SavedNoticeProps = {
   beforeShare: boolean;
   /** Scroll into view only right after saving, not when returning to the tab. */
   autoScroll: boolean;
+  /** Saved an empty selection: the answer was removed, not saved. */
+  withdrawn?: boolean;
   onShowResults: () => void;
 };
 
 /** What happens next after saving: you can close the app, edit later, results go to the chat. */
-export const SavedNotice = ({ beforeShare, autoScroll, onShowResults }: SavedNoticeProps) => {
+export const SavedNotice = ({
+  beforeShare,
+  autoScroll,
+  withdrawn = false,
+  onShowResults,
+}: SavedNoticeProps) => {
   const { t } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (autoScroll) ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [autoScroll]);
+
+  if (withdrawn) {
+    return (
+      <div ref={ref} className={styles.notice} role="status">
+        <strong className={styles.noticeTitle}>{t.poll.withdrawnTitle}</strong>
+        <p className={styles.noticeText}>{t.poll.withdrawnText}</p>
+      </div>
+    );
+  }
 
   return (
     <div ref={ref} className={styles.notice} role="status">

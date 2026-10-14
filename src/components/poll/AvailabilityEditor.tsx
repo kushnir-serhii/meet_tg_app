@@ -60,10 +60,13 @@ export const AvailabilityEditor = ({
     [markSaved, onSaved],
   );
   const { save, status } = useSaveAvailability(poll.id, handleSaved);
-  const isStored = hasResponse || status === 'saved';
+  /** Pending save would remove the answer (everything cleared). */
+  const willWithdraw = isDirty && selected.size === 0 && hasResponse;
+  /** Just saved an empty selection — the answer is gone, not "saved". */
+  const isWithdrawn = status === 'saved' && !isDirty && !hasResponse;
   let saveState: 'saved' | 'unsaved' | null = null;
   if (isDirty) saveState = 'unsaved';
-  else if (isStored) saveState = 'saved';
+  else if (hasResponse) saveState = 'saved';
 
   useEffect(() => {
     onDirtyChange(isDirty);
@@ -102,13 +105,19 @@ export const AvailabilityEditor = ({
       <SlotGrid grid={grid} renderCell={renderCell} bodyProps={dragHandlers} />
       {status === 'error' && <ErrorText>{t.app.genericError}</ErrorText>}
       {status === 'saved' && !isDirty && (
-        <SavedNotice beforeShare={idleAction != null} autoScroll onShowResults={onShowResults} />
+        <SavedNotice
+          beforeShare={idleAction != null}
+          autoScroll
+          withdrawn={isWithdrawn}
+          onShowResults={onShowResults}
+        />
       )}
       <SaveButton
         idleAction={idleAction}
         status={status}
         isDirty={isDirty}
-        hasSaved={isStored}
+        hasSaved={hasResponse || isWithdrawn}
+        saveText={willWithdraw ? t.poll.withdraw : undefined}
         onSave={() => void save([...selected])}
       />
     </Section>

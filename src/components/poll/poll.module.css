@@ -107,3 +107,9 @@
 .panel[hidden] {
   display: none;
 }
+
+.noticeText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.35;
+}

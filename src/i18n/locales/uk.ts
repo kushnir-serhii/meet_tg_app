@@ -51,6 +51,9 @@ export const uk: Messages = {
     unsavedMessage: 'Збережіть свій час, щоб побачити актуальні результати.',
     saveAndView: 'Зберегти',
     discard: 'Не зберігати',
+    withdraw: 'Прибрати мою відповідь',
+    withdrawnTitle: '🗑 Вашу відповідь прибрано',
+    withdrawnText: 'Вас більше не враховано в підсумку. Позначте час, якщо плани зміняться.',
     savedTitle: '✅ Ваш час збережено',
     savedSteps: [
       'Застосунок можна закрити — підсумок у чаті оновиться автоматично.',
@@ -111,6 +114,10 @@ export const uk: Messages = {
     start: 'Привіт! Я допоможу знайти час для зустрічі, зручний усім.',
     createButton: '➕ Створити зустріч',
     inlineCreate: '➕ Створити нову зустріч',
+    inlineSendOne: (title) => `📤 ${title}`,
+    inlineSendOneHint: 'Додати в чат',
+    inlinePickTitle: (title) => `📅 ${title}`,
+    inlinePickHint: (n) => (n > 0 ? `Додати в чат · відповіли: ${n}` : 'Додати в чат'),
     markButton: '🗓 Позначити свій час',
     respondents: (names, n, expected) =>
       `👥 Відповіли ${expected ? `${n}/${expected}` : n}: ${names}`,

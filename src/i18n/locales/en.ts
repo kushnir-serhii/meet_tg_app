@@ -51,6 +51,9 @@ export const en = {
     unsavedMessage: 'Save your time first to see up-to-date results.',
     saveAndView: 'Save',
     discard: "Don't save",
+    withdraw: 'Remove my answer',
+    withdrawnTitle: '🗑 Your answer is removed',
+    withdrawnText: "You're no longer counted in the results. Mark your time if plans change.",
     savedTitle: '✅ Your time is saved',
     savedSteps: [
       'You can close the app now — the summary in the chat updates automatically.',
@@ -115,6 +118,10 @@ export const en = {
     start: 'Hi! I help find a meeting time that works for everyone.',
     createButton: '➕ Create meeting',
     inlineCreate: '➕ Create a new meeting',
+    inlineSendOne: (title: string) => `📤 ${title}`,
+    inlineSendOneHint: 'Add to chat',
+    inlinePickTitle: (title: string) => `📅 ${title}`,
+    inlinePickHint: (n: number) => (n > 0 ? `Add to chat · responded: ${n}` : 'Add to chat'),
     markButton: '🗓 Mark your time',
     respondents: (names: string, n: number, expected: number | null) =>
       `👥 Responded ${expected ? `${n}/${expected}` : n}: ${names}`,
