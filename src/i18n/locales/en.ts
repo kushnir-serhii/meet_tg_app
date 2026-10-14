@@ -48,7 +48,7 @@ export const en = {
     nothingSelected: 'Nothing selected yet',
     selectedCount: (n: number) => `Selected: ${n}`,
     stateSaving: 'Saving…',
-    stateSaved: '✓ Saved',
+    stateSaved: 'Saved',
     stateRemoved: 'Answer removed',
     stateError: "Couldn't save",
     retry: 'Retry',
