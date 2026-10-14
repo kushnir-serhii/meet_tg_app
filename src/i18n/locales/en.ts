@@ -24,6 +24,8 @@ export const en = {
     slotOption: (minutes: number) =>
       minutes < 60 ? `${minutes} min` : `${minutes / 60} hour${minutes === 60 ? '' : 's'}`,
     expected: 'Expected participants (optional)',
+    titleRequired: 'Enter a meeting title',
+    expectedInvalid: 'From 2 to 200 people — or leave it empty',
     submit: 'Create',
     creating: 'Creating…',
   },
@@ -114,6 +116,7 @@ export const en = {
       `👥 Responded ${expected ? `${n}/${expected}` : n}: ${names}`,
     nobody: '👥 No responses yet',
     perfect: '✅ Works for everyone:',
+    singleAnswer: '🗓 One answer so far — free time:',
     noCommon: '❌ No common time yet',
     best: (count: number, total: number) => `🏆 Best options — ${count} of ${total} can join:`,
     more: (n: number) => `…and ${n} more`,

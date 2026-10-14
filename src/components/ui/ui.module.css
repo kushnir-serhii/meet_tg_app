@@ -62,6 +62,16 @@
   border-color: var(--accent);
 }
 
+.inputInvalid,
+.inputInvalid:focus {
+  border-color: var(--destructive);
+}
+
+.fieldError {
+  font-size: 13px;
+  color: var(--destructive);
+}
+
 .row {
   display: flex;
   gap: var(--gap);

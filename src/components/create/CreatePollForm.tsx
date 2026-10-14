@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import type { Poll } from '@/domain/types';
 import { useCreatePoll } from '@/hooks/useCreatePoll';
 import { useCreatePollForm } from '@/hooks/useCreatePollForm';
+import { useHaptics } from '@/hooks/useHaptics';
 import { useI18n } from '@/hooks/useI18n';
 import { useMainButton } from '@/hooks/useMainButton';
 
@@ -21,17 +22,31 @@ type CreatePollFormProps = {
 
 export const CreatePollForm = ({ onCreated }: CreatePollFormProps) => {
   const { t } = useI18n();
-  const { values, setField, input, minDate } = useCreatePollForm();
+  const { values, setField, input, invalid, minDate } = useCreatePollForm();
   const { create, isPending, error } = useCreatePoll(onCreated);
+  const haptics = useHaptics();
+  /** Errors appear only after the first "Create" tap, then update live as the user types. */
+  const [showErrors, setShowErrors] = useState(false);
+  const titleRef = useRef<HTMLInputElement>(null);
+  const expectedRef = useRef<HTMLInputElement>(null);
 
+  // The button stays active: a tap on an incomplete form explains what's missing.
   const submit = useCallback(() => {
-    if (input) void create(input);
-  }, [input, create]);
+    if (isPending) return;
+    if (input) {
+      void create(input);
+      return;
+    }
+    setShowErrors(true);
+    haptics.error();
+    const target = invalid.title ? titleRef.current : expectedRef.current;
+    target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    target?.focus();
+  }, [input, invalid, isPending, create, haptics]);
 
   useMainButton({
     text: isPending ? t.create.creating : t.create.submit,
     onClick: submit,
-    disabled: !input || isPending,
     loading: isPending,
   });
 
@@ -40,6 +55,8 @@ export const CreatePollForm = ({ onCreated }: CreatePollFormProps) => {
       <h1 className={styles.heading}>{t.create.heading}</h1>
       <Section>
         <TitleField
+          ref={titleRef}
+          error={showErrors && invalid.title ? t.create.titleRequired : undefined}
           value={values.title}
           onChange={(v) => {
             setField('title', v);
@@ -52,6 +69,8 @@ export const CreatePollForm = ({ onCreated }: CreatePollFormProps) => {
       </Section>
       <Section>
         <ExpectedCountField
+          ref={expectedRef}
+          error={showErrors && invalid.expectedCount ? t.create.expectedInvalid : undefined}
           value={values.expectedCount}
           onChange={(v) => {
             setField('expectedCount', v);

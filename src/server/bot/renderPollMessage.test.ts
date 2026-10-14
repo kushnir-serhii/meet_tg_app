@@ -51,6 +51,12 @@ describe('renderPollMessage', () => {
     expect(text).toContain('18:00–20:00');
   });
 
+  it('does not claim "works for everyone" with a single answer', () => {
+    const { text } = render([response(1, 'Olena', slots)]);
+    expect(text).toContain('🗓 One answer so far — free time:');
+    expect(text).not.toContain('Works for everyone');
+  });
+
   it('names who cannot join when nobody fits all', () => {
     const { text } = render([response(1, 'Olena', [slots[0]!]), response(2, 'Andrii', [])]);
     expect(text).toContain('❌ No common time yet');
@@ -62,7 +68,7 @@ describe('renderPollMessage', () => {
     const results = computeResults(slots, [response(1, 'Olena', slots)], 60);
     const { text, replyMarkup } = renderPollMessage({ ...poll, locale: 'uk' }, results, 'u');
     expect(text).toContain('Відповіли 1/3: Olena');
-    expect(text).toContain('✅ Підходить усім:');
+    expect(text).toContain('🗓 Поки одна відповідь — ось вільний час:');
     expect(replyMarkup.inline_keyboard[0]?.[0]?.text).toBe('🗓 Позначити свій час');
   });
 

@@ -1,3 +1,5 @@
+import type { Ref } from 'react';
+
 import { useI18n } from '@/hooks/useI18n';
 
 import { Field } from '../ui/Field';
@@ -5,16 +7,20 @@ import { Field } from '../ui/Field';
 type ExpectedCountFieldProps = {
   value: string;
   onChange: (value: string) => void;
+  error?: string;
+  ref?: Ref<HTMLInputElement>;
 };
 
-export const ExpectedCountField = ({ value, onChange }: ExpectedCountFieldProps) => {
+export const ExpectedCountField = ({ value, onChange, error, ref }: ExpectedCountFieldProps) => {
   const { t } = useI18n();
 
   return (
-    <Field label={t.create.expected}>
+    <Field label={t.create.expected} error={error}>
       {(id, className) => (
         <input
+          ref={ref}
           id={id}
+          aria-invalid={error ? true : undefined}
           className={className}
           type="number"
           inputMode="numeric"
