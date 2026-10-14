@@ -12,6 +12,7 @@ export const useHaptics = () => {
       selection: () => webApp?.HapticFeedback.selectionChanged(),
       success: () => webApp?.HapticFeedback.notificationOccurred('success'),
       error: () => webApp?.HapticFeedback.notificationOccurred('error'),
+      warning: () => webApp?.HapticFeedback.notificationOccurred('warning'),
     }),
     [webApp],
   );

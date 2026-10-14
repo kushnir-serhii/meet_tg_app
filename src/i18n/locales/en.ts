@@ -42,6 +42,8 @@ export const en = {
     save: 'Save',
     saving: 'Saving…',
     saved: 'Saved ✓',
+    stateSaved: 'saved',
+    stateUnsaved: 'not saved',
     savedTitle: '✅ Your time is saved',
     savedSteps: [
       'You can close the app now — the summary in the chat updates automatically.',
@@ -52,7 +54,7 @@ export const en = {
       'You can come back and edit your time at any moment.',
     ] as string[],
     showResults: 'See results',
-    close: 'Done — close',
+    close: 'Done',
     timezone: (tz: string) => `Times in ${tz}`,
     timezoneMismatch: (tz: string) => `Note: your time zone is ${tz}`,
     delete: 'Delete meeting',

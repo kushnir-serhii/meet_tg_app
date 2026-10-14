@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { buildGrid } from '@/domain/grid';
 import type { Poll, PollDetails } from '@/domain/types';
@@ -20,19 +20,21 @@ import { SavedNotice } from './SavedNotice';
 type AvailabilityEditorProps = {
   poll: Poll;
   initialSlots: string[];
+  /** The user already has a stored response (possibly from an earlier session). */
+  hasResponse: boolean;
   useNativeButton: boolean;
-  /** Saved earlier in this session (editor was remounted, e.g. after a tab switch). */
-  alreadySaved: boolean;
   onSaved: (data: PollDetails) => void;
+  onDirtyChange: (isDirty: boolean) => void;
   onShowResults: () => void;
 };
 
 export const AvailabilityEditor = ({
   poll,
   initialSlots,
+  hasResponse,
   useNativeButton,
-  alreadySaved,
   onSaved,
+  onDirtyChange,
   onShowResults,
 }: AvailabilityEditorProps) => {
   const { t, locale } = useI18n();
@@ -48,9 +50,15 @@ export const AvailabilityEditor = ({
     },
     [markSaved, onSaved],
   );
-  const { save, status: saveStatus } = useSaveAvailability(poll.id, handleSaved);
-  // A fresh mount starts 'idle'; restore 'saved' if nothing changed since the last save.
-  const status = saveStatus === 'idle' && alreadySaved ? 'saved' : saveStatus;
+  const { save, status } = useSaveAvailability(poll.id, handleSaved);
+  const isStored = hasResponse || status === 'saved';
+  let saveState: 'saved' | 'unsaved' | null = null;
+  if (isDirty) saveState = 'unsaved';
+  else if (isStored) saveState = 'saved';
+
+  useEffect(() => {
+    onDirtyChange(isDirty);
+  }, [isDirty, onDirtyChange]);
 
   const isSelected = useCallback((slot: string) => selected.has(slot), [selected]);
   const dragHandlers = useDragSelect({ isSelected, setSlot, onChange: haptics.selection });
@@ -65,6 +73,7 @@ export const AvailabilityEditor = ({
       <Hint>{t.poll.hint}</Hint>
       <EditorToolbar
         count={selected.size}
+        saveState={status === 'saving' ? null : saveState}
         canUndo={canUndoClear}
         onClear={() => {
           clear();
@@ -78,17 +87,13 @@ export const AvailabilityEditor = ({
       <SlotGrid grid={grid} renderCell={renderCell} bodyProps={dragHandlers} />
       {status === 'error' && <ErrorText>{t.app.genericError}</ErrorText>}
       {status === 'saved' && !isDirty && (
-        <SavedNotice
-          beforeShare={!useNativeButton}
-          autoScroll={saveStatus === 'saved'}
-          onShowResults={onShowResults}
-        />
+        <SavedNotice beforeShare={!useNativeButton} autoScroll onShowResults={onShowResults} />
       )}
       <SaveButton
         native={useNativeButton}
         status={status}
         isDirty={isDirty}
-        hasSaved={initialSlots.length > 0}
+        hasSaved={isStored}
         onSave={() => void save([...selected])}
       />
     </Section>

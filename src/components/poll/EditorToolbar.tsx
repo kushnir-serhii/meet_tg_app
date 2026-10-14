@@ -7,6 +7,8 @@ import styles from './poll.module.css';
 
 type EditorToolbarProps = {
   count: number;
+  /** Whether the current selection matches what's stored; null before the first save. */
+  saveState: 'saved' | 'unsaved' | null;
   canUndo: boolean;
   onClear: () => void;
   onUndo: () => void;
@@ -39,7 +41,13 @@ const UndoIcon = () => (
 );
 
 /** "Selected: N" + clear-all (with undo instead of a confirm dialog). */
-export const EditorToolbar = ({ count, canUndo, onClear, onUndo }: EditorToolbarProps) => {
+export const EditorToolbar = ({
+  count,
+  saveState,
+  canUndo,
+  onClear,
+  onUndo,
+}: EditorToolbarProps) => {
   const { t } = useI18n();
   let statusText = t.poll.nothingSelected;
   if (canUndo) statusText = t.poll.cleared;
@@ -49,6 +57,12 @@ export const EditorToolbar = ({ count, canUndo, onClear, onUndo }: EditorToolbar
     <div className={styles.toolbar}>
       <span className={styles.counter} aria-live="polite">
         {statusText}
+        {saveState && (
+          <span className={cx(saveState === 'unsaved' && styles.counterUnsaved)}>
+            {' · '}
+            {saveState === 'saved' ? t.poll.stateSaved : t.poll.stateUnsaved}
+          </span>
+        )}
       </span>
       {canUndo ? (
         <button type="button" className={styles.toolButton} onClick={onUndo}>
