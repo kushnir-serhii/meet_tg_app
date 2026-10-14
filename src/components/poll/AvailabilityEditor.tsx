@@ -88,6 +88,7 @@ export const AvailabilityEditor = ({
         native={useNativeButton}
         status={status}
         isDirty={isDirty}
+        hasSaved={initialSlots.length > 0}
         onSave={() => void save([...selected])}
       />
     </Section>

@@ -26,7 +26,7 @@ export const PerfectRanges = ({ poll, ranges, onPick }: PerfectRangesProps) => {
 
   return (
     <Section title={t.results.perfect}>
-      {onPick && <Hint>{t.schedule.pickHint}</Hint>}
+      <Hint>{onPick ? t.schedule.pickHint : t.schedule.waitHint}</Hint>
       <div className={styles.dayScroll}>
         <ul className={styles.dayColumns} style={{ '--days': days.length } as CSSProperties}>
           {days.map(({ date, ranges: dayRanges }) => {

@@ -75,7 +75,8 @@ export const en = {
     legendNone: 'Nobody',
   },
   schedule: {
-    pickHint: 'Organizer: tap a time to schedule the meeting.',
+    pickHint: 'Tap a time to schedule the meeting.',
+    waitHint: 'The organizer will pick the final time.',
     formTitle: 'Schedule the meeting',
     from: 'Start',
     to: 'End',

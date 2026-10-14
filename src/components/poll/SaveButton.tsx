@@ -15,19 +15,21 @@ type SaveButtonProps = {
   native: boolean;
   status: Status;
   isDirty: boolean;
+  /** User already has a saved response (e.g. reopened the app) — nothing to save yet. */
+  hasSaved: boolean;
   onSave: () => void;
 };
 
-const labelFor = (t: Messages, status: Status, isDirty: boolean): string => {
+const labelFor = (t: Messages, status: Status, isDone: boolean): string => {
   if (status === 'saving') return t.poll.saving;
-  if (status === 'saved' && !isDirty) return t.poll.saved;
+  if (isDone) return t.poll.saved;
   return t.poll.save;
 };
 
-export const SaveButton = ({ native, status, isDirty, onSave }: SaveButtonProps) => {
+export const SaveButton = ({ native, status, isDirty, hasSaved, onSave }: SaveButtonProps) => {
   const { t } = useI18n();
   const webApp = useTelegram();
-  const isDone = status === 'saved' && !isDirty;
+  const isDone = !isDirty && status !== 'saving' && (status === 'saved' || hasSaved);
   // Nothing to save: keep the button fully visible, just ignore taps (no faded "disabled" look).
   const inactive = !isDirty || status === 'saving';
   const handleSave = () => {
@@ -48,7 +50,7 @@ export const SaveButton = ({ native, status, isDirty, onSave }: SaveButtonProps)
     }
     return (
       <MainButton
-        text={labelFor(t, status, isDirty)}
+        text={labelFor(t, status, isDone)}
         onClick={handleSave}
         loading={status === 'saving'}
       />
@@ -62,7 +64,7 @@ export const SaveButton = ({ native, status, isDirty, onSave }: SaveButtonProps)
       className={isDone ? styles.saveDone : undefined}
       onClick={handleSave}
     >
-      {labelFor(t, status, isDirty)}
+      {labelFor(t, status, isDone)}
     </Button>
   );
 };
