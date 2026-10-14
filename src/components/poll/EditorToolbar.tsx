@@ -5,10 +5,17 @@ import { cx } from '@/utils/cx';
 
 import styles from './poll.module.css';
 
+export type SaveLine = {
+  text: string;
+  isError?: boolean;
+  /** Shown as a "Retry" link next to the text. */
+  onRetry?: () => void;
+};
+
 type EditorToolbarProps = {
   count: number;
-  /** Whether the current selection matches what's stored; null before the first save. */
-  saveState: 'saved' | 'unsaved' | null;
+  /** Auto-save status line under the counter (null = nothing to say). */
+  saveLine: SaveLine | null;
   canUndo: boolean;
   onClear: () => void;
   onUndo: () => void;
@@ -40,10 +47,10 @@ const UndoIcon = () => (
   </svg>
 );
 
-/** "Selected: N" + clear-all (with undo instead of a confirm dialog). */
+/** "Selected: N" + auto-save status + clear-all (with undo instead of a confirm dialog). */
 export const EditorToolbar = ({
   count,
-  saveState,
+  saveLine,
   canUndo,
   onClear,
   onUndo,
@@ -57,11 +64,17 @@ export const EditorToolbar = ({
     <div className={styles.toolbar}>
       <span className={styles.counter} aria-live="polite">
         <span>{statusText}</span>
-        {saveState && (
-          <span
-            className={cx(styles.counterState, saveState === 'unsaved' && styles.counterUnsaved)}
-          >
-            {saveState === 'saved' ? `✓ ${t.poll.stateSaved}` : t.poll.stateUnsaved}
+        {saveLine && (
+          <span className={cx(styles.counterState, saveLine.isError && styles.counterError)}>
+            {saveLine.text}
+            {saveLine.onRetry && (
+              <>
+                {' · '}
+                <button type="button" className={styles.linkButton} onClick={saveLine.onRetry}>
+                  {t.poll.retry}
+                </button>
+              </>
+            )}
           </span>
         )}
       </span>

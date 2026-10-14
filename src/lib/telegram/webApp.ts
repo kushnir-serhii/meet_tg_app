@@ -61,6 +61,11 @@ export type WebApp = {
   openLink: (url: string, options?: { try_instant_view?: boolean }) => void;
   isVersionAtLeast: (version: string) => boolean;
   switchInlineQuery: (query: string, chatTypes?: ChatType[]) => void;
+  /** Bot API 8.0+. Opens the native chat picker for a prepared inline message. */
+  shareMessage: (messageId: string, callback?: (sent: boolean) => void) => void;
+  /** Bot API 6.2+. Asks "close anyway?" when the user closes the app. */
+  enableClosingConfirmation: () => void;
+  disableClosingConfirmation: () => void;
   MainButton: BottomButton;
   BackButton: BackButton;
   HapticFeedback: HapticFeedback;

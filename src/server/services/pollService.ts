@@ -88,7 +88,10 @@ export const saveResponse = async (
   slots: string[],
 ): Promise<PollDetails> => {
   const poll = await getPollOrThrow(pollId);
-  await responsesRepository.upsert(poll.id, participant, sanitizeSlots(slots, generateSlots(poll)));
+  const valid = sanitizeSlots(slots, generateSlots(poll));
+  // Clearing everything withdraws the answer: the user no longer counts as responded.
+  if (valid.length === 0) await responsesRepository.remove(poll.id, participant.userId);
+  else await responsesRepository.upsert(poll.id, participant, valid);
   return getPollDetails(poll.id, participant.userId);
 };
 

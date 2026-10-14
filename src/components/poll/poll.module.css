@@ -67,7 +67,7 @@
   font-size: 13px;
 }
 
-.counterUnsaved {
+.counterError {
   color: var(--destructive);
 }
 
@@ -93,12 +93,6 @@
   background: color-mix(in srgb, var(--destructive) 10%, var(--section-bg));
 }
 
-/* Saved state: readable success label instead of a faded disabled button. */
-.saveDone {
-  color: var(--success-strong);
-  cursor: default;
-}
-
 /* Tab panel: transparent to the parent's flex gap; hidden one is removed from layout. */
 .panel {
   display: contents;
@@ -106,4 +100,20 @@
 
 .panel[hidden] {
   display: none;
+}
+
+.noticeText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.linkButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
 }

@@ -13,7 +13,17 @@ export const responsesRepository = {
       .eq('poll_id', pollId)
       .order('updated_at', { ascending: true });
     if (error) throw error;
-    return data.map(toPollResponse);
+    // An empty selection is "no answer" (also hides legacy empty rows).
+    return data.map(toPollResponse).filter((response) => response.slots.length > 0);
+  },
+
+  async remove(pollId: string, userId: number): Promise<void> {
+    const { error } = await getDb()
+      .from('responses')
+      .delete()
+      .eq('poll_id', pollId)
+      .eq('user_id', userId);
+    if (error) throw error;
   },
 
   async upsert(pollId: string, participant: Participant, slots: string[]): Promise<void> {
