@@ -52,7 +52,9 @@ const renderSummary = (ctx: RenderContext, results: PollResults): string[] => {
 
   if (results.perfectRanges.length > 0) {
     const ranges = limitLines(results.perfectRanges, MAX_PERFECT, (r) => renderRange(r, ctx), ctx);
-    return ['', ctx.t.bot.perfect, ...ranges];
+    // With one answer "works for everyone" is misleading — it's just that person's time.
+    const heading = total === 1 ? ctx.t.bot.singleAnswer : ctx.t.bot.perfect;
+    return ['', heading, ...ranges];
   }
 
   const ranges = limitLines(results.bestRanges, MAX_BEST, (r) => renderBestRange(r, ctx), ctx);

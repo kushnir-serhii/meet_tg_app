@@ -48,7 +48,7 @@ const toInput = (values: CreatePollFormValues): unknown => ({
   expectedCount: values.expectedCount ? Number(values.expectedCount) : null,
 });
 
-/** Form state + validation; returns parsed input only when valid. */
+/** Form state + validation; returns parsed input only when valid, plus invalid fields. */
 export const useCreatePollForm = () => {
   const [values, setValues] = useState(initialValues);
 
@@ -65,6 +65,11 @@ export const useCreatePollForm = () => {
 
   const parsed = useMemo(() => createPollSchema.safeParse(toInput(values)), [values]);
   const input: CreatePollInput | null = parsed.success ? parsed.data : null;
+  /** Fields the user can fix (dates/hours are always kept valid by `setField`). */
+  const invalid = useMemo(() => {
+    const paths = new Set(parsed.error?.issues.map((issue) => issue.path[0]));
+    return { title: paths.has('title'), expectedCount: paths.has('expectedCount') };
+  }, [parsed]);
 
-  return { values, setField, input, minDate: today() };
+  return { values, setField, input, invalid, minDate: today() };
 };
