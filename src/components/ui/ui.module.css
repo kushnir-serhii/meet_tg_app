@@ -85,6 +85,10 @@
   font-weight: 500;
 }
 
+.tabLocked {
+  opacity: 0.45;
+}
+
 .tabActive {
   background: var(--accent);
   color: var(--accent-text);

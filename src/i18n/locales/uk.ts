@@ -1,6 +1,9 @@
 import type { Messages } from '../types';
 
 export const uk: Messages = {
+  common: {
+    cancel: 'Скасувати',
+  },
   app: {
     loading: 'Завантаження…',
     openInTelegram: 'Відкрийте застосунок у Telegram',
@@ -44,6 +47,10 @@ export const uk: Messages = {
     saved: 'Збережено ✓',
     stateSaved: 'збережено',
     stateUnsaved: 'не збережено',
+    unsavedTitle: 'Зміни не збережено',
+    unsavedMessage: 'Збережіть свій час, щоб побачити актуальні результати.',
+    saveAndView: 'Зберегти',
+    discard: 'Не зберігати',
     savedTitle: '✅ Ваш час збережено',
     savedSteps: [
       'Застосунок можна закрити — підсумок у чаті оновиться автоматично.',
@@ -56,6 +63,7 @@ export const uk: Messages = {
     timezoneMismatch: (tz) => `Увага: ваш часовий пояс ${tz}`,
     delete: 'Видалити зустріч',
     deleting: 'Видаляю…',
+    deleteAction: 'Видалити',
     deleteConfirm: 'Видалити зустріч і всі відповіді? Це не можна скасувати.',
     deleted: 'Зустріч видалено 🗑',
     notFound: 'Зустріч не знайдено — можливо, її видалили або вона застаріла.',
@@ -86,6 +94,7 @@ export const uk: Messages = {
     addIcs: 'Apple / Outlook (.ics)',
     change: 'Змінити час',
     unschedule: 'Прибрати призначений час',
+    unscheduleAction: 'Прибрати',
     unscheduleConfirm: 'Прибрати призначений час? Повідомлення в чаті оновляться.',
     calendarDetails: (names, link) =>
       [names ? `Учасники: ${names}` : null, `Узгоджено в Pik To Meet: ${link}`]

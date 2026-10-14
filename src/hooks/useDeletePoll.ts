@@ -17,7 +17,11 @@ export const useDeletePoll = (pollId: string, onDeleted: () => void) => {
   const haptics = useHaptics();
 
   const remove = useCallback(async () => {
-    if (!(await confirm(t.poll.deleteConfirm))) return;
+    const ok = await confirm(t.poll.deleteConfirm, {
+      confirmText: t.poll.deleteAction,
+      destructive: true,
+    });
+    if (!ok) return;
 
     setIsDeleting(true);
     setError(false);

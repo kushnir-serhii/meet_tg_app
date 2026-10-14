@@ -2,18 +2,29 @@
 
 import { useCallback } from 'react';
 
-import { useTelegram } from './useTelegram';
+import { useI18n } from './useI18n';
+import { usePopup } from './usePopup';
 
-/** Native Telegram confirm dialog as a promise (falls back to `window.confirm`). */
+type ConfirmOptions = {
+  /** Label of the confirming button — name the action ("Видалити"), not "OK". */
+  confirmText: string;
+  destructive?: boolean;
+};
+
+/** Confirm dialog as a promise: true only when the action button was pressed. */
 export const useConfirm = () => {
-  const webApp = useTelegram();
+  const popup = usePopup();
+  const { t } = useI18n();
 
   return useCallback(
-    (message: string): Promise<boolean> =>
-      new Promise((resolve) => {
-        if (webApp) webApp.showConfirm(message, resolve);
-        else resolve(window.confirm(message));
-      }),
-    [webApp],
+    async (message: string, { confirmText, destructive = false }: ConfirmOptions) =>
+      (await popup({
+        message,
+        buttons: [
+          { id: 'cancel', type: 'default', text: t.common.cancel },
+          { id: 'confirm', type: destructive ? 'destructive' : 'default', text: confirmText },
+        ],
+      })) === 'confirm',
+    [popup, t],
   );
 };

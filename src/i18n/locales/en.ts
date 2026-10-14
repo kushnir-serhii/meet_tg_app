@@ -1,5 +1,8 @@
 /** English strings — the source of truth for the `Messages` shape. */
 export const en = {
+  common: {
+    cancel: 'Cancel',
+  },
   app: {
     loading: 'Loading…',
     openInTelegram: 'Open the app in Telegram',
@@ -44,6 +47,10 @@ export const en = {
     saved: 'Saved ✓',
     stateSaved: 'saved',
     stateUnsaved: 'not saved',
+    unsavedTitle: 'Changes not saved',
+    unsavedMessage: 'Save your time first to see up-to-date results.',
+    saveAndView: 'Save',
+    discard: "Don't save",
     savedTitle: '✅ Your time is saved',
     savedSteps: [
       'You can close the app now — the summary in the chat updates automatically.',
@@ -59,6 +66,7 @@ export const en = {
     timezoneMismatch: (tz: string) => `Note: your time zone is ${tz}`,
     delete: 'Delete meeting',
     deleting: 'Deleting…',
+    deleteAction: 'Delete',
     deleteConfirm: 'Delete this meeting and all responses? This cannot be undone.',
     deleted: 'Meeting deleted 🗑',
     notFound: 'Meeting not found — it may have been deleted or expired.',
@@ -90,6 +98,7 @@ export const en = {
     addIcs: 'Apple / Outlook (.ics)',
     change: 'Change time',
     unschedule: 'Remove scheduled time',
+    unscheduleAction: 'Remove',
     unscheduleConfirm: 'Remove the scheduled time? Chat messages will be updated.',
     calendarDetails: (names: string | null, link: string) =>
       [names ? `Participants: ${names}` : null, `Scheduled with Pik To Meet: ${link}`]

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo } from 'react';
+import { type Ref, useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
 
 import { buildGrid } from '@/domain/grid';
 import type { Poll, PollDetails } from '@/domain/types';
@@ -17,7 +17,14 @@ import { EditorToolbar } from './EditorToolbar';
 import { SaveButton } from './SaveButton';
 import { SavedNotice } from './SavedNotice';
 
+/** Lets the screen save or drop unsaved edits (e.g. before leaving to Results). */
+export type AvailabilityEditorHandle = {
+  save: () => Promise<boolean>;
+  discard: () => void;
+};
+
 type AvailabilityEditorProps = {
+  ref?: Ref<AvailabilityEditorHandle>;
   poll: Poll;
   initialSlots: string[];
   /** The user already has a stored response (possibly from an earlier session). */
@@ -29,6 +36,7 @@ type AvailabilityEditorProps = {
 };
 
 export const AvailabilityEditor = ({
+  ref,
   poll,
   initialSlots,
   hasResponse,
@@ -39,7 +47,7 @@ export const AvailabilityEditor = ({
 }: AvailabilityEditorProps) => {
   const { t, locale } = useI18n();
   const grid = useMemo(() => buildGrid(poll, locale), [poll, locale]);
-  const { selected, setSlot, markSaved, clear, undoClear, canUndoClear, isDirty } =
+  const { selected, setSlot, markSaved, reset, clear, undoClear, canUndoClear, isDirty } =
     useSlotSelection(initialSlots);
   const haptics = useHaptics();
 
@@ -59,6 +67,12 @@ export const AvailabilityEditor = ({
   useEffect(() => {
     onDirtyChange(isDirty);
   }, [isDirty, onDirtyChange]);
+
+  useImperativeHandle(ref, () => ({ save: () => save([...selected]), discard: reset }), [
+    save,
+    selected,
+    reset,
+  ]);
 
   const isSelected = useCallback((slot: string) => selected.has(slot), [selected]);
   const dragHandlers = useDragSelect({ isSelected, setSlot, onChange: haptics.selection });

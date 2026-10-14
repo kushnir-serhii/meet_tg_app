@@ -55,8 +55,16 @@
 }
 
 .counter {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
   font-size: 14px;
+  line-height: 1.3;
   color: var(--hint);
+}
+
+.counterState {
+  font-size: 13px;
 }
 
 .counterUnsaved {
@@ -64,6 +72,8 @@
 }
 
 .toolButton {
+  flex-shrink: 0;
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   gap: 6px;

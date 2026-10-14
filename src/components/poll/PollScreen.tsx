@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import { useI18n } from '@/hooks/useI18n';
 import { usePollDetails } from '@/hooks/usePollDetails';
+import { usePopup } from '@/hooks/usePopup';
 import { useSchedulePoll } from '@/hooks/useSchedulePoll';
 
 import { ResultsView } from '../results/ResultsView';
@@ -11,7 +12,7 @@ import { ScheduledCard } from '../schedule/ScheduledCard';
 import { SupportSection } from '../support/SupportSection';
 import { ErrorState, Loading, Notice } from '../ui/StateViews';
 import { Tabs } from '../ui/Tabs';
-import { AvailabilityEditor } from './AvailabilityEditor';
+import { AvailabilityEditor, type AvailabilityEditorHandle } from './AvailabilityEditor';
 import { DeletePollButton } from './DeletePollButton';
 import styles from './poll.module.css';
 import { PollHeader } from './PollHeader';
@@ -30,15 +31,41 @@ export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) 
   /** Unsaved edits in "Мій час" — flagged on the tab so they aren't forgotten on Results. */
   const [isDirty, setIsDirty] = useState(false);
   const { t } = useI18n();
+  const popup = usePopup();
+  const editorRef = useRef<AvailabilityEditorHandle>(null);
   const scheduling = useSchedulePoll(pollId, update);
   const tabs = useMemo(
     () =>
       [
         { id: 'mine', label: isDirty ? `${t.poll.tabMine} •` : t.poll.tabMine },
-        { id: 'results', label: t.poll.tabResults },
+        { id: 'results', label: t.poll.tabResults, locked: isDirty },
       ] as const,
     [t, isDirty],
   );
+
+  /** Results would be stale with unsaved edits: ask to save (or drop) them first. */
+  const openTab = async (next: Tab) => {
+    if (next === tab) return;
+    if (next === 'mine' || !isDirty) {
+      setTab(next);
+      return;
+    }
+    const choice = await popup({
+      title: t.poll.unsavedTitle,
+      message: t.poll.unsavedMessage,
+      buttons: [
+        { id: 'save', type: 'default', text: t.poll.saveAndView },
+        { id: 'discard', type: 'destructive', text: t.poll.discard },
+        { id: 'cancel', type: 'cancel' },
+      ],
+    });
+    if (choice === 'save') {
+      if (await editorRef.current?.save()) setTab('results');
+    } else if (choice === 'discard') {
+      editorRef.current?.discard();
+      setTab('results');
+    }
+  };
 
   if (state.status === 'loading') return <Loading />;
   if (state.status === 'error') return <ErrorState onRetry={reload} />;
@@ -57,16 +84,23 @@ export const PollScreen = ({ pollId, hideMainButton = false }: PollScreenProps) 
           canManage={canManage}
           isSaving={scheduling.isSaving}
           onChange={() => {
-            setTab('results');
+            void openTab('results');
           }}
           onUnschedule={() => void scheduling.schedule(null)}
         />
       )}
-      <Tabs tabs={tabs} active={tab} onChange={setTab} />
+      <Tabs
+        tabs={tabs}
+        active={tab}
+        onChange={(next) => {
+          void openTab(next);
+        }}
+      />
       {/* Both panels stay mounted: unsaved selection survives tab switches and the
           bottom Save/Done button stays visible on both tabs. */}
       <div className={styles.panel} hidden={tab !== 'mine'}>
         <AvailabilityEditor
+          ref={editorRef}
           poll={poll}
           initialSlots={myResponse?.slots ?? []}
           hasResponse={myResponse != null}
