@@ -22,7 +22,7 @@ export const BestSlots = ({ ranges, count, total, timezone, onPick }: BestSlotsP
   return (
     <Section title={t.results.best(count, total)}>
       <Hint>{t.results.noMatch}</Hint>
-      {onPick && <Hint>{t.schedule.pickHint}</Hint>}
+      <Hint>{onPick ? t.schedule.pickHint : t.schedule.waitHint}</Hint>
       <ul className={styles.list}>
         {ranges.map((range) => (
           <li key={range.start} className={styles.item}>
