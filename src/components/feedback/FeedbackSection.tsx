@@ -63,6 +63,8 @@ export const FeedbackSection = () => {
                 <textarea
                   id={id}
                   className={cx(className, styles.textarea)}
+                  name="pik-feedback-text"
+                  autoComplete="off"
                   rows={3}
                   maxLength={FEEDBACK_MAX_LENGTH}
                   placeholder={t.feedback.textPlaceholder}
@@ -85,12 +87,12 @@ export const FeedbackSection = () => {
             </label>
             {status === 'error' && <ErrorText>{t.app.genericError}</ErrorText>}
             <Button
-              disabled={status === 'sending'}
+              loading={status === 'sending'}
               onClick={() => {
                 void send({ rating, text, canPublish });
               }}
             >
-              {status === 'sending' ? t.feedback.sending : t.feedback.submit}
+              {t.feedback.submit}
             </Button>
           </>
         )}

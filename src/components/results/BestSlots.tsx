@@ -1,3 +1,6 @@
+import { useState } from 'react';
+
+import { hasEnded } from '@/domain/pastTime';
 import type { RangeSummary, SlotRange } from '@/domain/types';
 import { useI18n } from '@/hooks/useI18n';
 import { formatRange } from '@/shared/format';
@@ -18,6 +21,7 @@ type BestSlotsProps = {
 /** Shown when nobody-fits-all: every range where the most people are free. */
 export const BestSlots = ({ ranges, count, total, timezone, onPick }: BestSlotsProps) => {
   const { t, locale } = useI18n();
+  const [now] = useState(() => new Date());
 
   return (
     <Section title={t.results.best(count, total)}>
@@ -32,7 +36,7 @@ export const BestSlots = ({ ranges, count, total, timezone, onPick }: BestSlotsP
               unavailable={range.unavailable}
               total={total}
             />
-            {onPick && (
+            {onPick && !hasEnded(range, now) && (
               <button
                 type="button"
                 className={styles.pickButton}

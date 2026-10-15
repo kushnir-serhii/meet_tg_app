@@ -22,6 +22,8 @@ export const TitleField = ({ value, onChange, error, ref }: TitleFieldProps) => 
           id={id}
           aria-invalid={error ? true : undefined}
           className={className}
+          name="pik-meeting-title"
+          autoComplete="on"
           value={value}
           maxLength={80}
           placeholder={t.create.titlePlaceholder}

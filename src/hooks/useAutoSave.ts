@@ -29,8 +29,6 @@ export const useAutoSave = (
   const webApp = useTelegram();
   const haptics = useHaptics();
   const [status, setStatus] = useState<AutoSaveStatus>('idle');
-  /** What the server has — cells that differ from it are shown as unsaved. */
-  const [saved, setSaved] = useState<ReadonlySet<string>>(() => new Set(initialSlots));
 
   const latest = useRef<string[]>([...selected]);
   const savedKey = useRef(toKey(initialSlots));
@@ -60,7 +58,6 @@ export const useAutoSave = (
         const data = await pollsApi.saveResponse(pollId, slots);
         savedKey.current = key;
         savedOnce.current = true;
-        setSaved(new Set(slots));
         onSavedRef.current(data);
         // Changed again while saving → the scheduled save will pick it up.
         setStatus(toKey(latest.current) === key ? 'saved' : 'pending');
@@ -112,5 +109,5 @@ export const useAutoSave = (
     else webApp.disableClosingConfirmation();
   }, [webApp, hasUnsaved]);
 
-  return { status, saved, flush };
+  return { status, flush };
 };

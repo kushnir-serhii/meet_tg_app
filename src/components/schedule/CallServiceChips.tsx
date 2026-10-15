@@ -32,7 +32,6 @@ export const CallServiceChips = ({ onCreate }: CallServiceChipsProps) => {
             onCreate();
           }}
         >
-          {service.id === 'meet' && <span aria-hidden="true">🎥 </span>}
           {service.label}
         </button>
       ))}

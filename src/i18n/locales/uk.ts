@@ -27,7 +27,6 @@ export const uk: Messages = {
     titleRequired: 'Вкажіть назву зустрічі',
     expectedInvalid: 'Від 2 до 200 людей — або залиште поле порожнім',
     submit: 'Створити',
-    creating: 'Створюю…',
   },
   share: {
     heading: 'Зустріч створено 🎉',
@@ -57,7 +56,6 @@ export const uk: Messages = {
     timezone: (tz) => `Час указано за ${tz}`,
     timezoneMismatch: (tz) => `Увага: ваш часовий пояс ${tz}`,
     delete: 'Видалити зустріч',
-    deleting: 'Видаляю…',
     deleteAction: 'Видалити',
     deleteConfirm: 'Видалити зустріч і всі відповіді? Це не можна скасувати.',
     deleted: 'Зустріч видалено 🗑',
@@ -85,10 +83,9 @@ export const uk: Messages = {
     meetingUrlPlaceholder: 'https://meet.google.com/…',
     createCall: 'Створити:',
     meetingUrlHint:
-      'Створіть дзвінок, скопіюйте посилання і вставте сюди. Учасники отримають кнопку «Приєднатися».',
+      'У Google Meet: «Нова зустріч» → «Створити зустріч на потім», скопіюйте посилання і вставте сюди. Учасники отримають кнопку «Приєднатися».',
     meetingUrlInvalid: 'Вкажіть посилання, що починається з https://',
     confirm: 'Призначити й повідомити чат',
-    saving: 'Зберігаю…',
     cancel: 'Скасувати',
     scheduledTitle: '📌 Зустріч призначено',
     join: 'Приєднатися до дзвінка',
@@ -122,7 +119,6 @@ export const uk: Messages = {
     textPlaceholder: 'Що подобається, чого бракує?',
     consent: 'Можна опублікувати мій відгук з моїм імʼям',
     submit: 'Надіслати',
-    sending: 'Надсилаємо…',
     thanks: 'Дякуємо за відгук! 💙',
   },
   bot: {

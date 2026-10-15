@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useI18n } from '@/hooks/useI18n';
 import { usePollDetails } from '@/hooks/usePollDetails';
@@ -28,7 +28,7 @@ type PollScreenProps = {
 };
 
 export const PollScreen = ({ pollId, action }: PollScreenProps) => {
-  const { state, reload, update, markDeleted } = usePollDetails(pollId);
+  const { state, reload, update, refresh, markDeleted } = usePollDetails(pollId);
   const [tab, setTab] = useState<Tab>('mine');
   const { t } = useI18n();
   const webApp = useTelegram();
@@ -52,7 +52,19 @@ export const PollScreen = ({ pollId, action }: PollScreenProps) => {
     // Results should include the latest edits; on failure stay put — the error is shown.
     if (next === 'results' && !(await flush())) return;
     setTab(next);
+    if (next === 'results') void refresh();
   };
+
+  // Coming back to the app: other participants may have answered meanwhile.
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') void refresh();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [refresh]);
 
   const runPrimary = async () => {
     if (await flush()) await primary.run();
