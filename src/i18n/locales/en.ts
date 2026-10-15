@@ -114,7 +114,7 @@ export const en = {
   },
   feedback: {
     prompt: 'How do you like the app? Your review helps us improve it',
-    open: '✍️ Leave a review',
+    dismiss: 'Not now',
     title: 'Your review',
     ratingLabel: (rating: number) => `${rating} of 5`,
     textLabel: 'Comment (optional)',
