@@ -37,7 +37,17 @@ export const ScheduledCard = ({
     <Section title={t.schedule.scheduledTitle}>
       <p className={styles.when}>{formatRange(poll.scheduled, poll.timezone, locale)}</p>
       <div className={styles.actions}>
+        {poll.meetingUrl && (
+          <Button
+            onClick={() => {
+              if (poll.meetingUrl) openLink(poll.meetingUrl);
+            }}
+          >
+            {t.schedule.join}
+          </Button>
+        )}
         <Button
+          variant={poll.meetingUrl ? 'secondary' : 'primary'}
           onClick={() => {
             openLink(calendar.google);
           }}

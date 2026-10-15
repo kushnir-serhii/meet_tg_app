@@ -81,18 +81,28 @@ export const uk: Messages = {
     formTitle: 'Призначити зустріч',
     from: 'Початок',
     to: 'Кінець',
+    meetingUrl: 'Посилання на дзвінок (необов’язково)',
+    meetingUrlPlaceholder: 'https://meet.google.com/…',
+    meetingUrlHint:
+      'Google Meet, Zoom, Teams — будь-яке посилання. Учасники отримають кнопку «Приєднатися».',
+    meetingUrlInvalid: 'Вкажіть посилання, що починається з https://',
     confirm: 'Призначити й повідомити чат',
     saving: 'Зберігаю…',
     cancel: 'Скасувати',
     scheduledTitle: '📌 Зустріч призначено',
+    join: 'Приєднатися до дзвінка',
     addGoogle: 'Додати в Google Calendar',
     addIcs: 'Apple / Outlook (.ics)',
     change: 'Змінити час',
     unschedule: 'Прибрати призначений час',
     unscheduleAction: 'Прибрати',
     unscheduleConfirm: 'Прибрати призначений час? Повідомлення в чаті оновляться.',
-    calendarDetails: (names, link) =>
-      [names ? `Учасники: ${names}` : null, `Узгоджено в Pik To Meet: ${link}`]
+    calendarDetails: (names, link, meetingUrl) =>
+      [
+        meetingUrl ? `Дзвінок: ${meetingUrl}` : null,
+        names ? `Учасники: ${names}` : null,
+        `Узгоджено в Pik To Meet: ${link}`,
+      ]
         .filter(Boolean)
         .join('\n'),
   },
@@ -134,6 +144,7 @@ export const uk: Messages = {
     cannot: 'не може',
     timezone: (tz) => `🕒 ${tz}`,
     scheduled: (when) => `📌 <b>Зустріч призначено: ${when}</b>`,
+    joinButton: '🎥 Приєднатися до дзвінка',
     googleButton: '📅 Додати в Google Calendar',
     icsButton: '🍏 Apple / Outlook (.ics)',
     deleted: (title) => `🗑 Зустріч «${title}» видалено організатором`,

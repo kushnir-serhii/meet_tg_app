@@ -19,6 +19,7 @@ const poll: Poll = {
   expectedCount: 3,
   locale: 'en',
   scheduled: null,
+  meetingUrl: null,
   createdAt: '2026-10-12T00:00:00.000Z',
 };
 
@@ -84,5 +85,21 @@ describe('renderPollMessage', () => {
     expect(
       replyMarkup.inline_keyboard.map((row) => (row[0] as { url?: string } | undefined)?.url),
     ).toEqual(['https://calendar.google.com/x', 'https://app/ics', 'mini']);
+  });
+
+  it('puts the call link button first when it is set', () => {
+    const scheduled = { start: slots[0]!, end: slots[1]! };
+    const { replyMarkup } = renderPollMessage(
+      { ...poll, scheduled, meetingUrl: 'https://meet.google.com/abc-defg-hij' },
+      computeResults(slots, [], 60),
+      'mini',
+      { google: 'https://calendar.google.com/x', ics: 'https://app/ics' },
+    );
+    const first = replyMarkup.inline_keyboard[0]?.[0] as { text: string; url?: string };
+    expect(first).toEqual({
+      text: '🎥 Join the call',
+      url: 'https://meet.google.com/abc-defg-hij',
+    });
+    expect(replyMarkup.inline_keyboard).toHaveLength(4);
   });
 });

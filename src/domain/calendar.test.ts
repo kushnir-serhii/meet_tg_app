@@ -40,3 +40,23 @@ describe('buildIcs', () => {
     }
   });
 });
+
+describe('call link as location', () => {
+  const withLink = { ...event, location: 'https://meet.google.com/abc-defg-hij' };
+
+  it('is passed to Google Calendar', () => {
+    const url = new URL(buildGoogleCalendarUrl(withLink, 'Europe/Warsaw'));
+    expect(url.searchParams.get('location')).toBe(withLink.location);
+  });
+
+  it('is written to the .ics', () => {
+    const ics = buildIcs(withLink);
+    expect(ics).toContain('LOCATION:https://meet.google.com/abc-defg-hij');
+    expect(ics).toContain('URL:https://meet.google.com/abc-defg-hij');
+  });
+
+  it('is omitted when absent', () => {
+    expect(buildIcs(event)).not.toContain('LOCATION:');
+    expect(new URL(buildGoogleCalendarUrl(event, 'UTC')).searchParams.has('location')).toBe(false);
+  });
+});

@@ -16,10 +16,10 @@ export const pollsApi = {
       body: { slots },
     }),
 
-  schedule: (pollId: string, range: SlotRange | null) =>
+  schedule: (pollId: string, range: SlotRange | null, meetingUrl: string | null = null) =>
     apiRequest<PollDetails>(`/api/polls/${encodeURIComponent(pollId)}/schedule`, {
       method: 'PUT',
-      body: { range },
+      body: { range, meetingUrl },
     }),
 
   /** Prepared inline message id for `WebApp.shareMessage`. */

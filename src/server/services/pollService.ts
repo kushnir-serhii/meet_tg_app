@@ -64,6 +64,7 @@ export const schedulePoll = async (
   pollId: string,
   userId: number,
   range: SlotRange | null,
+  meetingUrl: string | null = null,
 ): Promise<PollDetails> => {
   const poll = await getPollOrThrow(pollId);
   if (poll.creatorId !== userId) throw forbidden('Only the organizer can schedule the meeting');
@@ -78,6 +79,7 @@ export const schedulePoll = async (
   await pollsRepository.update(poll.id, {
     scheduled_start: normalized?.start ?? null,
     scheduled_end: normalized?.end ?? null,
+    meeting_url: normalized ? meetingUrl : null,
   });
   return getPollDetails(poll.id, userId);
 };
