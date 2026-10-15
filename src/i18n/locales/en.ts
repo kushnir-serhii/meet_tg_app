@@ -27,7 +27,6 @@ export const en = {
     titleRequired: 'Enter a meeting title',
     expectedInvalid: 'From 2 to 200 people — or leave it empty',
     submit: 'Create',
-    creating: 'Creating…',
   },
   share: {
     heading: 'Meeting created 🎉',
@@ -57,7 +56,6 @@ export const en = {
     timezone: (tz: string) => `Times in ${tz}`,
     timezoneMismatch: (tz: string) => `Note: your time zone is ${tz}`,
     delete: 'Delete meeting',
-    deleting: 'Deleting…',
     deleteAction: 'Delete',
     deleteConfirm: 'Delete this meeting and all responses? This cannot be undone.',
     deleted: 'Meeting deleted 🗑',
@@ -86,10 +84,9 @@ export const en = {
     meetingUrlPlaceholder: 'https://meet.google.com/…',
     createCall: 'Create:',
     meetingUrlHint:
-      'Create a call, copy the link and paste it here. Participants will get a "Join" button.',
+      'In Google Meet: "New meeting" → "Create a meeting for later", copy the link and paste it here. Participants will get a "Join" button.',
     meetingUrlInvalid: 'Enter a link starting with https://',
     confirm: 'Schedule and notify the chat',
-    saving: 'Saving…',
     cancel: 'Cancel',
     scheduledTitle: '📌 Meeting scheduled',
     join: 'Join the call',
@@ -123,7 +120,6 @@ export const en = {
     textPlaceholder: 'What do you like, what is missing?',
     consent: 'You may publish my review with my name',
     submit: 'Send',
-    sending: 'Sending…',
     thanks: 'Thank you for your review! 💙',
   },
   bot: {

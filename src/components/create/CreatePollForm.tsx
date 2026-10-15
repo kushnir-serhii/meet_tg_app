@@ -45,7 +45,7 @@ export const CreatePollForm = ({ onCreated }: CreatePollFormProps) => {
   }, [input, invalid, isPending, create, haptics]);
 
   useMainButton({
-    text: isPending ? t.create.creating : t.create.submit,
+    text: t.create.submit,
     onClick: submit,
     loading: isPending,
   });

@@ -1,5 +1,6 @@
-import { type CSSProperties, useMemo } from 'react';
+import { type CSSProperties, useMemo, useState } from 'react';
 
+import { hasEnded } from '@/domain/pastTime';
 import { groupRangesByDay } from '@/domain/ranges';
 import type { Poll, SlotRange } from '@/domain/types';
 import { useI18n } from '@/hooks/useI18n';
@@ -19,6 +20,7 @@ type PerfectRangesProps = {
 /** Days as columns (like the grid), matching time ranges stacked under each day. */
 export const PerfectRanges = ({ poll, ranges, onPick }: PerfectRangesProps) => {
   const { t, locale } = useI18n();
+  const [now] = useState(() => new Date());
   const days = useMemo(
     () => groupRangesByDay(ranges, poll.dates, poll.timezone),
     [ranges, poll.dates, poll.timezone],
@@ -38,20 +40,23 @@ export const PerfectRanges = ({ poll, ranges, onPick }: PerfectRangesProps) => {
                   <span>{day}</span>
                 </div>
                 {dayRanges.length === 0 && <span className={styles.dayEmpty}>—</span>}
-                {dayRanges.map((range) => (
-                  <button
-                    key={range.start}
-                    type="button"
-                    disabled={!onPick}
-                    className={cx(styles.timePill, onPick && styles.timePillAction)}
-                    onClick={() => onPick?.(range)}
-                  >
-                    <span className={styles.timeStart}>
-                      {formatTime(range.start, poll.timezone)}
-                    </span>
-                    <span className={styles.timeEnd}>{formatTime(range.end, poll.timezone)}</span>
-                  </button>
-                ))}
+                {dayRanges.map((range) => {
+                  const pickable = onPick !== undefined && !hasEnded(range, now);
+                  return (
+                    <button
+                      key={range.start}
+                      type="button"
+                      disabled={!pickable}
+                      className={cx(styles.timePill, pickable && styles.timePillAction)}
+                      onClick={() => onPick?.(range)}
+                    >
+                      <span className={styles.timeStart}>
+                        {formatTime(range.start, poll.timezone)}
+                      </span>
+                      <span className={styles.timeEnd}>{formatTime(range.end, poll.timezone)}</span>
+                    </button>
+                  );
+                })}
               </li>
             );
           })}

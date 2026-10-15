@@ -22,10 +22,10 @@ export const DeletePollButton = ({ pollId, onDeleted }: DeletePollButtonProps) =
       <Button
         variant="secondary"
         className={styles.danger}
-        disabled={isDeleting}
+        loading={isDeleting}
         onClick={() => void remove()}
       >
-        {isDeleting ? t.poll.deleting : t.poll.delete}
+        {t.poll.delete}
       </Button>
     </>
   );

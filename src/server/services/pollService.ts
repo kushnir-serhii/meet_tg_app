@@ -2,6 +2,7 @@ import 'server-only';
 
 import { nanoid } from 'nanoid';
 
+import { startsInPast } from '@/domain/pastTime';
 import { computeResults, isRangeOfSlots } from '@/domain/results';
 import { generateSlots, sanitizeSlots } from '@/domain/slots';
 import type { Participant, Poll, PollDetails, PollResults, SlotRange } from '@/domain/types';
@@ -74,6 +75,9 @@ export const schedulePoll = async (
     : null;
   if (normalized && !isRangeOfSlots(normalized, generateSlots(poll), poll.slotMinutes)) {
     throw badRequest('The time must be within the poll slots');
+  }
+  if (normalized && startsInPast(normalized, new Date())) {
+    throw badRequest('The meeting time is in the past');
   }
 
   await pollsRepository.update(poll.id, {

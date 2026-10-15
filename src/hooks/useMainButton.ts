@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useEffectEvent } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 
 import { useTelegram } from './useTelegram';
 
 type MainButtonOptions = {
   text: string;
-  onClick: () => void;
+  /** May be async: the button shows Telegram's progress spinner until it settles. */
+  onClick: () => Promise<void> | void;
   visible?: boolean;
   disabled?: boolean;
   loading?: boolean;
@@ -22,12 +23,20 @@ export const useMainButton = ({
 }: MainButtonOptions): void => {
   const webApp = useTelegram();
   const handleClick = useEffectEvent(onClick);
+  const [running, setRunning] = useState(false);
 
   useEffect(() => {
     if (!webApp) return;
     const button = webApp.MainButton;
     const listener = () => {
-      handleClick();
+      const result = handleClick();
+      if (!result) return;
+      setRunning(true);
+      void Promise.resolve(result)
+        .catch(() => undefined)
+        .finally(() => {
+          setRunning(false);
+        });
     };
 
     button.onClick(listener);
@@ -47,7 +56,7 @@ export const useMainButton = ({
     if (disabled) button.disable();
     else button.enable();
 
-    if (loading) button.showProgress(false);
+    if (loading || running) button.showProgress(false);
     else button.hideProgress();
-  }, [webApp, text, visible, disabled, loading]);
+  }, [webApp, text, visible, disabled, loading, running]);
 };

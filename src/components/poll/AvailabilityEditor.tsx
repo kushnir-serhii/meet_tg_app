@@ -11,7 +11,7 @@ import { useI18n } from '@/hooks/useI18n';
 import { useSlotSelection } from '@/hooks/useSlotSelection';
 import type { Messages } from '@/i18n';
 
-import { SelectCell, type UnsavedState } from '../grid/SelectCell';
+import { SelectCell } from '../grid/SelectCell';
 import { SlotGrid } from '../grid/SlotGrid';
 import { Hint, Section } from '../ui/Section';
 import { EditorToolbar, type SaveLine } from './EditorToolbar';
@@ -44,13 +44,6 @@ const saveLineFor = (
   return null;
 };
 
-/** How unsaved cells look: blinking while waiting/saving, dimmed after a failed save. */
-const unsavedStateFor = (status: AutoSaveStatus): UnsavedState | null => {
-  if (status === 'pending' || status === 'saving') return 'syncing';
-  if (status === 'error') return 'failed';
-  return null;
-};
-
 export const AvailabilityEditor = ({
   ref,
   poll,
@@ -61,7 +54,7 @@ export const AvailabilityEditor = ({
   const { t, locale } = useI18n();
   const grid = useMemo(() => buildGrid(poll, locale), [poll, locale]);
   const { selected, setSlot, clear, undoClear, canUndoClear } = useSlotSelection(initialSlots);
-  const { status, saved, flush } = useAutoSave(poll.id, selected, initialSlots, onSaved);
+  const { status, flush } = useAutoSave(poll.id, selected, initialSlots, onSaved);
   const haptics = useHaptics();
 
   useImperativeHandle(ref, () => ({ flush }), [flush]);
@@ -69,21 +62,9 @@ export const AvailabilityEditor = ({
   const isSelected = useCallback((slot: string) => selected.has(slot), [selected]);
   const dragHandlers = useDragSelect({ isSelected, setSlot, onChange: haptics.selection });
 
-  const unsavedState = unsavedStateFor(status);
   const renderCell = useCallback(
-    (slot: string) => {
-      const isOn = selected.has(slot);
-      const changed = unsavedState !== null && isOn !== saved.has(slot);
-      return (
-        <SelectCell
-          key={slot}
-          slot={slot}
-          selected={isOn}
-          unsaved={changed ? unsavedState : null}
-        />
-      );
-    },
-    [selected, saved, unsavedState],
+    (slot: string) => <SelectCell key={slot} slot={slot} selected={selected.has(slot)} />,
+    [selected],
   );
 
   return (

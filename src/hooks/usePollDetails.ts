@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { PollDetails } from '@/domain/types';
 import { ApiError } from '@/lib/api/client';
@@ -21,6 +21,8 @@ const toErrorState = (error: unknown): State => {
 export const usePollDetails = (pollId: string) => {
   const [state, setState] = useState<State>({ status: 'loading' });
   const [attempt, setAttempt] = useState(0);
+  /** Bumped by every write, so an older in-flight refresh can't overwrite newer data. */
+  const version = useRef(0);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -47,12 +49,25 @@ export const usePollDetails = (pollId: string) => {
 
   /** Replace data after a mutation (e.g. saved availability). */
   const update = useCallback((data: PollDetails) => {
+    version.current += 1;
     setState({ status: 'ready', data });
   }, []);
+
+  /** Silently re-fetches the poll (other participants may have answered); errors are ignored. */
+  const refresh = useCallback(async (): Promise<void> => {
+    const startedAt = version.current;
+    try {
+      const data = await pollsApi.get(pollId);
+      if (version.current !== startedAt) return;
+      setState((prev) => (prev.status === 'ready' ? { status: 'ready', data } : prev));
+    } catch {
+      // Keep showing what we have.
+    }
+  }, [pollId]);
 
   const markDeleted = useCallback(() => {
     setState({ status: 'deleted' });
   }, []);
 
-  return { state, reload, update, markDeleted };
+  return { state, reload, update, refresh, markDeleted };
 };
