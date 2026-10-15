@@ -52,6 +52,8 @@ for (const { language_code, command, paySupport, description, short } of profile
     ],
     language_code,
   });
+  // Telegram shows the bot name in the Mini App header.
+  await call('setMyName', { name: 'Pick to Meet', language_code });
   await call('setMyDescription', { description, language_code });
   await call('setMyShortDescription', { short_description: short, language_code });
 }

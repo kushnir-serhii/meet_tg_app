@@ -55,7 +55,7 @@ export const buildIcs = (event: CalendarEvent, now = new Date()): string =>
   [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Pik To Meet//EN',
+    'PRODID:-//Pick to Meet//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     'BEGIN:VEVENT',

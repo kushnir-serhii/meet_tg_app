@@ -3,6 +3,7 @@ import type { Messages } from '../types';
 export const uk: Messages = {
   common: {
     cancel: 'Скасувати',
+    wait: 'Зачекайте…',
   },
   app: {
     loading: 'Завантаження…',
@@ -99,7 +100,7 @@ export const uk: Messages = {
       [
         meetingUrl ? `Дзвінок: ${meetingUrl}` : null,
         names ? `Учасники: ${names}` : null,
-        `Узгоджено в Pik To Meet: ${link}`,
+        `Узгоджено в Pick to Meet: ${link}`,
       ]
         .filter(Boolean)
         .join('\n'),
@@ -145,7 +146,7 @@ export const uk: Messages = {
     googleButton: '📅 Додати в Google Calendar',
     icsButton: '🍏 Apple / Outlook (.ics)',
     deleted: (title) => `🗑 Зустріч «${title}» видалено організатором`,
-    tipTitle: 'Підтримати Pik To Meet',
+    tipTitle: 'Підтримати Pick to Meet',
     tipDescription: (stars) => `Чайові ${stars} ⭐ на розвиток застосунку`,
     tipThanks: (stars) => `Дякуємо за ${stars} ⭐! 💙`,
     paySupport:

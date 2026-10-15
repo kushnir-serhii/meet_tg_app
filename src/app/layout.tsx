@@ -5,7 +5,7 @@ import Script from 'next/script';
 import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Pik To Meet',
+  title: 'Pick to Meet',
   description: 'Find a meeting time that works for everyone, right in Telegram.',
 };
 

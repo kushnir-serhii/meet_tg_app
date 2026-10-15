@@ -19,7 +19,7 @@ type BottomActionProps = {
 };
 
 /**
- * Telegram's bottom button with a spinner while the action runs (ignores repeated taps).
+ * Telegram's bottom button; shows "Please wait…" while the action runs (ignores repeated taps).
  * Outside Telegram (dev in a browser) — an inline button.
  */
 export const BottomAction = ({ text, onPress }: BottomActionProps) => {
@@ -40,7 +40,7 @@ export const BottomAction = ({ text, onPress }: BottomActionProps) => {
     return <MainButton text={text} loading={busy} onClick={() => void handlePress()} />;
   }
   return (
-    <Button disabled={busy} onClick={() => void handlePress()}>
+    <Button loading={busy} onClick={() => void handlePress()}>
       {text}
     </Button>
   );

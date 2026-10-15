@@ -2,6 +2,7 @@
 export const en = {
   common: {
     cancel: 'Cancel',
+    wait: 'Please wait…',
   },
   app: {
     loading: 'Loading…',
@@ -100,7 +101,7 @@ export const en = {
       [
         meetingUrl ? `Call: ${meetingUrl}` : null,
         names ? `Participants: ${names}` : null,
-        `Scheduled with Pik To Meet: ${link}`,
+        `Scheduled with Pick to Meet: ${link}`,
       ]
         .filter(Boolean)
         .join('\n'),
@@ -146,7 +147,7 @@ export const en = {
     googleButton: '📅 Add to Google Calendar',
     icsButton: '🍏 Apple / Outlook (.ics)',
     deleted: (title: string) => `🗑 Meeting “${title}” was deleted by the organizer`,
-    tipTitle: 'Support Pik To Meet',
+    tipTitle: 'Support Pick to Meet',
     tipDescription: (stars: number) => `A ${stars} ⭐ tip to support development`,
     tipThanks: (stars: number) => `Thank you for the ${stars} ⭐ tip! 💙`,
     paySupport:
