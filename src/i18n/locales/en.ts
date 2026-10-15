@@ -84,7 +84,9 @@ export const en = {
     to: 'End',
     meetingUrl: 'Call link (optional)',
     meetingUrlPlaceholder: 'https://meet.google.com/…',
-    meetingUrlHint: 'Google Meet, Zoom, Teams — any link. Participants will get a "Join" button.',
+    createCall: 'Create:',
+    meetingUrlHint:
+      'Create a call, copy the link and paste it here. Participants will get a "Join" button.',
     meetingUrlInvalid: 'Enter a link starting with https://',
     confirm: 'Schedule and notify the chat',
     saving: 'Saving…',
