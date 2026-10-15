@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { isValidTimezone, MAX_POLL_DAYS } from './dates';
+import { FEEDBACK_MAX_LENGTH } from './feedback';
 import { isTipAmount } from './tips';
 import { SLOT_MINUTES, type SlotMinutes } from './types';
 
@@ -46,3 +47,11 @@ export const schedulePollSchema = z.object({
     .object({ start: z.iso.datetime({ offset: true }), end: z.iso.datetime({ offset: true }) })
     .nullable(),
 });
+
+export const feedbackSchema = z.object({
+  rating: z.number().int().min(1).max(5),
+  text: z.string().trim().max(FEEDBACK_MAX_LENGTH).default(''),
+  canPublish: z.boolean().default(false),
+});
+
+export type FeedbackSchemaInput = z.infer<typeof feedbackSchema>;

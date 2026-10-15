@@ -7,6 +7,7 @@ import { usePollDetails } from '@/hooks/usePollDetails';
 import { useSchedulePoll } from '@/hooks/useSchedulePoll';
 import { useTelegram } from '@/hooks/useTelegram';
 
+import { FeedbackSection } from '../feedback/FeedbackSection';
 import { ResultsView } from '../results/ResultsView';
 import { ScheduledCard } from '../schedule/ScheduledCard';
 import { SupportSection } from '../support/SupportSection';
@@ -109,6 +110,7 @@ export const PollScreen = ({ pollId, action }: PollScreenProps) => {
         />
       </div>
       <SupportSection />
+      <FeedbackSection />
       {canManage && <DeletePollButton pollId={poll.id} onDeleted={markDeleted} />}
       <BottomAction text={primary.text} onPress={runPrimary} />
     </div>

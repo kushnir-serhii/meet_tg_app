@@ -1,0 +1,37 @@
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.star {
+  border: 0;
+  background: none;
+  padding: 4px;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--bg-secondary);
+  cursor: pointer;
+}
+
+.starActive {
+  color: #f5b301;
+}
+
+.textarea {
+  resize: vertical;
+  font: inherit;
+}
+
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--hint);
+}
+
+.consent input {
+  margin-top: 2px;
+  accent-color: var(--accent);
+}

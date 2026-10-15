@@ -101,6 +101,32 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['tips']['Insert']>;
         Relationships: [];
       };
+      feedback: {
+        Row: {
+          user_id: number;
+          name: string;
+          username: string | null;
+          rating: number;
+          text: string;
+          can_publish: boolean;
+          locale: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: number;
+          name: string;
+          username?: string | null;
+          rating: number;
+          text?: string;
+          can_publish?: boolean;
+          locale: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['feedback']['Insert']>;
+        Relationships: [];
+      };
     };
     Views: { [_ in never]: never };
     Functions: { [_ in never]: never };
