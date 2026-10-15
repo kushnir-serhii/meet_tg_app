@@ -103,6 +103,18 @@ export const en = {
     thanks: 'Thank you for your support! 💙',
     error: 'Payment failed. Please try again.',
   },
+  feedback: {
+    prompt: 'How do you like the app? Your review helps us improve it',
+    open: '✍️ Leave a review',
+    title: 'Your review',
+    ratingLabel: (rating: number) => `${rating} of 5`,
+    textLabel: 'Comment (optional)',
+    textPlaceholder: 'What do you like, what is missing?',
+    consent: 'You may publish my review with my name',
+    submit: 'Send',
+    sending: 'Sending…',
+    thanks: 'Thank you for your review! 💙',
+  },
   bot: {
     start: 'Hi! I help find a meeting time that works for everyone.',
     createButton: '➕ Create meeting',
