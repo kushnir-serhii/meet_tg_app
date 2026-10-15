@@ -83,8 +83,9 @@ export const uk: Messages = {
     to: 'Кінець',
     meetingUrl: 'Посилання на дзвінок (необов’язково)',
     meetingUrlPlaceholder: 'https://meet.google.com/…',
+    createCall: 'Створити:',
     meetingUrlHint:
-      'Google Meet, Zoom, Teams — будь-яке посилання. Учасники отримають кнопку «Приєднатися».',
+      'Створіть дзвінок, скопіюйте посилання і вставте сюди. Учасники отримають кнопку «Приєднатися».',
     meetingUrlInvalid: 'Вкажіть посилання, що починається з https://',
     confirm: 'Призначити й повідомити чат',
     saving: 'Зберігаю…',
