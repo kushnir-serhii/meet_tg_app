@@ -82,18 +82,27 @@ export const en = {
     formTitle: 'Schedule the meeting',
     from: 'Start',
     to: 'End',
+    meetingUrl: 'Call link (optional)',
+    meetingUrlPlaceholder: 'https://meet.google.com/…',
+    meetingUrlHint: 'Google Meet, Zoom, Teams — any link. Participants will get a "Join" button.',
+    meetingUrlInvalid: 'Enter a link starting with https://',
     confirm: 'Schedule and notify the chat',
     saving: 'Saving…',
     cancel: 'Cancel',
     scheduledTitle: '📌 Meeting scheduled',
+    join: 'Join the call',
     addGoogle: 'Add to Google Calendar',
     addIcs: 'Apple / Outlook (.ics)',
     change: 'Change time',
     unschedule: 'Remove scheduled time',
     unscheduleAction: 'Remove',
     unscheduleConfirm: 'Remove the scheduled time? Chat messages will be updated.',
-    calendarDetails: (names: string | null, link: string) =>
-      [names ? `Participants: ${names}` : null, `Scheduled with Pik To Meet: ${link}`]
+    calendarDetails: (names: string | null, link: string, meetingUrl: string | null) =>
+      [
+        meetingUrl ? `Call: ${meetingUrl}` : null,
+        names ? `Participants: ${names}` : null,
+        `Scheduled with Pik To Meet: ${link}`,
+      ]
         .filter(Boolean)
         .join('\n'),
   },
@@ -135,6 +144,7 @@ export const en = {
     cannot: "can't",
     timezone: (tz: string) => `🕒 ${tz}`,
     scheduled: (when: string) => `📌 <b>Meeting scheduled: ${when}</b>`,
+    joinButton: '🎥 Join the call',
     googleButton: '📅 Add to Google Calendar',
     icsButton: '🍏 Apple / Outlook (.ics)',
     deleted: (title: string) => `🗑 Meeting “${title}” was deleted by the organizer`,

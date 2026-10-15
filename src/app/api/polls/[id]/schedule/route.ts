@@ -10,9 +10,9 @@ import { schedulePoll } from '@/server/services/pollService';
 export const PUT = handle<RouteContext<'/api/polls/[id]/schedule'>>(async (request, { params }) => {
   const user = getAuthUser(request);
   const { id } = await params;
-  const { range } = schedulePollSchema.parse(await readJson(request));
+  const { range, meetingUrl } = schedulePollSchema.parse(await readJson(request));
 
-  const details = await schedulePoll(id, user.userId, range);
+  const details = await schedulePoll(id, user.userId, range, meetingUrl);
   after(() => syncPollMessages(id));
 
   return NextResponse.json(details);

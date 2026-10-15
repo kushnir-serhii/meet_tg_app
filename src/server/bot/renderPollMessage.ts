@@ -67,13 +67,15 @@ const renderScheduled = ({ poll, t }: RenderContext): string[] =>
     : [];
 
 const renderKeyboard = (
-  { t }: RenderContext,
+  { poll, t }: RenderContext,
   miniAppLink: string,
   calendar: CalendarLinks | null,
 ): InlineKeyboardButton[][] => {
   const mark = [{ text: t.bot.markButton, url: miniAppLink }];
   if (!calendar) return [mark];
+  const join = poll.meetingUrl ? [[{ text: t.bot.joinButton, url: poll.meetingUrl }]] : [];
   return [
+    ...join,
     [{ text: t.bot.googleButton, url: calendar.google }],
     [{ text: t.bot.icsButton, url: calendar.ics }],
     mark,

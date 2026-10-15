@@ -81,6 +81,37 @@
   background: var(--success);
 }
 
+/* Unsaved changes. A removed cell keeps a pale green trace until the save lands. */
+.removed {
+  background: color-mix(in srgb, var(--success) 35%, var(--bg-secondary));
+}
+
+.syncing {
+  animation: unsaved-blink 900ms ease-in-out infinite;
+}
+
+.failed {
+  opacity: 0.45;
+}
+
+@keyframes unsaved-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .syncing {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
 .heat {
   cursor: pointer;
   /* Partial availability stays pale (≤ 40%) so "everyone" cells stand out clearly. */

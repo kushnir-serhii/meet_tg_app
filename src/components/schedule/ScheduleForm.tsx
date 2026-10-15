@@ -4,12 +4,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { generateSlots } from '@/domain/slots';
 import type { Poll, SlotRange } from '@/domain/types';
+import { meetingUrlSchema } from '@/domain/validation';
 import { useI18n } from '@/hooks/useI18n';
 import { formatDay, formatTime } from '@/shared/format';
 
 import { Button } from '../ui/Button';
 import { Field, FieldRow } from '../ui/Field';
 import { ErrorText, Section } from '../ui/Section';
+import { MeetingUrlField } from './MeetingUrlField';
 import styles from './schedule.module.css';
 
 type ScheduleFormProps = {
@@ -18,7 +20,7 @@ type ScheduleFormProps = {
   window: SlotRange;
   isSaving: boolean;
   error: boolean;
-  onSubmit: (range: SlotRange) => void;
+  onSubmit: (range: SlotRange, meetingUrl: string | null) => void;
   onCancel: () => void;
 };
 
@@ -37,6 +39,8 @@ export const ScheduleForm = ({
   const ref = useRef<HTMLDivElement>(null);
   const [start, setStart] = useState(freeWindow.start);
   const [end, setEnd] = useState(freeWindow.end);
+  const [meetingUrl, setMeetingUrl] = useState(poll.meetingUrl ?? '');
+  const [urlInvalid, setUrlInvalid] = useState(false);
 
   const starts = useMemo(
     () => generateSlots(poll).filter((s) => s >= freeWindow.start && s < freeWindow.end),
@@ -54,6 +58,12 @@ export const ScheduleForm = ({
   const changeStart = (value: string) => {
     setStart(value);
     if (end <= value) setEnd(addMinutes(value, poll.slotMinutes));
+  };
+
+  const submit = () => {
+    const url = meetingUrlSchema.safeParse(meetingUrl);
+    setUrlInvalid(!url.success);
+    if (url.success) onSubmit({ start, end }, url.data);
   };
 
   return (
@@ -98,14 +108,17 @@ export const ScheduleForm = ({
             )}
           </Field>
         </FieldRow>
+        <MeetingUrlField
+          value={meetingUrl}
+          invalid={urlInvalid}
+          onChange={(value) => {
+            setMeetingUrl(value);
+            setUrlInvalid(false);
+          }}
+        />
         {error && <ErrorText>{t.app.genericError}</ErrorText>}
         <div className={styles.actions}>
-          <Button
-            disabled={isSaving}
-            onClick={() => {
-              onSubmit({ start, end });
-            }}
-          >
+          <Button disabled={isSaving} onClick={submit}>
             {isSaving ? t.schedule.saving : t.schedule.confirm}
           </Button>
           <Button variant="secondary" disabled={isSaving} onClick={onCancel}>

@@ -41,11 +41,24 @@ export const createTipSchema = z.object({
   amount: z.number().int().refine(isTipAmount, 'Unsupported tip amount'),
 });
 
-/** `range: null` clears the scheduled time. */
+export const MEETING_URL_MAX_LENGTH = 500;
+
+/** Optional call link: empty → `null`, otherwise an https URL. */
+export const meetingUrlSchema = z
+  .string()
+  .trim()
+  .max(MEETING_URL_MAX_LENGTH)
+  .transform((value) => value || null)
+  .pipe(z.url({ protocol: /^https$/, hostname: z.regexes.domain }).nullable())
+  .nullable()
+  .default(null);
+
+/** `range: null` clears the scheduled time (and the call link). */
 export const schedulePollSchema = z.object({
   range: z
     .object({ start: z.iso.datetime({ offset: true }), end: z.iso.datetime({ offset: true }) })
     .nullable(),
+  meetingUrl: meetingUrlSchema,
 });
 
 export const feedbackSchema = z.object({

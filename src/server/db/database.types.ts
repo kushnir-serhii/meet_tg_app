@@ -20,6 +20,7 @@ export type Database = {
           locale: string;
           scheduled_start: string | null;
           scheduled_end: string | null;
+          meeting_url: string | null;
           created_at: string;
         };
         Insert: {
@@ -36,6 +37,7 @@ export type Database = {
           locale?: string;
           scheduled_start?: string | null;
           scheduled_end?: string | null;
+          meeting_url?: string | null;
           created_at?: string;
         };
         Update: Partial<Database['public']['Tables']['polls']['Insert']>;

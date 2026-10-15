@@ -23,7 +23,9 @@ export const buildPollEvent = (poll: Poll, results: PollResults): CalendarEvent 
     description: t.schedule.calendarDetails(
       people.length > 0 ? formatNames(people) : null,
       buildMiniAppLink(poll.id),
+      poll.meetingUrl,
     ),
+    location: poll.meetingUrl,
   };
 };
 

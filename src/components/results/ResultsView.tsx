@@ -20,7 +20,7 @@ type ResultsViewProps = {
   schedule: {
     isSaving: boolean;
     error: boolean;
-    submit: (range: SlotRange) => Promise<boolean>;
+    submit: (range: SlotRange, meetingUrl: string | null) => Promise<boolean>;
   };
 };
 
@@ -63,8 +63,8 @@ export const ResultsView = ({ poll, results, canManage, schedule }: ResultsViewP
           onCancel={() => {
             setPicked(null);
           }}
-          onSubmit={(range) => {
-            void schedule.submit(range).then((ok) => {
+          onSubmit={(range, meetingUrl) => {
+            void schedule.submit(range, meetingUrl).then((ok) => {
               if (ok) setPicked(null);
             });
           }}

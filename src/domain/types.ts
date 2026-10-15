@@ -23,6 +23,8 @@ export type Poll = {
   locale: Locale;
   /** Meeting time picked by the organizer, if any. */
   scheduled: SlotRange | null;
+  /** Video call link (https), only together with `scheduled`. */
+  meetingUrl: string | null;
   createdAt: string;
 };
 

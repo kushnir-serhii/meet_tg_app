@@ -20,6 +20,7 @@ export const toPoll = (row: Tables<'polls'>): Poll => ({
     row.scheduled_start && row.scheduled_end
       ? { start: normalizeSlotId(row.scheduled_start), end: normalizeSlotId(row.scheduled_end) }
       : null,
+  meetingUrl: row.meeting_url,
   createdAt: row.created_at,
 });
 

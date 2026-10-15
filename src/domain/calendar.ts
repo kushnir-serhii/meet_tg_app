@@ -4,6 +4,8 @@ export type CalendarEvent = SlotRange & {
   uid: string;
   title: string;
   description: string;
+  /** Call link — becomes the event location. */
+  location?: string | null;
 };
 
 /** "2026-10-13T14:00:00.000Z" → "20261013T140000Z" */
@@ -22,6 +24,7 @@ export const buildGoogleCalendarUrl = (event: CalendarEvent, timezone: string): 
     details: event.description,
     ctz: timezone,
   });
+  if (event.location) params.set('location', event.location);
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 };
 
@@ -62,6 +65,9 @@ export const buildIcs = (event: CalendarEvent, now = new Date()): string =>
     `DTEND:${toCalendarStamp(event.end)}`,
     `SUMMARY:${escapeIcsText(event.title)}`,
     `DESCRIPTION:${escapeIcsText(event.description)}`,
+    ...(event.location
+      ? [`LOCATION:${escapeIcsText(event.location)}`, `URL:${event.location}`]
+      : []),
     'END:VEVENT',
     'END:VCALENDAR',
   ]
