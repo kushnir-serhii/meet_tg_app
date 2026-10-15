@@ -114,7 +114,7 @@ export const uk: Messages = {
   },
   feedback: {
     prompt: 'Як вам застосунок? Ваш відгук допоможе зробити його кращим',
-    open: '✍️ Залишити відгук',
+    dismiss: 'Не зараз',
     title: 'Ваш відгук',
     ratingLabel: (rating) => `${rating} з 5`,
     textLabel: 'Коментар (необовʼязково)',
