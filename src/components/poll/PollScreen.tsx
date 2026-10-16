@@ -30,6 +30,7 @@ type PollScreenProps = {
 export const PollScreen = ({ pollId, action }: PollScreenProps) => {
   const { state, reload, update, refresh, markDeleted } = usePollDetails(pollId);
   const [tab, setTab] = useState<Tab>('mine');
+  const [scheduleFormOpen, setScheduleFormOpen] = useState(false);
   const { t } = useI18n();
   const webApp = useTelegram();
   const editorRef = useRef<AvailabilityEditorHandle>(null);
@@ -119,12 +120,16 @@ export const PollScreen = ({ pollId, action }: PollScreenProps) => {
             error: scheduling.error,
             submit: scheduling.schedule,
           }}
+          onFormOpenChange={setScheduleFormOpen}
         />
       </div>
       <SupportSection />
       <FeedbackSection />
       {canManage && <DeletePollButton pollId={poll.id} onDeleted={markDeleted} />}
-      <BottomAction text={primary.text} onPress={runPrimary} />
+      {/* "Done" would close the app and drop the unsaved schedule form: it has its own confirm. */}
+      {!(tab === 'results' && scheduleFormOpen) && (
+        <BottomAction text={primary.text} onPress={runPrimary} />
+      )}
     </div>
   );
 };
