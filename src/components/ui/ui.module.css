@@ -39,6 +39,35 @@
   position: relative;
 }
 
+.loading .label {
+  visibility: hidden;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: button-spin 0.7s linear infinite;
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2s;
+  }
+}
+
 .secondary {
   background: var(--bg-secondary);
   color: var(--link);
@@ -162,4 +191,22 @@ select.input {
   display: block;
   text-align: center;
   text-decoration: none;
+}
+
+/* App-wide bottom action bar (replaces Telegram's native MainButton). */
+.bottomBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--bg-secondary);
+}
+
+.bottomBar .button {
+  display: block;
+  width: 100%;
+  max-width: 608px;
+  margin: 0 auto;
 }

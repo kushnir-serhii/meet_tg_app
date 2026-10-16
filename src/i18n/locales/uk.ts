@@ -3,7 +3,6 @@ import type { Messages } from '../types';
 export const uk: Messages = {
   common: {
     cancel: 'Скасувати',
-    wait: 'Зачекайте…',
   },
   app: {
     loading: 'Завантаження…',
@@ -84,7 +83,7 @@ export const uk: Messages = {
     meetingUrlPlaceholder: 'https://meet.google.com/…',
     createCall: 'Створити:',
     meetingUrlHint:
-      'У Google Meet: «Нова зустріч» → «Створити зустріч на потім», скопіюйте посилання і вставте сюди. Учасники отримають кнопку «Приєднатися».',
+      'Сервіс відкриється з уже заповненими назвою і часом. Збережіть зустріч, скопіюйте посилання на дзвінок і вставте сюди. У Google Календарі додайте Google Meet, якщо він не додався сам. Учасники отримають кнопку «Приєднатися».',
     meetingUrlInvalid: 'Вкажіть посилання, що починається з https://',
     confirm: 'Призначити й повідомити чат',
     cancel: 'Скасувати',

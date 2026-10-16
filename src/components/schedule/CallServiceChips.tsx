@@ -1,6 +1,6 @@
 'use client';
 
-import { CALL_SERVICES } from '@/domain/callServices';
+import { CALL_SERVICES, type CallDraft } from '@/domain/callServices';
 import { useHaptics } from '@/hooks/useHaptics';
 import { useI18n } from '@/hooks/useI18n';
 import { useOpenLink } from '@/hooks/useOpenLink';
@@ -8,12 +8,14 @@ import { useOpenLink } from '@/hooks/useOpenLink';
 import styles from './schedule.module.css';
 
 type CallServiceChipsProps = {
+  /** Meeting title and time, prefilled where the service supports it. */
+  draft: CallDraft;
   /** Called after a chip is clicked, so the parent can wait for the pasted link. */
   onCreate: () => void;
 };
 
 /** Quick-create chips: open the service to create a call, then paste the link back. */
-export const CallServiceChips = ({ onCreate }: CallServiceChipsProps) => {
+export const CallServiceChips = ({ draft, onCreate }: CallServiceChipsProps) => {
   const { t } = useI18n();
   const haptics = useHaptics();
   const openLink = useOpenLink();
@@ -28,7 +30,7 @@ export const CallServiceChips = ({ onCreate }: CallServiceChipsProps) => {
           className={service.id === 'meet' ? `${styles.chip} ${styles.chipPrimary}` : styles.chip}
           onClick={() => {
             haptics.selection();
-            openLink(service.url);
+            openLink(service.buildUrl(draft));
             onCreate();
           }}
         >

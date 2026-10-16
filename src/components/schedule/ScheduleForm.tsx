@@ -96,6 +96,7 @@ export const ScheduleForm = ({
           />
         </FieldRow>
         <MeetingUrlField
+          draft={{ title: poll.title, start, end, timezone: poll.timezone }}
           value={meetingUrl}
           invalid={urlInvalid}
           onChange={(value) => {

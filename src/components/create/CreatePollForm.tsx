@@ -7,8 +7,8 @@ import { useCreatePoll } from '@/hooks/useCreatePoll';
 import { useCreatePollForm } from '@/hooks/useCreatePollForm';
 import { useHaptics } from '@/hooks/useHaptics';
 import { useI18n } from '@/hooks/useI18n';
-import { useMainButton } from '@/hooks/useMainButton';
 
+import { BottomButton } from '../ui/BottomButton';
 import { ErrorText, Section } from '../ui/Section';
 import styles from './create.module.css';
 import { DateRangeFields } from './DateRangeFields';
@@ -44,12 +44,6 @@ export const CreatePollForm = ({ onCreated }: CreatePollFormProps) => {
     target?.focus();
   }, [input, invalid, isPending, create, haptics]);
 
-  useMainButton({
-    text: t.create.submit,
-    onClick: submit,
-    loading: isPending,
-  });
-
   return (
     <div className={styles.stack}>
       <h1 className={styles.heading}>{t.create.heading}</h1>
@@ -78,6 +72,7 @@ export const CreatePollForm = ({ onCreated }: CreatePollFormProps) => {
         />
       </Section>
       {error && <ErrorText>{error}</ErrorText>}
+      <BottomButton text={t.create.submit} onPress={submit} loading={isPending} />
     </div>
   );
 };

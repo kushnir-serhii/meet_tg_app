@@ -2,7 +2,6 @@
 export const en = {
   common: {
     cancel: 'Cancel',
-    wait: 'Please wait…',
   },
   app: {
     loading: 'Loading…',
@@ -85,7 +84,7 @@ export const en = {
     meetingUrlPlaceholder: 'https://meet.google.com/…',
     createCall: 'Create:',
     meetingUrlHint:
-      'In Google Meet: "New meeting" → "Create a meeting for later", copy the link and paste it here. Participants will get a "Join" button.',
+      'The service opens with the meeting title and time filled in. Save the meeting, copy the call link and paste it here. In Google Calendar, add Google Meet if it isn\'t added automatically. Participants will get a "Join" button.',
     meetingUrlInvalid: 'Enter a link starting with https://',
     confirm: 'Schedule and notify the chat',
     cancel: 'Cancel',
