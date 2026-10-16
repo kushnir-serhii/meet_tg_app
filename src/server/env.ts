@@ -10,6 +10,8 @@ const envSchema = z.object({
   APP_URL: z.url(),
   SUPABASE_URL: z.url(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+  /** Telegram chat (your user ID) that receives new feedback. Optional. */
+  FEEDBACK_CHAT_ID: z.string().optional(),
 });
 
 export type ServerEnv = z.infer<typeof envSchema>;
