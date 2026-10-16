@@ -70,7 +70,7 @@ export const uk: Messages = {
     cannot: 'Не можуть',
     of: (a, b) => `${a}/${b}`,
     legendAll: 'Усі',
-    legendSome: 'Частина',
+    legendSome: 'Учасники',
     legendNone: 'Ніхто',
     legendCreator: 'Організатор',
   },

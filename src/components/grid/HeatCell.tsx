@@ -14,7 +14,7 @@ type HeatCellProps = {
   onSelect: (slot: string) => void;
 };
 
-/** Read-only cell: solid with ✓ when everyone is free, pale shades otherwise. */
+/** Read-only cell: strong with ✓ when everyone is free, solid for the organizer, pale for others. */
 export const HeatCell = memo(function HeatCell({
   slot,
   count,
@@ -35,7 +35,7 @@ export const HeatCell = memo(function HeatCell({
         styles.heat,
         count === 0 && styles.heatEmpty,
         isFull && styles.heatFull,
-        byCreator && styles.heatCreator,
+        byCreator && !isFull && styles.heatCreator,
         active && styles.active,
       )}
       style={style}
