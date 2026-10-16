@@ -71,7 +71,7 @@ export const en = {
     cannot: "Can't join",
     of: (a: number, b: number) => `${a}/${b}`,
     legendAll: 'Everyone',
-    legendSome: 'Some',
+    legendSome: 'Participants',
     legendNone: 'Nobody',
     legendCreator: 'Organizer',
   },

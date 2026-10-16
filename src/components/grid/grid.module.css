@@ -113,12 +113,7 @@
 }
 
 .heatCreator {
-  box-shadow: inset 0 0 0 2px var(--accent);
-}
-
-.legendOutline {
-  background: transparent;
-  box-shadow: inset 0 0 0 2px var(--accent);
+  background: var(--success);
 }
 
 .legend {
