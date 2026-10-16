@@ -33,11 +33,12 @@ export const Heatmap = ({ poll, results }: HeatmapProps) => {
         slot={slot}
         count={results.availability[slot]?.length ?? 0}
         total={total}
+        byCreator={results.availability[slot]?.includes(poll.creatorId) ?? false}
         active={slot === activeSlot}
         onSelect={setActiveSlot}
       />
     ),
-    [results.availability, total, activeSlot],
+    [results.availability, poll.creatorId, total, activeSlot],
   );
 
   const activeSummary = useMemo(

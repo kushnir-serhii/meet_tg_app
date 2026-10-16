@@ -2,6 +2,10 @@
   "name": "meet-tg-app",
   "version": "0.1.0",
   "private": true,
+  "allowScripts": {
+    "esbuild": true,
+    "unrs-resolver": true
+  },
   "type": "module",
   "scripts": {
     "dev": "next dev",

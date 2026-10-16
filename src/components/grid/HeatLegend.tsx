@@ -9,6 +9,7 @@ const ITEMS = [
   { key: 'legendAll', className: styles.heatFull },
   { key: 'legendSome', className: styles.heat },
   { key: 'legendNone', className: styles.heatEmpty },
+  { key: 'legendCreator', className: styles.legendOutline },
 ] as const;
 
 /** Explains heatmap colours. */

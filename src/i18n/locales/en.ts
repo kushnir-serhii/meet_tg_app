@@ -73,6 +73,7 @@ export const en = {
     legendAll: 'Everyone',
     legendSome: 'Some',
     legendNone: 'Nobody',
+    legendCreator: 'Organizer',
   },
   schedule: {
     pickHint: 'Tap a time to schedule the meeting.',

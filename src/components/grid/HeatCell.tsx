@@ -8,6 +8,8 @@ type HeatCellProps = {
   slot: string;
   count: number;
   total: number;
+  /** The organizer marked this slot as available. */
+  byCreator: boolean;
   active: boolean;
   onSelect: (slot: string) => void;
 };
@@ -17,6 +19,7 @@ export const HeatCell = memo(function HeatCell({
   slot,
   count,
   total,
+  byCreator,
   active,
   onSelect,
 }: HeatCellProps) {
@@ -32,6 +35,7 @@ export const HeatCell = memo(function HeatCell({
         styles.heat,
         count === 0 && styles.heatEmpty,
         isFull && styles.heatFull,
+        byCreator && styles.heatCreator,
         active && styles.active,
       )}
       style={style}
