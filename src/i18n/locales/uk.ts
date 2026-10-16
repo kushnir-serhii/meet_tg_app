@@ -72,6 +72,7 @@ export const uk: Messages = {
     legendAll: 'Усі',
     legendSome: 'Частина',
     legendNone: 'Ніхто',
+    legendCreator: 'Організатор',
   },
   schedule: {
     pickHint: 'Торкніться часу, щоб призначити зустріч.',
