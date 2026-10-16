@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { Poll, PollResults, SlotRange } from '@/domain/types';
 import { useI18n } from '@/hooks/useI18n';
@@ -22,11 +22,24 @@ type ResultsViewProps = {
     error: boolean;
     submit: (range: SlotRange, meetingUrl: string | null) => Promise<boolean>;
   };
+  /** The schedule form has its own confirm button: the screen hides its bottom button meanwhile. */
+  onFormOpenChange?: (open: boolean) => void;
 };
 
-export const ResultsView = ({ poll, results, canManage, schedule }: ResultsViewProps) => {
+export const ResultsView = ({
+  poll,
+  results,
+  canManage,
+  schedule,
+  onFormOpenChange,
+}: ResultsViewProps) => {
   const { t } = useI18n();
   const [picked, setPicked] = useState<SlotRange | null>(null);
+  const formOpen = picked !== null;
+
+  useEffect(() => {
+    onFormOpenChange?.(formOpen);
+  }, [formOpen, onFormOpenChange]);
 
   if (results.respondents.length === 0) {
     return (

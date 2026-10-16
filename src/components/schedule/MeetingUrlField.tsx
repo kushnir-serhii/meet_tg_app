@@ -7,7 +7,7 @@ import { MEETING_URL_MAX_LENGTH } from '@/domain/validation';
 import { useI18n } from '@/hooks/useI18n';
 
 import { Field } from '../ui/Field';
-import { Hint } from '../ui/Section';
+import { ErrorText, Hint } from '../ui/Section';
 import { CallServiceChips } from './CallServiceChips';
 
 type MeetingUrlFieldProps = {
@@ -18,6 +18,10 @@ type MeetingUrlFieldProps = {
 };
 
 /** Optional video call link (Meet, Zoom, Teams…) for the scheduled meeting. */
+/** A Calendar event link, not a call: people would land on the event, not in the call. */
+const isCalendarEventLink = (value: string): boolean =>
+  /^https?:\/\/(calendar\.app\.google|calendar\.google\.com)\b/i.test(value.trim());
+
 export const MeetingUrlField = ({ draft, value, invalid, onChange }: MeetingUrlFieldProps) => {
   const { t } = useI18n();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -66,6 +70,7 @@ export const MeetingUrlField = ({ draft, value, invalid, onChange }: MeetingUrlF
           />
         )}
       </Field>
+      {isCalendarEventLink(value) && <ErrorText>{t.schedule.meetingUrlCalendarLink}</ErrorText>}
       <CallServiceChips
         draft={draft}
         onCreate={() => {

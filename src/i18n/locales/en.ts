@@ -85,6 +85,8 @@ export const en = {
     createCall: 'Create:',
     meetingUrlHint:
       'The service opens with the meeting title and time filled in. Save the meeting, copy the call link and paste it here. In Google Calendar, add Google Meet if it isn\'t added automatically. Participants will get a "Join" button.',
+    meetingUrlCalendarLink:
+      'This is a link to the calendar event, not the call. Open the event and copy the Google Meet link (meet.google.com/…).',
     meetingUrlInvalid: 'Enter a link starting with https://',
     confirm: 'Schedule and notify the chat',
     cancel: 'Cancel',

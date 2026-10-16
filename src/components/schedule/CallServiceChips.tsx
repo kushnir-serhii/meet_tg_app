@@ -27,7 +27,7 @@ export const CallServiceChips = ({ draft, onCreate }: CallServiceChipsProps) => 
         <button
           key={service.id}
           type="button"
-          className={service.id === 'meet' ? `${styles.chip} ${styles.chipPrimary}` : styles.chip}
+          className={styles.chip}
           onClick={() => {
             haptics.selection();
             openLink(service.buildUrl(draft));

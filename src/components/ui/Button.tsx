@@ -32,8 +32,8 @@ export const Button = ({
     aria-busy={loading || undefined}
     {...props}
   >
-    <span className={styles.label}>{children}</span>
-    {loading && <span className={styles.spinner} aria-hidden="true" />}
+    <span className={styles.buttonLabel}>{children}</span>
+    {loading && <span className={styles.buttonSpinner} aria-hidden="true" />}
   </button>
 );
 

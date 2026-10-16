@@ -32,18 +32,18 @@
 }
 
 .button.loading:disabled {
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .button {
   position: relative;
 }
 
-.loading .label {
+.loading .buttonLabel {
   visibility: hidden;
 }
 
-.spinner {
+.buttonSpinner {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -63,7 +63,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .spinner {
+  .buttonSpinner {
     animation-duration: 2s;
   }
 }
@@ -201,7 +201,7 @@ select.input {
   bottom: 0;
   z-index: 10;
   padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
-  background: var(--bg-secondary);
+  background: var(--tg-theme-bottom-bar-bg-color, var(--bg-secondary));
 }
 
 .bottomBar .button {
