@@ -1,48 +1,41 @@
-'use client';
-
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react';
 
-import { useBusyText } from '@/hooks/useBusyText';
 import { cx } from '@/utils/cx';
 
 import styles from './ui.module.css';
 
-type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'primary' | 'secondary';
-  children: string;
-  /** Replaces the label with `loadingText` (default "Please wait…") and blocks clicks. */
+  /** Shows a rotating spinner instead of the label (the button keeps its size) and blocks clicks. */
   loading?: boolean;
-  loadingText?: string;
 };
 
+/** The only button in the app: inline actions and the bottom bar both render it. */
 export const Button = ({
   variant = 'primary',
   className,
   type = 'button',
   loading = false,
-  loadingText,
   disabled,
   children,
   ...props
-}: ButtonProps) => {
-  const label = useBusyText(children, loading, loadingText);
-  return (
-    <button
-      type={type}
-      className={cx(
-        styles.button,
-        variant === 'secondary' && styles.secondary,
-        loading && styles.loading,
-        className,
-      )}
-      disabled={disabled || loading}
-      aria-busy={loading || undefined}
-      {...props}
-    >
-      {label}
-    </button>
-  );
-};
+}: ButtonProps) => (
+  <button
+    type={type}
+    className={cx(
+      styles.button,
+      variant === 'secondary' && styles.secondary,
+      loading && styles.loading,
+      className,
+    )}
+    disabled={disabled || loading}
+    aria-busy={loading || undefined}
+    {...props}
+  >
+    <span className={styles.label}>{children}</span>
+    {loading && <span className={styles.spinner} aria-hidden="true" />}
+  </button>
+);
 
 type ButtonLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
   variant?: 'primary' | 'secondary';

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
+import type { CallDraft } from '@/domain/callServices';
 import { MEETING_URL_MAX_LENGTH } from '@/domain/validation';
 import { useI18n } from '@/hooks/useI18n';
 
@@ -10,13 +11,14 @@ import { Hint } from '../ui/Section';
 import { CallServiceChips } from './CallServiceChips';
 
 type MeetingUrlFieldProps = {
+  draft: CallDraft;
   value: string;
   invalid: boolean;
   onChange: (value: string) => void;
 };
 
 /** Optional video call link (Meet, Zoom, Teams…) for the scheduled meeting. */
-export const MeetingUrlField = ({ value, invalid, onChange }: MeetingUrlFieldProps) => {
+export const MeetingUrlField = ({ draft, value, invalid, onChange }: MeetingUrlFieldProps) => {
   const { t } = useI18n();
   const inputRef = useRef<HTMLInputElement>(null);
   const waiting = useRef(false);
@@ -65,6 +67,7 @@ export const MeetingUrlField = ({ value, invalid, onChange }: MeetingUrlFieldPro
         )}
       </Field>
       <CallServiceChips
+        draft={draft}
         onCreate={() => {
           waiting.current = true;
         }}
