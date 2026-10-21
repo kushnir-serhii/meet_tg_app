@@ -9,7 +9,9 @@ describe('pastTime', () => {
   it('isBefore compares instants regardless of ISO format', () => {
     expect(isBefore('2026-10-16T14:59:59.000Z', now)).toBe(true);
     expect(isBefore('2026-10-16T15:00:00.000Z', now)).toBe(false);
-    expect(isBefore('2026-10-16T16:00:00+01:00', now)).toBe(true);
+    // 15:59:59+01:00 is 14:59:59Z — earlier, though a plain string compare ("15:59" > "15:00") says no.
+    expect(isBefore('2026-10-16T15:59:59+01:00', now)).toBe(true);
+    expect(isBefore('2026-10-16T16:00:00+01:00', now)).toBe(false);
   });
 
   it('hasEnded is true once the end is reached', () => {

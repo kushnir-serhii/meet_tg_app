@@ -12,7 +12,7 @@ import { HeatCell } from '../grid/HeatCell';
 import { HeatLegend } from '../grid/HeatLegend';
 import { SlotGrid } from '../grid/SlotGrid';
 import { Section } from '../ui/Section';
-import { SlotDetails } from './SlotDetails';
+import { SlotSheet } from './SlotSheet';
 
 type HeatmapProps = {
   poll: Poll;
@@ -25,6 +25,10 @@ export const Heatmap = ({ poll, results }: HeatmapProps) => {
   const grid = useMemo(() => buildGrid(poll, locale), [poll, locale]);
   const [activeSlot, setActiveSlot] = useState<string | null>(null);
   const total = results.respondents.length;
+  const notResponded = poll.expectedCount === null ? null : Math.max(0, poll.expectedCount - total);
+  const closeSheet = useCallback(() => {
+    setActiveSlot(null);
+  }, []);
 
   const renderCell = useCallback(
     (slot: string) => (
@@ -51,11 +55,13 @@ export const Heatmap = ({ poll, results }: HeatmapProps) => {
       <SlotGrid grid={grid} renderCell={renderCell} />
       <HeatLegend />
       {activeSummary && (
-        <SlotDetails
+        <SlotSheet
           label={formatSlot(activeSummary.slot, poll.timezone, locale)}
           available={activeSummary.available}
           unavailable={activeSummary.unavailable}
           total={total}
+          notResponded={notResponded}
+          onClose={closeSheet}
         />
       )}
     </Section>
