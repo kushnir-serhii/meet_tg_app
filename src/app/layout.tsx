@@ -17,7 +17,8 @@ export const viewport: Viewport = {
 };
 
 const RootLayout = ({ children }: { children: ReactNode }) => (
-  <html lang="en">
+  // telegram-web-app.js sets --tg-viewport-* on <html> before hydration; the mismatch is expected.
+  <html lang="en" suppressHydrationWarning>
     <body>
       <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
       {children}

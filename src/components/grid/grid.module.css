@@ -57,9 +57,12 @@
   font-size: 11px;
   color: var(--hint);
   background: var(--section-bg);
+  /* Also paint over the grid gaps and the scroller's left padding, so scrolled cells don't peek out. */
+  box-shadow:
+    0 0 0 2px var(--section-bg),
+    -4px 0 0 2px var(--section-bg);
   display: flex;
-  align-items: flex-start;
-  transform: translateY(-6px);
+  align-items: center;
 }
 
 .cell {
@@ -98,6 +101,13 @@
 
 .heatEmpty {
   background: var(--bg-secondary);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cell.heat:hover {
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 70%, transparent);
+    filter: brightness(0.96);
+  }
 }
 
 /* Everyone is free: solid colour + a check mark (not colour-only). */
