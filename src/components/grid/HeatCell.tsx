@@ -14,7 +14,10 @@ type HeatCellProps = {
   onSelect: (slot: string) => void;
 };
 
-/** Read-only cell: strong with ✓ when everyone is free, solid for the organizer, pale for others. */
+/**
+ * Read-only cell: strong with ✓ when everyone is free, solid for the organizer, pale for others.
+ * Partial cells show how many respondents are free (the total is in the "Responded" header).
+ */
 export const HeatCell = memo(function HeatCell({
   slot,
   count,
@@ -42,6 +45,8 @@ export const HeatCell = memo(function HeatCell({
       onClick={() => {
         onSelect(slot);
       }}
-    />
+    >
+      {count > 0 && !isFull ? count : null}
+    </button>
   );
 });
