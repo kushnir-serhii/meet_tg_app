@@ -7,12 +7,12 @@ import styles from './grid.module.css';
 
 const ITEMS = [
   { key: 'legendAll', className: styles.heatFull },
-  { key: 'legendCreator', className: styles.heatCreator },
-  { key: 'legendSome', className: styles.heat },
+  { key: 'legendSome', className: styles.legendRamp },
+  { key: 'legendCreator', className: cx(styles.heat, styles.heatCreator) },
   { key: 'legendNone', className: styles.heatEmpty },
 ] as const;
 
-/** Explains heatmap colours. */
+/** Explains heatmap colours: the green scale by count, and the organizer's dot. */
 export const HeatLegend = () => {
   const { t } = useI18n();
 
@@ -22,7 +22,7 @@ export const HeatLegend = () => {
         <span key={key} className={styles.legendItem}>
           <span
             className={cx(styles.legendSwatch, className)}
-            style={key === 'legendSome' ? ({ '--ratio': 0.5 } as CSSProperties) : undefined}
+            style={key === 'legendCreator' ? ({ '--ratio': 0.3 } as CSSProperties) : undefined}
             aria-hidden
           />
           {t.results[key]}

@@ -57,3 +57,14 @@ export const groupRangesByDay = <T extends SlotRange>(
       (range) => formatInTimeZone(range.start, timezone, 'yyyy-MM-dd') === date,
     ),
   }));
+
+/** The range that contains slot `slot` (start inclusive, end exclusive), if any. */
+export const findRangeWithSlot = <T extends SlotRange>(
+  ranges: T[],
+  slot: string,
+): T | undefined => {
+  const time = new Date(slot).getTime();
+  return ranges.find(
+    (range) => new Date(range.start).getTime() <= time && time < new Date(range.end).getTime(),
+  );
+};

@@ -12,11 +12,16 @@ type HeatCellProps = {
   byCreator: boolean;
   active: boolean;
   onSelect: (slot: string) => void;
+  /** Mouse hover or keyboard focus (desktop preview). */
+  onPreview?: (slot: string, cell: HTMLElement) => void;
 };
 
+/** From this share of respondents the fill is dark enough for white digits. */
+const STRONG_RATIO = 0.75;
+
 /**
- * Read-only cell: strong with ✓ when everyone is free, solid for the organizer, pale for others.
- * Partial cells show how many respondents are free (the total is in the "Responded" header).
+ * Read-only cell: the more respondents are free, the greener it is; solid with ✓ when everyone is.
+ * Partial cells show the count (the total is in the "Responded" header); a dot marks the organizer.
  */
 export const HeatCell = memo(function HeatCell({
   slot,
@@ -25,8 +30,10 @@ export const HeatCell = memo(function HeatCell({
   byCreator,
   active,
   onSelect,
+  onPreview,
 }: HeatCellProps) {
-  const style = { '--ratio': total > 0 ? count / total : 0 } as CSSProperties;
+  const ratio = total > 0 ? count / total : 0;
+  const style = { '--ratio': ratio } as CSSProperties;
   const isFull = total > 0 && count === total;
 
   return (
@@ -38,12 +45,19 @@ export const HeatCell = memo(function HeatCell({
         styles.heat,
         count === 0 && styles.heatEmpty,
         isFull && styles.heatFull,
+        ratio >= STRONG_RATIO && styles.heatStrong,
         byCreator && !isFull && styles.heatCreator,
         active && styles.active,
       )}
       style={style}
       onClick={() => {
         onSelect(slot);
+      }}
+      onPointerEnter={(event) => {
+        if (event.pointerType === 'mouse') onPreview?.(slot, event.currentTarget);
+      }}
+      onFocus={(event) => {
+        if (event.currentTarget.matches(':focus-visible')) onPreview?.(slot, event.currentTarget);
       }}
     >
       {count > 0 && !isFull ? count : null}
