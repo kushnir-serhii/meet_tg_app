@@ -21,6 +21,14 @@
   box-sizing: border-box;
 }
 
+/* Slim, theme-aware scrollbars. Standard properties (not ::-webkit-scrollbar) so the colours
+   resolve against the nearest theme, which the dev preview sets on a nested frame. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--text) 50%, transparent)
+    color-mix(in srgb, var(--text) 10%, transparent);
+}
+
 html,
 body {
   margin: 0;
