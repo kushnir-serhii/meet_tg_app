@@ -1,5 +1,12 @@
 import { mergeSlotsIntoRanges, mergeSummariesIntoRanges } from './ranges';
-import type { Participant, PollResponse, PollResults, SlotRange, SlotSummary } from './types';
+import type {
+  Participant,
+  PollResponse,
+  PollResults,
+  RangeSummary,
+  SlotRange,
+  SlotSummary,
+} from './types';
 
 const toParticipant = ({ userId, name, username }: PollResponse): Participant => ({
   userId,
@@ -86,3 +93,7 @@ export const isRangeOfSlots = (
   }
   return true;
 };
+
+/** Ranges listed under the heatmap: "works for everyone" if any, else the best options. */
+export const getListedRanges = (results: PollResults): SlotRange[] | RangeSummary[] =>
+  results.perfectRanges.length > 0 ? results.perfectRanges : results.bestRanges;

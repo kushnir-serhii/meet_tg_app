@@ -85,18 +85,26 @@
 }
 
 .heat {
+  position: relative;
   cursor: pointer;
+  /* No double-tap zoom: a double tap finds the time in the options list. */
+  touch-action: manipulation;
   /* Count of free respondents. */
   font-size: 11px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: color-mix(in srgb, var(--text) 70%, transparent);
-  /* Partial availability stays pale (≤ 40%) so "everyone" cells stand out clearly. */
+  /* One ramp by share of respondents: 1 person is pale, "all but one" is almost solid. */
   background: color-mix(
     in srgb,
-    var(--success) calc(10% + var(--ratio) * 30%),
+    var(--success) calc(15% + var(--ratio) * 75%),
     var(--bg-secondary)
   );
+}
+
+/* Dark enough for white digits. */
+.heatStrong {
+  color: #ffffff;
 }
 
 .heatEmpty {
@@ -127,9 +135,27 @@
   color: #ffffff;
 }
 
-.heatCreator {
-  background: var(--success);
-  color: #ffffff;
+/* Organizer's slot: a corner dot, so the fill stays a pure "how many" scale. */
+.heatCreator::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 1.5px var(--section-bg);
+}
+
+/* Legend swatch for the count scale. */
+.legendRamp {
+  width: 36px;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--success) 15%, var(--bg-secondary)),
+    color-mix(in srgb, var(--success) 90%, var(--bg-secondary))
+  );
 }
 
 .legend {

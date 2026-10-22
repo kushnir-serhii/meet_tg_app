@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import type { Poll, PollResults, SlotRange } from '@/domain/types';
 import { useI18n } from '@/hooks/useI18n';
+import type { LocateRequest } from '@/hooks/useLocateRange';
 
 import { ScheduleForm } from '../schedule/ScheduleForm';
 import { Hint, Section } from '../ui/Section';
@@ -36,6 +37,10 @@ export const ResultsView = ({
   const { t } = useI18n();
   const [picked, setPicked] = useState<SlotRange | null>(null);
   const formOpen = picked !== null;
+  const [locate, setLocate] = useState<LocateRequest | null>(null);
+  const onLocate = useCallback((slot: string) => {
+    setLocate((prev) => ({ slot, seq: (prev?.seq ?? 0) + 1 }));
+  }, []);
 
   useEffect(() => {
     onFormOpenChange?.(formOpen);
@@ -54,15 +59,16 @@ export const ResultsView = ({
   return (
     <>
       <Respondents respondents={results.respondents} expected={poll.expectedCount} />
-      <Heatmap poll={poll} results={results} />
+      <Heatmap poll={poll} results={results} onLocate={onLocate} />
       {results.perfectRanges.length > 0 ? (
-        <PerfectRanges poll={poll} ranges={results.perfectRanges} onPick={onPick} />
+        <PerfectRanges poll={poll} ranges={results.perfectRanges} locate={locate} onPick={onPick} />
       ) : (
         <BestSlots
           ranges={results.bestRanges}
           count={results.bestCount}
           total={results.respondents.length}
           timezone={poll.timezone}
+          locate={locate}
           onPick={onPick}
         />
       )}

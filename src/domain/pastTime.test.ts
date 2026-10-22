@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { hasEnded, isBefore, startsInPast } from './pastTime';
+import { hasEnded, isBefore, isPastDay, startsInPast } from './pastTime';
 
 const now = new Date('2026-10-16T15:00:00.000Z');
 const range = (start: string, end: string) => ({ start, end });
@@ -28,5 +28,16 @@ describe('pastTime', () => {
     expect(startsInPast(range('2026-10-16T15:00:00.000Z', '2026-10-16T16:00:00.000Z'), now)).toBe(
       false,
     );
+  });
+
+  it('isPastDay uses the calendar day in the poll timezone', () => {
+    // 15:00Z is 17:00 on 16 Oct in Kyiv and 08:00 on 16 Oct in Los Angeles.
+    expect(isPastDay('2026-10-15', 'Europe/Kyiv', now)).toBe(true);
+    expect(isPastDay('2026-10-16', 'Europe/Kyiv', now)).toBe(false);
+    expect(isPastDay('2026-10-17', 'Europe/Kyiv', now)).toBe(false);
+    // Just after midnight UTC it is still the previous day in Los Angeles.
+    const lateUtc = new Date('2026-10-17T02:00:00.000Z');
+    expect(isPastDay('2026-10-16', 'America/Los_Angeles', lateUtc)).toBe(false);
+    expect(isPastDay('2026-10-16', 'Europe/Kyiv', lateUtc)).toBe(true);
   });
 });

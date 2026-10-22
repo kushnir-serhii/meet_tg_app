@@ -54,7 +54,7 @@ export const RESULTS_DEMOS: Demo[] = [
   {
     id: 'slot-sheet',
     title: 'Slot sheet (open)',
-    note: 'On a desktop window it uses the centred-modal layout; phones get the bottom sheet.',
+    note: 'Phone layout (tap). On desktop, hover a cell in the Results demos to see the hover card.',
     height: 560,
     render: () => (
       <SlotSheet
