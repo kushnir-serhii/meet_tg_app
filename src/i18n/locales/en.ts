@@ -3,6 +3,10 @@ export const en = {
   common: {
     cancel: 'Cancel',
   },
+  language: {
+    title: 'Language',
+    message: 'Choose the app language.',
+  },
   app: {
     loading: 'Loading…',
     openInTelegram: 'Open the app in Telegram',
@@ -74,6 +78,10 @@ export const en = {
     notResponded: (n: number) => `Haven't responded: ${n}`,
     locateClick: 'Click to find this time in the list below',
     locateDoubleTap: 'Double-tap the cell to find this time in the list',
+    addClick: 'Click to add this time to the options',
+    addDoubleTap: 'Double-tap the cell to add this time to the options',
+    picked: '📌 Your pick',
+    removePicked: 'Remove',
     closeDetails: 'Close',
     showAllOptions: (hidden: number) => `Show all options (${hidden} more)`,
     showFewerOptions: 'Show less',

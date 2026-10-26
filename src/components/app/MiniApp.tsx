@@ -1,5 +1,6 @@
 'use client';
 
+import { useLanguageMenu } from '@/hooks/useLanguageMenu';
 import { useLocale } from '@/hooks/useLocale';
 import { useTelegram } from '@/hooks/useTelegram';
 import { useTelegramInit } from '@/hooks/useTelegramInit';
@@ -20,6 +21,7 @@ type MiniAppProps = {
 const Screen = ({ telegramLink }: MiniAppProps) => {
   const webApp = useTelegram();
   useTelegramInit();
+  useLanguageMenu();
 
   if (webApp === null) return <Loading />;
   if (!isInsideTelegram(webApp)) return <OpenInTelegram link={telegramLink} />;

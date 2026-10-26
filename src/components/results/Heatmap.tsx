@@ -3,12 +3,12 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 
 import { buildGrid } from '@/domain/grid';
-import { findRangeWithSlot } from '@/domain/ranges';
-import { getListedRanges, getSlotSummary } from '@/domain/results';
+import { getSlotSummary } from '@/domain/results';
 import type { Poll, PollResults } from '@/domain/types';
 import { useCanHover } from '@/hooks/useCanHover';
 import { useDoubleTap } from '@/hooks/useDoubleTap';
 import { useI18n } from '@/hooks/useI18n';
+import { useSlotAction } from '@/hooks/useSlotAction';
 import { formatSlot } from '@/shared/format';
 
 import { HeatCell } from '../grid/HeatCell';
@@ -24,11 +24,13 @@ type HeatmapProps = {
   results: PollResults;
   /** Scroll the options list below to the range with this slot (desktop click, phone double tap). */
   onLocate?: (slot: string) => void;
+  /** Organizer: add a slot that isn't listed to the options, to schedule it anyway. */
+  onAdd?: (slot: string) => void;
 };
 
 /** Heat grid of availability: hover (desktop) or tap (phone) a cell to see who can join. */
-export const Heatmap = ({ poll, results, onLocate }: HeatmapProps) => {
-  const { t, locale } = useI18n();
+export const Heatmap = ({ poll, results, onLocate, onAdd }: HeatmapProps) => {
+  const { locale } = useI18n();
   const canHover = useCanHover();
   const grid = useMemo(() => buildGrid(poll, locale), [poll, locale]);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -39,11 +41,12 @@ export const Heatmap = ({ poll, results, onLocate }: HeatmapProps) => {
   const total = results.respondents.length;
   const notResponded = poll.expectedCount === null ? null : Math.max(0, poll.expectedCount - total);
 
-  const listed = getListedRanges(results);
-  const isListed = useCallback(
-    (slot: string) => onLocate !== undefined && findRangeWithSlot(listed, slot) !== undefined,
-    [listed, onLocate],
-  );
+  const { actionFor, act, hintFor } = useSlotAction({
+    results,
+    slotMinutes: poll.slotMinutes,
+    onLocate,
+    onAdd,
+  });
 
   const closeSheet = useCallback(() => {
     setActiveSlot(null);
@@ -56,17 +59,17 @@ export const Heatmap = ({ poll, results, onLocate }: HeatmapProps) => {
     onSingle: setActiveSlot,
     onDouble: (slot) => {
       setActiveSlot(null);
-      onLocate?.(slot);
+      act(slot);
     },
-    hasDouble: isListed,
+    hasDouble: (slot) => actionFor(slot) !== null,
   });
   const onClick = useCallback(
     (slot: string) => {
-      if (!isListed(slot)) return;
+      if (!actionFor(slot)) return;
       setPreview(null);
-      onLocate?.(slot);
+      act(slot);
     },
-    [isListed, onLocate],
+    [actionFor, act],
   );
 
   const onPreview = useCallback((slot: string, cell: HTMLElement) => {
@@ -104,14 +107,13 @@ export const Heatmap = ({ poll, results, onLocate }: HeatmapProps) => {
     () => (shownSlot ? getSlotSummary(shownSlot, results) : null),
     [shownSlot, results],
   );
-  const locateHint = canHover ? t.results.locateClick : t.results.locateDoubleTap;
   const card = summary && {
     label: formatSlot(summary.slot, poll.timezone, locale),
     available: summary.available,
     unavailable: summary.unavailable,
     total,
     notResponded,
-    footnote: isListed(summary.slot) ? locateHint : undefined,
+    footnote: hintFor(summary.slot, canHover),
   };
 
   return (

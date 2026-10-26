@@ -10,6 +10,9 @@ export { DEFAULT_LOCALE, type Locale, LOCALES, type Messages };
 const MESSAGES: Record<Locale, Messages> = { en, uk };
 const DATE_LOCALES: Record<Locale, DateLocale> = { en: enGB, uk: ukDate };
 
+/** Each language's name in itself, for the language picker. */
+export const LOCALE_NAMES: Record<Locale, string> = { en: 'English', uk: 'Українська' };
+
 export const isLocale = (value: unknown): value is Locale =>
   typeof value === 'string' && (LOCALES as readonly string[]).includes(value);
 

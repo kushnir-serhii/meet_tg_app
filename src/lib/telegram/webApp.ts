@@ -19,6 +19,14 @@ type BackButton = {
   offClick: (callback: () => void) => void;
 };
 
+/** Bot API 7.0+. The "Settings" item in the Mini App's ⋮ menu. */
+type SettingsButton = {
+  show: () => SettingsButton;
+  hide: () => SettingsButton;
+  onClick: (callback: () => void) => SettingsButton;
+  offClick: (callback: () => void) => SettingsButton;
+};
+
 type HapticFeedback = {
   selectionChanged: () => void;
   notificationOccurred: (type: 'error' | 'success' | 'warning') => void;
@@ -68,6 +76,7 @@ export type WebApp = {
   disableClosingConfirmation: () => void;
   MainButton: BottomButton;
   BackButton: BackButton;
+  SettingsButton?: SettingsButton;
   HapticFeedback: HapticFeedback;
   showConfirm: (message: string, callback: (confirmed: boolean) => void) => void;
   /** Bot API 6.2+. Callback gets the pressed button id ('' when dismissed). */
