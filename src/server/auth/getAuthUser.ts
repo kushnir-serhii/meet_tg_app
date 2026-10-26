@@ -1,7 +1,7 @@
 import 'server-only';
 
 import type { Participant } from '@/domain/types';
-import { type Locale, resolveLocale } from '@/i18n';
+import { isLocale, type Locale, resolveLocale } from '@/i18n';
 import { buildDisplayName } from '@/shared/format';
 
 import { getEnv } from '../env';
@@ -12,7 +12,10 @@ const SCHEME = 'tma ';
 
 export type AuthUser = Participant & { locale: Locale };
 
-/** Reads `Authorization: tma <initData>` and returns the verified Telegram user. */
+/**
+ * Reads `Authorization: tma <initData>` and returns the verified Telegram user.
+ * Locale: the language picked in the app (`X-Locale`), else the Telegram language.
+ */
 export const getAuthUser = (request: Request): AuthUser => {
   const header = request.headers.get('authorization') ?? '';
   if (!header.startsWith(SCHEME)) throw unauthorized();
@@ -21,10 +24,11 @@ export const getAuthUser = (request: Request): AuthUser => {
   if (!data) throw unauthorized('Invalid init data');
 
   const { id, first_name, last_name, username, language_code } = data.user;
+  const picked = request.headers.get('x-locale');
   return {
     userId: id,
     name: buildDisplayName(first_name, last_name),
     username: username ?? null,
-    locale: resolveLocale(language_code),
+    locale: isLocale(picked) ? picked : resolveLocale(language_code),
   };
 };

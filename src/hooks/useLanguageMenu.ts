@@ -3,9 +3,9 @@
 import { useEffect } from 'react';
 
 import { isLocale, LOCALE_NAMES, LOCALES } from '@/i18n';
+import { writeStoredLocale } from '@/lib/storedLocale';
 
 import { useI18n } from './useI18n';
-import { setStoredLocale } from './useLocale';
 import { usePopup } from './usePopup';
 import { useTelegram } from './useTelegram';
 
@@ -28,7 +28,7 @@ export const useLanguageMenu = () => {
           text: id === locale ? `✓ ${LOCALE_NAMES[id]}` : LOCALE_NAMES[id],
         })),
       }).then((id) => {
-        if (isLocale(id) && id !== locale) setStoredLocale(id);
+        if (isLocale(id) && id !== locale) writeStoredLocale(id);
       });
     };
 
