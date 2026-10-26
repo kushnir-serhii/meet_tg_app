@@ -149,6 +149,17 @@
   cursor: pointer;
 }
 
+/* "Your pick": schedule it, or drop it. */
+.pickedActions {
+  display: flex;
+  gap: 16px;
+}
+
+.removeButton {
+  composes: pickButton;
+  color: var(--hint);
+}
+
 /* Heatmap cell details: bottom sheet above the app's bottom bar. */
 .sheetBackdrop {
   position: fixed;

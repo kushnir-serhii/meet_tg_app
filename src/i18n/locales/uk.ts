@@ -4,6 +4,10 @@ export const uk: Messages = {
   common: {
     cancel: 'Скасувати',
   },
+  language: {
+    title: 'Мова',
+    message: 'Оберіть мову застосунку.',
+  },
   app: {
     loading: 'Завантаження…',
     openInTelegram: 'Відкрийте застосунок у Telegram',
@@ -73,6 +77,10 @@ export const uk: Messages = {
     notResponded: (n) => `Не відповіли: ${n}`,
     locateClick: 'Клікніть, щоб знайти цей час у списку нижче',
     locateDoubleTap: 'Двічі торкніться клітинки, щоб знайти цей час у списку',
+    addClick: 'Клікніть, щоб додати цей час до варіантів',
+    addDoubleTap: 'Двічі торкніться клітинки, щоб додати цей час до варіантів',
+    picked: '📌 Ваш вибір',
+    removePicked: 'Прибрати',
     closeDetails: 'Закрити',
     showAllOptions: (hidden) => `Показати всі варіанти (ще ${hidden})`,
     showFewerOptions: 'Згорнути',
